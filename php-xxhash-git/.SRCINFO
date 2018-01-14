@@ -1,0 +1,17 @@
+pkgbase = php-xxhash-git
+	pkgdesc = xxhash fast non-crypto hashing for php
+	pkgver = r15.df03d35
+	pkgrel = 1
+	url = https://github.com/adsr/php-xxhash
+	arch = i686
+	arch = x86_64
+	license = PHP
+	makedepends = git
+	depends = php
+	provides = php-xxhash=r15.df03d35
+	conflicts = php-xxhash
+	source = git+https://github.com/refutationalist/php-xxhash
+	md5sums = SKIP
+
+pkgname = php-xxhash-git
+
