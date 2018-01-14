@@ -1,0 +1,18 @@
+--- JMPX.orig/rtaudio-4.1.2/RtAudio.cpp	2017-09-01 13:38:02.299176174 -0700
++++ JMPX/rtaudio-4.1.2/RtAudio.cpp	2017-09-01 14:05:17.964154391 -0700
+@@ -2477,6 +2477,7 @@
+     }
+ 
+     // Now make the port connections.  See note above.
++    /* SAM DUMB HACK STARTS
+     for ( unsigned int i=0; i<stream_.nUserChannels[1]; i++ ) {
+       result = 1;
+       if ( ports[ stream_.channelOffset[1] + i ] )
+@@ -2487,6 +2488,7 @@
+         goto unlock;
+       }
+     }
++    SAM DUMB HACK ENDS */
+     free(ports);
+   }
+ 

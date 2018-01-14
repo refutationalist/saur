@@ -1,0 +1,7 @@
+*/src
+*/pkg
+*/*.tar.xz
+*/*.tar.gz
+jmpx-git/JMPX
+jack_capture/jack_capture
+sthttpd/sthttpd

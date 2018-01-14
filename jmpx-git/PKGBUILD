@@ -1,0 +1,40 @@
+# Maintainer: Sam Mulvey <sam@askanatheist.tv>
+pkgname=jmpx-git # '-bzr', '-git', '-hg' or '-svn'
+pkgver=r63.b0a7abc
+pkgrel=1
+pkgdesc="FM stereo encoder with RDS and SCA support"
+arch=('x86_64' 'armv7h')
+url="https://github.com/jontio/JMPX"
+license=('MIT' 'BSD' 'Apache')
+groups=()
+depends=('qt5-base' 'jack' 'opus')
+makedepends=('git') # 'bzr', 'git', 'mercurial' or 'subversion'
+provides=("jmpx")
+#install=jmpx-git.install
+source=('JMPX::git+https://github.com/jontio/JMPX.git') # 'noconnect.patch')
+
+md5sums=('SKIP') # 'SKIP')
+
+# Please refer to the 'USING git SOURCES' section of the PKGBUILD man page for
+# a description of each element in the source array.
+
+pkgver() {
+	cd "$srcdir/JMPX"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+
+build() {
+	cd "$srcdir/JMPX"
+	#msg "Patching..."
+	#patch -p1 < $srcdir/noconnect.patch
+	msg "Building..."
+	qmake JMPX.pro
+	make
+}
+
+package() {
+	mkdir -p $pkgdir/usr/bin $pkgdir/usr/lib
+	cd "$srcdir/JMPX"
+	make INSTALL_ROOT="$pkgdir/" install
+}
