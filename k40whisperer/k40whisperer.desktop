@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=K-40 Whisperer
+Comment=Interface software for unmodified K-40 laser cutters
+Exec=/usr/bin/k40whisperer
+Terminal=false
+Icon=k40whisperer.png
+Type=Application
+Categories=Graphics
