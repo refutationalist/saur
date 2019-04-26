@@ -23,7 +23,7 @@ ZENITY="/usr/bin/zenity"
 
 nope() {
 	if [ $GUI -eq 1 ]; then
-		$ZENITY --width=200 --error --text="$1" --title="Android-x86 Error"
+		$ZENITY --width=240 --error --text="$1" --title="Android-x86 Error"
 	else
 		echo "$1"
 	fi
@@ -68,7 +68,10 @@ if [ ! -x $QEMU ]; then
 	nope "Please install the 'qemu' package to run Android-x86."
 fi
 
-if [ -d $DATA ]; then
+if [ $DATA == "none" ]; then
+	DATA_QEMULINE=""
+	DATA_CMDLINE=""
+elif [ -d $DATA ]; then
 	echo "9p mode selected."
 	IN_SUDO=1
 	DATA_QEMULINE="-virtfs local,id=data,path=${DATA},security_model=passthrough,mount_tag=data"
@@ -77,10 +80,7 @@ else
 	# sudo should only be needed for 9p, if KVM is set up right
 	# so a data partition sparse file will always be owned by the calling user
 
-	if [ $DATA == "none" ]; then
-		DATA_QEMULINE=""
-		DATA_CMDLINE=""
-	elif [ ! -e $DATA ]; then
+	if [ ! -e $DATA ]; then
 		if [ ! -w `dirname $DATA` ]; then
 			nope "Location for $DATA doesn't exist or isn't writeable."
 		fi
@@ -90,17 +90,17 @@ else
 				bash -c "/usr/bin/truncate -s ${DATASIZE}M $DATA && \
 					/usr/bin/mkfs.ext4 $DATA && \
 					echo && echo Hit enter to continue. && read"
-		else 
+		else
 			truncate -s ${DATASIZE}M $DATA
 			mkfs.ext4 $DATA
 		fi
 
-		DATA_QEMULINE="-drive index=2,if=virtio,id=data,file=${DATA},format=raw"
-		DATA_CMDLINE="DATA=vdc"
-
 	elif [ ! -w $DATA ]; then
 		nope "Data partition $DATA isn't writeable."
 	fi
+
+	DATA_QEMULINE="-drive index=2,if=virtio,id=data,file=${DATA},format=raw"
+	DATA_CMDLINE="DATA=vdc"
 
 fi
 
@@ -128,7 +128,7 @@ do_qemu() {
 
 	if [ -z $BRIDGE ]; then
 		NET_QEMULINE="-netdev user,id=anet0,hostfwd=tcp::$NETPORT-:5000 -device virtio-net-pci,netdev=anet0"
-	else 
+	else
 		NET_QEMULINE="-netdev bridge,br=$BRIDGE,id=anet0 -device virtio-net-pci,netdev=anet0"
 	fi
 
