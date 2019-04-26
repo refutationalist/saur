@@ -1,0 +1,22 @@
+
+post_upgrade() {
+  /usr/bin/gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+  /usr/bin/update-desktop-database -q
+}
+
+post_install() {
+	/usr/bin/groupadd lasercutter
+	post_upgrade
+	echo "==> To correctly operate the laser cutter, copy /usr/share/k40whisperer/97-lasercutter.rules"
+	echo "==> to /etc/udev/rules.d and modify it to include the right IDs for your laser cutter."
+	echo "==> To allow a user to use the lasercutter, insure they're a member of the"
+	echo "==> 'lasercutter' group."
+	echo "==> "
+	echo "==> For more info see /usr/share/k40whisperer/README_Linux.txt"
+}
+
+post_remove() {
+	/usr/bin/groupdel lasercutter
+	post_upgrade
+	echo "==> Remember to remove /etc/udev/rules.d/97-lasercutter.rules!"
+}

@@ -1,0 +1,61 @@
+# Maintainer: Sam Mulvey <sam@vis.nu>
+
+# This is an ugly, ugly package that I whipped up so I can manage everything on my laser cutter
+# system using pacman.  
+
+pkgname=k40whisperer
+pkgver=0.30
+pkgrel=1
+pkgdesc="talk to the cheap K-40 laser cutter using inkscape"
+arch=('any')
+url="http://home.scorchworks.com/K40whisperer/k40whisperer.html"
+license=('GPL3')
+depends=('python2' 'python2-lxml' 'python2-pyusb' 'python2-pillow' 'inkscape' 'libusb' 'hicolor-icon-theme' 'tk')
+makedepends=('imagemagick')
+install=k40whisperer.install
+changelog=
+source=(
+	"http://home.scorchworks.com/K40whisperer/K40_Whisperer-${pkgver}_src.zip"
+	"k40whisperer.sh"
+	"97-lasercutter.rules"
+	"k40whisperer.desktop"
+)
+
+sha512sums=('0b41bff4f4c22764d75523d282db7321bf6dc644b566c7dbd6b891f859c4c6271a32c5e7c2d3046c75725858bc049130ba27788c9400710925bedd2c94526e60'
+            'a69a17cdaeab3e838320e7f8876f3232129c967f3381233ade5284365244e44847a515ffd09ece7a472b8a0aee0259a9e46d197cf04f2a6477a93fe6d3f07fdb'
+            '3153b05bcb8b22f2134bdd702d4f630bf2fd7d34d5118a4af30c978138ede0fe5c1aa1bc009aff83a8663699f2c519119b71d326231c2f427fdccd49ac77e685'
+            'ddd5202bb71081d0a0b6cfa626b58cc5e89b308c4ebc0d7f03e89142224356fbc07b9c4e07b5d2c062fe869c22a96fa9ca0e3985dfb6d155923d4461bcf6c979')
+
+
+build() {
+	echo "yay"
+}
+
+
+package() {
+	mkdir -p $pkgdir/usr/share/k40whisperer/src $pkgdir/usr/bin $pkgdir/usr/share/applications
+
+	cp $srcdir/K40_Whisperer-${pkgver}_src/*py $pkgdir/usr/share/k40whisperer/src
+	cp $srcdir/K40_Whisperer-${pkgver}_src/*png $pkgdir/usr/share/k40whisperer/src
+	cp $srcdir/K40_Whisperer-${pkgver}_src/*txt $pkgdir/usr/share/k40whisperer
+
+	chmod 0644 $pkgdir/usr/share/k40whisperer/src/*
+	chmod 0644 $pkgdir/usr/share/k40whisperer/*txt
+
+	install -m0755 $srcdir/k40whisperer.sh $pkgdir/usr/bin/k40whisperer
+	install -m0644 $srcdir/97-lasercutter.rules $pkgdir/usr/share/k40whisperer
+	install -m0644 $srcdir/k40whisperer.desktop $pkgdir/usr/share/applications/k40whisperer.desktop
+
+	# already have a copy, thanks!
+	rm $pkgdir/usr/share/k40whisperer/gpl-3.0.txt
+
+	# Icons
+	mkdir -p $pkgdir/usr/share/icons/hicolor/{256x256,128x128,64x64,48x48,32x32,16x16}/apps
+	convert $srcdir/K40_Whisperer-${pkgver}_src/scorchworks.ico[0] -size 256x256 $pkgdir/usr/share/icons/hicolor/256x256/apps/k40whisperer.png
+	convert $srcdir/K40_Whisperer-${pkgver}_src/scorchworks.ico[0] $pkgdir/usr/share/icons/hicolor/128x128/apps/k40whisperer.png
+	convert $srcdir/K40_Whisperer-${pkgver}_src/scorchworks.ico[2] $pkgdir/usr/share/icons/hicolor/64x64/apps/k40whisperer.png
+	convert $srcdir/K40_Whisperer-${pkgver}_src/scorchworks.ico[3] $pkgdir/usr/share/icons/hicolor/48x48/apps/k40whisperer.png
+	convert $srcdir/K40_Whisperer-${pkgver}_src/scorchworks.ico[5] -size 32x32 $pkgdir/usr/share/icons/hicolor/32x32/apps/k40whisperer.png
+	convert $srcdir/K40_Whisperer-${pkgver}_src/scorchworks.ico[8] $pkgdir/usr/share/icons/hicolor/16x16/apps/k40whisperer.png
+
+}
