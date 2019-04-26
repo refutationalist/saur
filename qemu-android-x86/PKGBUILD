@@ -21,7 +21,7 @@ sha256sums=('a97db25c96bf0e2f4574177a59d9c8399141238154beae122f70ce0edf488a59'
             'e9524cdb27c57e6650af763b2231d67ff3e2beb12f52133e7e95eda4f16b0881'
             '8a5ed6a6c1a4dfd1c8af0ff5de48965ec2dc6b50f87e5f990d33c7025f63c8ec')
 
-PKGEXT=".pkg.tar"
+#PKGEXT=".pkg.tar"
 
 package() {
 
