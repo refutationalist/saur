@@ -1,4 +1,4 @@
-# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+# Maintainer: Sam Mulvey <archlinux -at- sammulvey.com>
 pkgname=qemu-android-x86
 _pkgver="8.1-r1"
 pkgver=8.1.r1
