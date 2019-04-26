@@ -52,10 +52,10 @@ VGALINE=${VGALINE:-"-vga virtio -display sdl,gl=on"}
 
 # Test for system images:
 # TODO add ability for r/w system image
-SYSTEMIMG=/usr/share/android-x86/system.sfs
-INITRD=/usr/share/android-x86/initrd.img
-RAMDISK=/usr/share/android-x86/ramdisk.img
-KERNEL=/usr/share/android-x86/kernel
+SYSTEMIMG=${SYSTEMIMG:-"/usr/share/android-x86/system.sfs"}
+INITRD=${INITRD:-"/usr/share/android-x86/initrd.img"}
+RAMDISK=${RAMDISK:-"/usr/share/android-x86/ramdisk.img"}
+KERNEL=${KERNEL:-"/usr/share/android-x86/kernel"}
 
 if [ ! -e $SYSTEMIMG ] || [ ! -e $INITRD ] || [ ! -e $RAMDISK ] || [ ! -e $KERNEL ]; then
 	nope "System images aren't installed.  Check your android-x86 package."
