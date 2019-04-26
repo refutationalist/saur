@@ -15,7 +15,6 @@ Most of these packages are for use in my radio studio for shows including
   * [sthttpd](https://github.com/refutationalist/sthttpd), fork of Jef Poskanzer's thttpd with my hacky php-cgi support for small systems.
   * mumble-jack-noconnect, a build of [mumble](https://wiki.mumble.info/wiki/Main_Page) with the jack patch, but the the autoconnection parts removed.
   * [darkice](http://www.darkice.org/), which is a working copy of what's in [AUR](https://aur.archlinux.org/packages/darkice/) but is here for completeness.
-  * [silentjack](https://www.aelius.com/njh/silentjack/) dead air detection for jack.  Not in AUR yet.
   * [k40whisperer](http://home.scorchworks.com/K40whisperer/k40whisperer.html) laser cutter software for stock K-40 cutters.
 
 
