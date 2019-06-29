@@ -4,7 +4,7 @@
 # system using pacman.  
 
 pkgname=k40whisperer
-pkgver=0.30
+pkgver=0.33
 pkgrel=1
 pkgdesc="talk to the cheap K-40 laser cutter using inkscape"
 arch=('any')
@@ -21,11 +21,10 @@ source=(
 	"k40whisperer.desktop"
 )
 
-sha512sums=('0b41bff4f4c22764d75523d282db7321bf6dc644b566c7dbd6b891f859c4c6271a32c5e7c2d3046c75725858bc049130ba27788c9400710925bedd2c94526e60'
+sha512sums=('990f8a2c14a21b72c2bace70225f591003ec274413f84336ca55eb160c70d59a155a87c0de63b01fdb99513b6f8294056f3b67dc8e566c9a2b69554d28cab9e2'
             'a69a17cdaeab3e838320e7f8876f3232129c967f3381233ade5284365244e44847a515ffd09ece7a472b8a0aee0259a9e46d197cf04f2a6477a93fe6d3f07fdb'
             '3153b05bcb8b22f2134bdd702d4f630bf2fd7d34d5118a4af30c978138ede0fe5c1aa1bc009aff83a8663699f2c519119b71d326231c2f427fdccd49ac77e685'
             'ddd5202bb71081d0a0b6cfa626b58cc5e89b308c4ebc0d7f03e89142224356fbc07b9c4e07b5d2c062fe869c22a96fa9ca0e3985dfb6d155923d4461bcf6c979')
-
 
 build() {
 	echo "yay"

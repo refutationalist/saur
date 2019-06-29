@@ -1,6 +1,6 @@
 _pkgname=sthttpd
 pkgname=sthttpd-sam-git
-pkgver=20180113.1f18b99
+pkgver=20190128.2cd75c0
 pkgrel=1
 pkgdesc='experimental fork of the thttpd web server'
 url='https://github.com/refutationalist/sthttpd'
