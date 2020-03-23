@@ -20,6 +20,7 @@ Most of these packages are for use in my radio studio for shows including
 
 ## Removed Packages
   * [silentjack](https://aur.archlinux.org/packages/silentjack-git/) - someone else moved it into AUR.   Use that instead.
+  * merecat didn't work
 
 
 ## Why Aren't You Putting k40-whisperer in AUR?

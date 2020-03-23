@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <sam@askanatheist.tv>
 pkgname=jmpx-git # '-bzr', '-git', '-hg' or '-svn'
-pkgver=r63.b0a7abc
+pkgver=r64.ee67dad
 pkgrel=1
 pkgdesc="FM stereo encoder with RDS and SCA support"
 arch=('x86_64' 'armv7h')
