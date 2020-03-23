@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
 pkgname=jack-peak-git
-pkgver=r23.7938095
+pkgver=20200323.b3ffd4e
 pkgrel=1
 pkgdesc="text mode JACK meter, include JSON"
 arch=('x86_64' 'aarch64')
@@ -8,12 +8,12 @@ url="http://gareus.org/gitweb/?p=jack-peak.git"
 license=('GPL2')
 depends=('jack')
 makedepends=('git' 'pkgconf') 
-source=('git://gareus.org/jack-peak.git')
+source=('git+https://github.com/refutationalist/jack-peak')
 md5sums=('SKIP')
 
 pkgver() {
-	cd "$srcdir/${pkgname%-git}"
-	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	cd "${srcdir}/${_pkgname}"
+	git log -1 --format='%cd.%h' --date=short | tr -d -
 }
 
 
