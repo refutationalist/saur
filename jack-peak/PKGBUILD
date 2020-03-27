@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
 pkgname=jack-peak-git
-pkgver=20200323.b3ffd4e
+pkgver=20200323.a6646f0
 pkgrel=1
 pkgdesc="text mode JACK meter, include JSON"
 arch=('x86_64' 'aarch64')
