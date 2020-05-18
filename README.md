@@ -13,7 +13,6 @@ Most of these packages are for use in my radio studio for shows including
   * [JMPX](http://jontio.zapto.org/hda1/paradise/jmpxencoder/jmpx.html) FM encoder
   * [jack_capture](https://github.com/refutationalist/jack_capture) **NOTE:** It's better to install the git package from [AUR](https://aur.archlinux.org/packages/jack_capture-git/) as my changes have been merged.  I'm keeping this here if I work on it again. 
   * [sthttpd](https://github.com/refutationalist/sthttpd), fork of Jef Poskanzer's thttpd with my hacky php-cgi support for small systems.
-  * mumble-jack-noconnect, a build of [mumble](https://wiki.mumble.info/wiki/Main_Page) with the jack patch, but the the autoconnection parts removed.
   * [darkice](http://www.darkice.org/), which is a working copy of what's in [AUR](https://aur.archlinux.org/packages/darkice/) but is here for completeness.
   * [k40whisperer](http://home.scorchworks.com/K40whisperer/k40whisperer.html) laser cutter software for stock K-40 cutters.
   * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) in AUR.  A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.
@@ -21,6 +20,8 @@ Most of these packages are for use in my radio studio for shows including
 ## Removed Packages
   * [silentjack](https://aur.archlinux.org/packages/silentjack-git/) - someone else moved it into AUR.   Use that instead.
   * merecat didn't work
+  * mumble-jack-noconnect, [mumble](https://wiki.mumble.info/wiki/Main_Page) supports JACK by default now, and even supports [no autoconnect](https://vis.nu/blog/disable_jack_autoconnect_in_mumble_1.3_and_later).
+
 
 
 ## Why Aren't You Putting k40-whisperer in AUR?
