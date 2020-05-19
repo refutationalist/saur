@@ -1,14 +1,15 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
-pkgname=jack-peak-git
-pkgver=20200323.a6646f0
+pkgname=jack-webpeak-git
+pkgver=20200518.b80948c
 pkgrel=1
-pkgdesc="text mode JACK meter, include JSON"
+pkgdesc="simple peak-signal meter for JACK with websocket support"
 arch=('x86_64' 'aarch64')
-url="http://gareus.org/gitweb/?p=jack-peak.git"
+url="https://github.com/refutationalist/jack-webpeak"
 license=('GPL2')
-depends=('jack')
+depends=('jack' 'libwebsock')
+provides=('jack-webpeak')
 makedepends=('git' 'pkgconf') 
-source=('git+https://github.com/refutationalist/jack-peak')
+source=('git+https://github.com/refutationalist/jack-webpeak')
 md5sums=('SKIP')
 
 pkgver() {
