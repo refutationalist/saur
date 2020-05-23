@@ -20,16 +20,19 @@ install_msg() {
 
 __EOF__
 
+
 }
 
 
 post_install() {
 	install_msg
 	systemd-tmpfiles --create
+	/usr/share/libalpm/scripts/xen-intel-ucode-extract.sh
 }
 
 post_upgrade() {
 	systemd-tmpfiles --create
+	/usr/share/libalpm/scripts/xen-intel-ucode-extract.sh
 }
 
 pre_remove() {
@@ -44,6 +47,8 @@ pre_remove() {
 	systemctl disable xenconsoled.service
 	systemctl disable xen-init-dom0.service
 	systemctl disable xen-qemu-dom0-disk-backend.service
+
+	echo "Be sure to check boot for auto-generated microcode files."
 }
 
 post_remove() {
