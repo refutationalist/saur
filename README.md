@@ -17,12 +17,20 @@ Most of these packages are for use in my radio studio for shows including
   * [libwebsock](https://github.com/JonnyWhatshisface/libwebsock) A really easy websocket library for C.
   * [jack-webpeak](https://github.com/refutationalist/jack-webpeak) my fork of `jack-peak` which can output to a web socket.  Requires the above package.
 
-## Probably Don't Use
+### Probably Don't Use
   * [k40whisperer](http://home.scorchworks.com/K40whisperer/k40whisperer.html) someone did the actual python work, so maybe use the one in [AUR](https://aur.archlinux.org/packages/k40whisperer/) instead.
+
+## Xen
+
+[Xen](https://xenproject.org) in [AUR](https://aur.archlinux.org/packages/xen/) is in a bit of a transitional state at the moment, that moment being May of 2020.  They're working to get patches upstream and more stuff included in the repos, which is a Very Good Thing that I'm looking forward to.   However, I'm using Xen right now and need to keep my systems up to date, so I created these packages in the meantime.   There are three packages:
+
+  * xen is the Xen package itself.  The PKGBUILD is a kitbash of what's in AUR combined with FFY00's work, with some simplifications and things I've wanted added on.
+  * qemu-xen is a modification of the QEMU package in the [repo](https://www.archlinux.org/packages/extra/x86_64/qemu/) that includes full Xen support.  Without it, Xen only works partially.
+  * linux-lts-pvh is a kernel installed on the dom0 for PVH.  As of May 2020, [PVH](https://wiki.xen.org/wiki/Xen_Project_Software_Overview#PVH_.28x86.29) only supports direct kernel booting, and this kernel provides that.   It is linux-lts from the repos with modules and most drivers stripped out, the xenconfig defconfig applied, and stuff I used added directly to the kernel.  It does not require an initramfs, and nothing needs to be installed on a PVH domU.  Headers are compiled into the kernel for simplicty.
+
 
 ## Removed Packages
   * [silentjack](https://aur.archlinux.org/packages/silentjack-git/) - someone else moved it into AUR.   Use that instead.
-  * merecat didn't work
   * mumble-jack-noconnect, [mumble](https://wiki.mumble.info/wiki/Main_Page) supports JACK by default now, and even supports [no autoconnect](https://vis.nu/blog/disable_jack_autoconnect_in_mumble_1.3_and_later).
   * [darkice](http://www.darkice.org/), I stopped using it, and someone else took over [AUR](https://aur.archlinux.org/packages/darkice/).
 

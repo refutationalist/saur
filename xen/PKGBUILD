@@ -1,4 +1,5 @@
 # Maintainer: Filipe Laíns (FFY00) <lains@archlinux.org>
+# Contibutor: Sam Mulvey <archlinux@sammulvey.com>
 
 # Check http://xenbits.xen.org/xen-extfiles/ for updates
 _gmp=4.3.2

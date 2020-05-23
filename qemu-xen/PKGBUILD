@@ -1,5 +1,6 @@
 # Maintainer: Tobias Powalowski <tpowa@archlinux.org>
 # Contributor: Sébastien "Seblu" Luttringer <seblu@seblu.net>
+# Contributor: Sam Mulvey <archlinux@sammulvey.com>
 
 pkgbase=qemu-xen
 pkgname=(qemu-xen qemu-headless-xen qemu-arch-extra-xen qemu-headless-arch-extra-xen
