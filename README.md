@@ -16,6 +16,7 @@ Most of these packages are for use in my radio studio for shows including
   * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) in AUR.  A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.
   * [libwebsock](https://github.com/JonnyWhatshisface/libwebsock) A really easy websocket library for C.
   * [jack-webpeak](https://github.com/refutationalist/jack-webpeak) my fork of `jack-peak` which can output to a web socket.  Requires the above package.
+  * [nrsc5](https://github.com/theori-io/nrsc5) "HD Radio" decoding software for RTL-SDR
 
 ## Probably Don't Use
   * [k40whisperer](http://home.scorchworks.com/K40whisperer/k40whisperer.html) someone did the actual python work, so maybe use the one in [AUR](https://aur.archlinux.org/packages/k40whisperer/) instead.
