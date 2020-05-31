@@ -1,0 +1,39 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=nrsc5
+pkgver=20200518.17181bb
+pkgrel=1
+pkgdesc="decode NRSC-5 (HD Radio) using an RTL-SDR"
+arch=('x86_64' 'aarch64')
+url="https://github.com/theori-io/nrsc5"
+license=('GPL')
+depends=('libao' 'fftw' 'rtl-sdr')
+makedepends=('git' 'cmake')
+source=("git+https://github.com/theori-io/nrsc5")
+md5sums=('SKIP')
+
+_buildopts="-DUSE_SSE=ON" # x86
+#_buildopts="-DUSE_NEON=ON" # rpi
+
+
+
+pkgver() {
+	cd "${srcdir}/${pkgname}"
+	git log -1 --format='%cd.%h' --date=short | tr -d -
+}
+
+prepare() {
+	mkdir -p "$srcdir/build"
+	cd "$srcdir/build"
+	cmake -DCMAKE_INSTALL_PREFIX=/usr $_buildopts "../$pkgname"
+}
+
+build() {
+	cd "$srcdir/build"
+	make
+}
+
+
+package() {
+	cd "$srcdir/build"
+	make DESTDIR="$pkgdir/" install
+}
