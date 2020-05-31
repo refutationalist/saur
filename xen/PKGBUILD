@@ -1,4 +1,5 @@
 # Maintainer: Filipe Laíns (FFY00) <lains@archlinux.org>
+# Contibutor: Sam Mulvey <archlinux@sammulvey.com>
 
 # Check http://xenbits.xen.org/xen-extfiles/ for updates
 _gmp=4.3.2
@@ -13,7 +14,7 @@ _zlib=1.2.3
 
 pkgname=xen
 pkgver=4.13.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Open-source type-1 or baremetal hypervisor'
 arch=('x86_64')
 url='https://xenproject.org/'
@@ -26,6 +27,7 @@ optdepends=('ed2k-ovmf: UEFI support'
             'seabios: SeaBIOS payload support')
 options=(!buildflags)
 _source=("https://downloads.xenproject.org/release/xen/$pkgver/$pkgname-$pkgver.tar.gz"{,.sig}
+		"http://xenbits.xen.org/xen-extfiles/ipxe-git-$_ipxe.tar.gz"
 		"https://src.fedoraproject.org/rpms/xen/raw/master/f/xen.gcc10.fixes.patch"
 		"https://src.fedoraproject.org/rpms/xen/raw/master/f/xen.ocaml.4.10.patch"
 		"xen_gcc10_1_omnibus.patch"
@@ -33,11 +35,12 @@ _source=("https://downloads.xenproject.org/release/xen/$pkgver/$pkgname-$pkgver.
 		"efi-xen.cfg"
 		"grub.conf"
 		"xen.conf"
-		"tmpfiles.conf")
+		"tmpfiles.conf"
+		"xen-intel-ucode-extract.sh"
+		"xen-intel-ucode.hook")
 
 _stubdom_source=("http://xenbits.xen.org/xen-extfiles/gmp-$_gmp.tar.bz2"
         		 "http://xenbits.xen.org/xen-extfiles/grub-$_grub.tar.gz"
-        		 "http://xenbits.xen.org/xen-extfiles/ipxe-git-$_ipxe.tar.gz"
         		 "http://xenbits.xen.org/xen-extfiles/lwip-$_lwip.tar.gz"
         		 "http://xenbits.xen.org/xen-extfiles/newlib-$_newlib.tar.gz"
         		 "http://xenbits.xen.org/xen-extfiles/pciutils-$_pciutils.tar.bz2"
@@ -49,17 +52,19 @@ source=("${_source[@]}" "${_stubdom_source[@]}")
 
 sha512sums=('b56d20704155d98d803496cba83eb928e0f986a750831cd5600fc88d0ae772fe1456571654375054043d2da8daca255cc98385ebf08b1b1a75ecf7f4b7a0ee90'
             'SKIP'
+            '8120696ba6d79fd9189664deed9b0489825d8d1edf7b931023b3979b7b9f82248e5b808c4517036cd40a85442ddf51a8dcad3b05d7f3c3cc6650654d53da4050'
             'a93b8f33a38af4434fb1fa0e1e24d6374105f7c6088fc011eccdd5d5576ad78152bf27b675ef37471bd6b45468f75499c08e0bb937ee880557acba3edec98a07'
             'abacb29fde9b583648651a076cc8697538dea51d7fcc8c2160e951548e7022a0c83c89ddac3d1b3e46e05cb265e8fe14c0d9248d055e914909232180b42b194f'
             'eac4aaaaee05b8c0de88a78ba45329c4344b42c8d34651a6f7e99a7c7f16bfb9933a26fffbc5fb5d22e8561d07dfc13fe591aacb5f9a1d49aa725b253aad03ec'
             '5243fa12ae394937055ee564e856480bea207db96504fd66fb0740851021ffbdf653b8bda614a7924ad1549aa746dbad62e1325c0dc1ebfbad3e1f25eaf042c0'
-            '47f1729e43e880b05d561880202089bc7d379a244e63e4428d5e7c4453e8606f06236e5092406432fe63838b9231cbaff9aae177c6a5a503b2d209e489336557'
+            '1bbcbcd9fb8344a207409ec9f0064a45b726416f043f902ca587f5e4fa58497a759be4ffd584fa32318e960aa478864cc05ec026c444e8d27ca8e3248bd67420'
             '72b58aa4e2d0ba1242d789000f9a9df0969461b5eca119f92a9d5980e4340b6b2f502aac42b62bb85c9f580067e6120b79e6a30f961e7aa88394738a3ba2cc4c'
             'ccaa2ff82e4203b11e5dec9aeccac2e165721d8067e0094603ecaa7a70b78c9eb9e2287a32687883d26b6ceae6f8d2ad7636ddf949eb658637b3ceaa6999711b'
             '53ba61587cc2e84044e935531ed161e22c36d9e90b43cab7b8e63bcc531deeefacca301b5dff39ce89210f06f1d1e4f4f5cf49d658ed5d9038c707e3c95c66ef'
+            'c32b23956d8c249368c9a7fd9f0c9c0bb200a902168dcf42eb9ccf1869ae4844a5ba4ad977e05fa41372c7366747aa311ed6ccc9e6ed9ed17ad2a09ed4cb40d4'
+            '547f1670d23b02d794bdd11ea82cf51c634a9862d241e5ba4d569795ca9c1aea4d5e6264cbce419dd647e0c1251a23d66c89b568c37a4b82c8a6c0cd929e241d'
             '2e0b0fd23e6f10742a5517981e5171c6e88b0a93c83da701b296f5c0861d72c19782daab589a7eac3f9032152a0fc7eff7f5362db8fccc4859564a9aa82329cf'
             'c2bc9ffc8583aeae71cee9ddcc4418969768d4e3764d47307da54f93981c0109fb07d84b061b3a3628bd00ba4d14a54742bc04848110eb3ae8ca25dbfbaabadb'
-            '8120696ba6d79fd9189664deed9b0489825d8d1edf7b931023b3979b7b9f82248e5b808c4517036cd40a85442ddf51a8dcad3b05d7f3c3cc6650654d53da4050'
             '1465b58279af1647f909450e394fe002ca165f0ff4a0254bfa9fe0e64316f50facdde2729d79a4e632565b4500cf4d6c74192ac0dd3bc9fe09129bbd67ba089d'
             '40eb96bbc6736a16b6399e0cdb73e853d0d90b685c967e77899183446664d64570277a633fdafdefc351b46ce210a99115769a1d9f47ac749d7e82837d4d1ac3'
             '2b3d98d027e46d8c08037366dde6f0781ca03c610ef2b380984639e4ef39899ed8d8b8e4cd9c9dc54df101279b95879bd66bfd4d04ad07fef41e847ea7ae32b5'
@@ -70,7 +75,7 @@ sha512sums=('b56d20704155d98d803496cba83eb928e0f986a750831cd5600fc88d0ae772fe145
 
 validpgpkeys=('23E3222C145F4475FA8060A783FE14C957E82BD9') # Xen.org Xen tree code signing (signatures on the xen hypervisor and tools) <pgp@xen.org>
 
-noextract=()
+noextract=("ipxe-git-$_ipxe.tar.gz")
 for file in "${_stubdom_source[@]}"; do
 	noextract+=( $(basename ${file}) )
 done
@@ -165,6 +170,11 @@ package() {
   install -D -m 0644 "${srcdir}/efi-xen.cfg" "${pkgdir}/etc/xen/efi-xen.cfg"
   install -D -m 0644 "${srcdir}/xen.conf" "${pkgdir}/usr/lib/modules-load.d/xen.conf"
   install -D -m 0644 "${srcdir}/tmpfiles.conf" "${pkgdir}/usr/lib/tmpfiles.d/${pkgbase}.conf"
+
+  # microcode hooks
+  mkdir -p "${pkgdir}/usr/share/libalpm/scripts" "${pkgdir}/usr/share/libalpm/hooks"
+  install -m755 "${srcdir}/xen-intel-ucode-extract.sh" "${pkgdir}/usr/share/libalpm/scripts"
+  install -m644 "${srcdir}/xen-intel-ucode.hook" "${pkgdir}/usr/share/libalpm/hooks"
 
 
 

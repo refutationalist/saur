@@ -1,0 +1,55 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=linux-lts-pvh
+_pkgname=linux
+pkgver=5.4.42
+pkgrel=2
+pkgdesc="Linux kernel, LTS, for Xen PVH use"
+arch=(x86_64)
+url="https://kernel.org/"
+license=('GPL2')
+makedepends=(bc kmod libelf)
+options=(!strip)
+source=("$_pkgname-$pkgver.tar.gz"
+        "$_pkgname-$pkgver.patch")
+source=(
+	https://www.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_pkgname}-${pkgver}.tar.{xz,sign}
+	pvh_defconfig
+)
+
+sha256sums=('4e431b7c0266a07b76fdb77f8917ad681f0fa34ffba0eb8a172b67f7ef57bc31'
+            'SKIP'
+            'a2ae12f9685ec94a0babc21c16cb0f696af7818756d3467db0022ee27b904d6e')
+
+
+validpgpkeys=( 
+  'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds 
+  '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman 
+)
+
+prepare() {
+	cd "$_pkgname-$pkgver"
+
+	cp ../pvh_defconfig arch/x86/configs
+
+	echo "Setting version..."
+	scripts/setlocalversion --save-scmversion
+	echo "-$pkgrel" > localversion.10-pkgrel
+	echo "${pkgbase#linux}" > localversion.20-pkgname
+
+	make defconfig KBUILD_DEFCONFIG=pvh_defconfig
+
+
+}
+
+build() {
+	cd "$_pkgname-$pkgver"
+	make
+}
+
+package() {
+	#cd "$_pkgname-$pkgver"
+	#make DESTDIR="$pkgdir/" install
+
+	mkdir -p "${pkgdir}/usr/share/linux-lts-pvh"
+	install -m644 "${srcdir}/${_pkgname}-${pkgver}/arch/x86/boot/bzImage" "${pkgdir}/usr/share/linux-lts-pvh/kernel"
+}
