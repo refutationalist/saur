@@ -1,7 +1,7 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
 pkgname=linux-lts-pvh
 _pkgname=linux
-pkgver=5.4.42
+pkgver=5.4.47
 pkgrel=2
 pkgdesc="Linux kernel, LTS, for Xen PVH use"
 arch=(x86_64)
@@ -16,9 +16,10 @@ source=(
 	pvh_defconfig
 )
 
-sha256sums=('4e431b7c0266a07b76fdb77f8917ad681f0fa34ffba0eb8a172b67f7ef57bc31'
+sha256sums=('970b9d393d9a8d45eafdec9c6ab0d9880c20c703eeb9b0ac409892c8bc418d6c'
             'SKIP'
             'a2ae12f9685ec94a0babc21c16cb0f696af7818756d3467db0022ee27b904d6e')
+
 
 
 validpgpkeys=( 

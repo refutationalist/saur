@@ -14,7 +14,7 @@ _zlib=1.2.3
 
 pkgname=xen
 pkgver=4.13.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Open-source type-1 or baremetal hypervisor'
 arch=('x86_64')
 url='https://xenproject.org/'
@@ -122,6 +122,7 @@ build() {
       --prefix=/usr \
       --sbindir=/usr/bin \
       --libdir=/usr/lib \
+      --with-rundir=/run \
       --enable-systemd \
       --enable-stubdom \
       --with-sysconfig-leaf-dir=conf.d \
