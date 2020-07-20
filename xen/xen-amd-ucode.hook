@@ -3,10 +3,10 @@ Type = Path
 Operation = Install
 Operation = Upgrade
 Operation = Remove
-Target = boot/intel-ucode.img
+Target = boot/amd-ucode.img
 
 [Action]
-Description = Extracting Intel microcode for Xen EFI...
+Description = Extracting AMD microcode for Xen EFI...
 When = PostTransaction
 Exec = /usr/share/libalpm/scripts/xen-ucode-extract.sh
 

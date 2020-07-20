@@ -27,12 +27,12 @@ __EOF__
 post_install() {
 	install_msg
 	systemd-tmpfiles --create
-	/usr/share/libalpm/scripts/xen-intel-ucode-extract.sh
+	/usr/share/libalpm/scripts/xen-ucode-extract.sh
 }
 
 post_upgrade() {
 	systemd-tmpfiles --create
-	/usr/share/libalpm/scripts/xen-intel-ucode-extract.sh
+	/usr/share/libalpm/scripts/xen-ucode-extract.sh
 }
 
 pre_remove() {
