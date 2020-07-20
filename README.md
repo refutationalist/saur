@@ -12,7 +12,6 @@ Most of these packages are for use in my radio studio for shows including
 
   * [JMPX](http://jontio.zapto.org/hda1/paradise/jmpxencoder/jmpx.html) FM encoder
   * [jack_capture](https://github.com/refutationalist/jack_capture) **NOTE:** It's better to install the git package from [AUR](https://aur.archlinux.org/packages/jack_capture-git/) as my changes have been merged.  I'm keeping this here if I work on it again. 
-  * [sthttpd](https://github.com/refutationalist/sthttpd), fork of Jef Poskanzer's thttpd with my hacky php-cgi support for small systems.
   * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) in AUR.  A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.
   * [libwebsock](https://github.com/JonnyWhatshisface/libwebsock) A really easy websocket library for C.
   * [jack-webpeak](https://github.com/refutationalist/jack-webpeak) my fork of `jack-peak` which can output to a web socket.  Requires the above package.
@@ -34,6 +33,7 @@ Most of these packages are for use in my radio studio for shows including
   * [silentjack](https://aur.archlinux.org/packages/silentjack-git/) - someone else moved it into AUR.   Use that instead.
   * mumble-jack-noconnect, [mumble](https://wiki.mumble.info/wiki/Main_Page) supports JACK by default now, and even supports [no autoconnect](https://vis.nu/blog/disable_jack_autoconnect_in_mumble_1.3_and_later).
   * [darkice](http://www.darkice.org/), I stopped using it, and someone else took over [AUR](https://aur.archlinux.org/packages/darkice/).
+  * [sthttpd](https://github.com/refutationalist/sthttpd), performed terribly and I ended up switching to lighttpd on devices wher I'd otherwise use this.
 
 
 
