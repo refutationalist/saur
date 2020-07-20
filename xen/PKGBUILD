@@ -15,19 +15,20 @@ _polarssl=1.1.4
 _tpm_emulator=0.7.4
 _zlib=1.2.3
 
-pkgname=xen
+pkgbase=xen
+pkgname=("xen" "xen-docs")
 pkgver=4.13.1
 pkgrel=4
 pkgdesc='Open-source type-1 or baremetal hypervisor'
 arch=('x86_64')
 url='https://xenproject.org/'
 license=('GPL2')
-depends=('zlib' 'python' 'ncurses' 'openssl' 'libx11' 'libuuid.so' 'yajl' 'libaio' 'glib2' 'pkgconf'
+
+makedepends=('zlib' 'python' 'ncurses' 'openssl' 'libx11' 'libuuid.so' 'yajl' 'libaio' 'glib2' 'pkgconf'
          'bridge-utils' 'iproute2' 'inetutils' 'acpica' 'lib32-glibc' 'gnutls'
-		 'vde2' 'lzo' 'pciutils' 'sdl') # this line from namcap
-makedepends=('wget' 'pandoc' 'valgrind' 'git' 'bin86' 'dev86' 'bison' 'gettext' 'flex' 'pixman' 'ocaml')
-optdepends=('ed2k-ovmf: UEFI support'
-            'seabios: SeaBIOS payload support')
+		 'vde2' 'lzo' 'pciutils' 'sdl') # last line from namcap, these depends are the xen depends
+makedepends+=('wget' 'pandoc' 'valgrind' 'git' 'bin86' 'dev86' 'bison' 'gettext' 'flex' 'pixman' 'ocaml')
+
 options=(!buildflags)
 _source=("https://downloads.xenproject.org/release/xen/$pkgver/$pkgname-$pkgver.tar.gz"{,.sig}
 		"http://xenbits.xen.org/xen-extfiles/ipxe-git-$_ipxe.tar.gz"
@@ -67,15 +68,6 @@ else
 	_config_stubdom='--disable-stubdom'
 fi
 
-backup=("etc/conf.d/xencommons"
-		"etc/conf.d/xendomains"
-		"etc/xen/efi-xen.cfg"
-		"etc/xen/cpupool"
-		"etc/xen/grub.conf"
-		"etc/xen/xl.conf"
-)
-
-install="xen.install"
 
 sha512sums=('b56d20704155d98d803496cba83eb928e0f986a750831cd5600fc88d0ae772fe1456571654375054043d2da8daca255cc98385ebf08b1b1a75ecf7f4b7a0ee90'
             'SKIP'
@@ -107,7 +99,7 @@ validpgpkeys=('23E3222C145F4475FA8060A783FE14C957E82BD9') # Xen.org Xen tree cod
 # TODO: Setup users, dirs, etc.
 
 prepare() {
-	cd $pkgname-$pkgver
+	cd "${pkgbase}-${pkgver}"
 
 	patch -p1 < ../xen.gcc10.fixes.patch
 	patch -p1 < ../xen.ocaml.4.10.patch
@@ -132,7 +124,8 @@ prepare() {
 }
 
 build() {
-	cd $pkgname-$pkgver
+	cd "${pkgbase}-${pkgver}"
+
 
 	./configure \
 		--prefix=/usr \
@@ -150,8 +143,31 @@ build() {
 	make XEN_VENDORVERSION=arch
 }
 
-package() {
-	cd $pkgname-$pkgver
+package_xen() {
+	pkgdesc='Open-source type-1 or baremetal hypervisor'
+
+	depends=('zlib' 'python' 'ncurses' 'openssl' 'libx11' 'libuuid.so' 'yajl' 'libaio' 'glib2' 'pkgconf'
+         	 'bridge-utils' 'iproute2' 'inetutils' 'acpica' 'lib32-glibc' 'gnutls'
+		 	 'vde2' 'lzo' 'pciutils' 'sdl') 
+
+	optdepends=('ed2k-ovmf: UEFI support'
+            	'seabios: SeaBIOS payload support'
+				'xen-docs: HTML documentation and man pages')
+
+	install="xen.install"
+
+
+	backup=("etc/conf.d/xencommons"
+			"etc/conf.d/xendomains"
+			"etc/xen/efi-xen.cfg"
+			"etc/xen/cpupool"
+			"etc/xen/grub.conf"
+			"etc/xen/xl.conf"
+	)
+
+
+	cd "${pkgbase}-${pkgver}"
+
 
 	make DESTDIR="$pkgdir" install
 
@@ -194,4 +210,16 @@ package() {
 	install -m755 "${srcdir}/xen-ucode-extract.sh" "${pkgdir}/usr/share/libalpm/scripts"
 	install -m644 "${srcdir}/xen-intel-ucode.hook" "${pkgdir}/usr/share/libalpm/hooks"
 	install -m644 "${srcdir}/xen-amd-ucode.hook"   "${pkgdir}/usr/share/libalpm/hooks"
+
+	# Remove documentation (included in separate xen-docs package).
+	rm -r "${pkgdir}/usr/share/doc"
+	rm -r "${pkgdir}/usr/share/man"
+
+}
+
+package_xen-docs() {
+	pkgdesc="Xen hypervisor documentation and man pages"
+	arch=("any")
+	cd "${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install-docs
 }
