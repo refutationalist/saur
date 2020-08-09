@@ -34,9 +34,7 @@ makedepends+=('wget' 'pandoc' 'valgrind' 'git' 'bin86' 'dev86' 'bison' 'gettext'
 
 source=("https://downloads.xenproject.org/release/xen/$pkgver/$pkgname-$pkgver.tar.gz"{,.sig}
 		"xen_4.14.0_fixes.patch"
-		"grub-mkconfig-helper"
 		"efi-xen.cfg"
-		"grub.conf"
 		"xen.conf"
 		"tmpfiles.conf"
 		"xen-ucode-extract.sh"
@@ -55,9 +53,7 @@ _stubdom_source=("http://xenbits.xen.org/xen-extfiles/gmp-$_gmp.tar.bz2"
 sha512sums=('ebce47a2f754955d8517123d69f62006634d97620fbbe3784869a0667466e586a249f57ffaf7846d5bcb45d69377cde43354c82c233fbb5407e55653b9a33ac0'
             'SKIP'
             '95b489d8ce2ba85ba48a50d8b5e087c9f3955a2750a16206502e3fdaa2bbbcb2a316586c78ae02937659cb862ddb10479bd0139a77b7dd4235bf07bb7982ee14'
-            '1e95d8767bb0d4df6d95ac1f29e7fa7a74b4483f8bb46efcf95e08ddc9481d17c8e315f095e8d5ebf6e319811099e083566acc45aa3803aa4de4e8d17af04180'
             '1bbcbcd9fb8344a207409ec9f0064a45b726416f043f902ca587f5e4fa58497a759be4ffd584fa32318e960aa478864cc05ec026c444e8d27ca8e3248bd67420'
-            '72b58aa4e2d0ba1242d789000f9a9df0969461b5eca119f92a9d5980e4340b6b2f502aac42b62bb85c9f580067e6120b79e6a30f961e7aa88394738a3ba2cc4c'
             'ccaa2ff82e4203b11e5dec9aeccac2e165721d8067e0094603ecaa7a70b78c9eb9e2287a32687883d26b6ceae6f8d2ad7636ddf949eb658637b3ceaa6999711b'
             '53ba61587cc2e84044e935531ed161e22c36d9e90b43cab7b8e63bcc531deeefacca301b5dff39ce89210f06f1d1e4f4f5cf49d658ed5d9038c707e3c95c66ef'
             'a9230ec6ef9636ac3f3e4b72b1747ee8c4648a8bf4bd8dc3650365e34f1f67474429dbdd24996907d277b0ff5f235574643e781cb3ff37da954e899ddadbe0d6'
@@ -157,7 +153,8 @@ package_xen() {
 
 	optdepends=('ed2k-ovmf: UEFI support'
             	'seabios: SeaBIOS payload support'
-				'xen-docs: HTML documentation and man pages')
+				'xen-docs: HTML documentation and man pages'
+				'grub-xen-git: GRUB and pvgrub2 bootloader support')
 
 	if [ "${_build_qemu}" == "false" ]; then
 		optdepends+=("qemu: HVM and PV support")
@@ -170,7 +167,6 @@ package_xen() {
 			"etc/conf.d/xendomains"
 			"etc/xen/efi-xen.cfg"
 			"etc/xen/cpupool"
-			"etc/xen/grub.conf"
 			"etc/xen/xl.conf"
 	)
 
@@ -208,8 +204,6 @@ package_xen() {
 	rm -r "${pkgdir}/etc/init.d"
 
 	# Install files for Arch Linux.
-	install -D -m 0644 "${srcdir}/grub.conf" "${pkgdir}/etc/xen/grub.conf"
-	install -D -m 0755 "${srcdir}/grub-mkconfig-helper" "${pkgdir}/etc/grub.d/09_xen"
 	install -D -m 0644 "${srcdir}/efi-xen.cfg" "${pkgdir}/etc/xen/efi-xen.cfg"
 	install -D -m 0644 "${srcdir}/xen.conf" "${pkgdir}/usr/lib/modules-load.d/xen.conf"
 	install -D -m 0644 "${srcdir}/tmpfiles.conf" "${pkgdir}/usr/lib/tmpfiles.d/${pkgbase}.conf"
