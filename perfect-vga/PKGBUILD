@@ -1,0 +1,21 @@
+# Maintainer: Sam Mulvey archlinux@sammulvey.com
+# Adapted from pxplus-ibm-vga8
+pkgname=perfect-vga
+pkgver=1.0
+pkgrel=1
+license=('custom:PublicDomain')
+pkgdesc="nice DOS-ish VGA fonts from LÆMEUR"
+arch=('any')
+url="http://laemeur.sdf.org/fonts/"
+depends=(fontconfig)
+source=(
+	"http://laemeur.sdf.org/fonts/MorePerfectDOSVGA.ttf"
+	"http://laemeur.sdf.org/fonts/LessPerfectDOSVGA.ttf"
+)
+sha256sums=('f7b0d074f08ababe781f8e6de181faaed417d3fee3168c3abc3c177aabf78acd'
+            'e7295b1858a58dfb3c98562fb1112eb053f04f30417bfc3f102baf9d91181c73')
+
+package() {
+	install -Dm644 MorePerfectDOSVGA.ttf "${pkgdir}/usr/share/fontss/TTF/MorePerfectDOSVGA.ttf"
+	install -Dm644 LessPerfectDOSVGA.ttf "${pkgdir}/usr/share/fonts/TTF/LessPerfectDOSVGA.ttf"
+}
