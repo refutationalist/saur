@@ -1,7 +1,7 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
 pkgname=jack-webpeak-git
-pkgver=20200518.b80948c
-pkgrel=1
+pkgver=20200816.da04734
+pkgrel=2
 pkgdesc="simple peak-signal meter for JACK with websocket support"
 arch=('x86_64' 'aarch64')
 url="https://github.com/refutationalist/jack-webpeak"
@@ -9,11 +9,26 @@ license=('GPL2')
 depends=('jack' 'libwebsock')
 provides=('jack-webpeak')
 makedepends=('git' 'pkgconf') 
-source=('git+https://github.com/refutationalist/jack-webpeak')
-md5sums=('SKIP')
+optdepends=(
+	'systemjack: start jack-webpeak on boot with easy config'
+)
+
+source=(
+	'git+https://github.com/refutationalist/jack-webpeak'
+	'jack-webpeak@.service'
+	'extra_jack-webpeak.sh'
+	'libexec_jack-webpeak.sh'
+	'systemjack.ini'
+)
+sha256sums=('SKIP'
+            'f223b598298d2bc7e037487d2b07e727439e989c48648b10d8e983c0e68b2825'
+            'fd829887e63f3dad1081103386005e2ba2e201cd16830bd0f67e0c4c8e20b0ed'
+            '2c9315c6cdf877985f4145981bef88ce2fb4f8a97f9cbf5b273ca7a7ba4ed830'
+            '423d3e4a9c56fb0c47e4d0f196fdfa80a87f361f399e7f8eac2f81344d0b3ad3')
+
 
 pkgver() {
-	cd "${srcdir}/${_pkgname}"
+	cd "${srcdir}/${pkgname%-}"
 	git log -1 --format='%cd.%h' --date=short | tr -d -
 }
 
@@ -26,4 +41,16 @@ build() {
 package() {
 	cd "$srcdir/${pkgname%-git}"
 	make PREFIX="/usr" DESTDIR="$pkgdir/" install
+
+	mkdir -p "$pkgdir"/usr/lib/systemd/system \
+		"$pkgdir"/etc/systemjack \
+		"$pkgdir"/usr/lib/systemjack/extra.d
+
+
+	install -Dm755 ../libexec_jack-webpeak.sh "$pkgdir"/usr/lib/systemjack/jack-webpeak
+	install -Dm755 ../extra_jack-webpeak.sh   "$pkgdir"/usr/lib/systemjack/extra.d/jack-webpeak.sh
+	install -Dm644 ../jack-webpeak@.service   "$pkgdir"/usr/lib/systemd/system
+	install -Dm644 ../systemjack.ini          "$pkgdir"/etc/systemjack/jack-webpeak.ini
+
+
 }

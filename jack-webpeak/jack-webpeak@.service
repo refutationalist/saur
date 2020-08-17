@@ -1,0 +1,21 @@
+[Unit]
+Description=jack-webpeak websocket vu meter via systemjack
+After=systemd-user-sessions.service jackd.service systemjack-init.service
+Requisite=systemjack-init.service
+
+
+[Service]
+ExecStart=/usr/lib/systemjack/jack-webpeak %i
+Restart=always
+RestartSec=2
+KillSignal=SIGTERM
+LimitMEMLOCK=infinity
+LimitRTPRIO=infinity
+LimitRTTIME=infinity
+IOSchedulingClass=realtime
+CPUSchedulingPolicy=fifo
+CPUSchedulingPriority=80
+
+
+[Install]
+WantedBy=multi-user.target
