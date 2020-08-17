@@ -48,12 +48,6 @@ fi
 if [ -z $ports ]; then
 	die "no ports specified in jack-webpeak '${name}'"
 fi
-#else
-	#for p in "${ports[@]}"; do
-		#options+=" ${p}"
-	#done
-#fi
-
 
 jackwebpeak=$(which jack-webpeak)
 
