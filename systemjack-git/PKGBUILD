@@ -1,0 +1,48 @@
+# Maintainer: Sam Mulvey <code@ktqa.org>
+pkgname=systemjack-git
+pkgver=r19.54f425b
+pkgrel=1
+pkgdesc="running JACK audio apps via systemd"
+arch=('x86_64' 'armv7h' 'aarch64')
+url="https://ktqa.org/code"
+license=('AGPL3' 'BSD' 'GPL2')
+groups=()
+depends=('bash' 'jack' 'realtime-privileges')
+makedepends=('git')
+provides=("systemjack")
+backup=('etc/systemjack/*')
+
+optdepends=(
+	'rtirq: IRQ balancing for PCI and PCIe sound cards'
+	'aj-snapshot: manage connections between apps'
+	'calf: an effects rack'
+	'ffmpeg: icecast streaming and other misc'
+	'mumble: low latency streaming over the internet'
+	'non-mixer: a software mixer'
+	'meterbridge: graphical metering in patchpanel'
+	'silentjack: silence detection'
+	'smtp-forwarder: email on failure support'
+	'screen: viewing jack_capture without X'
+	'rxvt-unicode: viewing jack_capture'
+	'xdotool: automatic minimize for jack_capture with urxvt'
+)
+
+source=('git+https://github.com/refutationalist/systemjack.git')
+md5sums=('SKIP')
+
+
+pkgver() {
+	cd "$srcdir/systemjack"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+
+build() {
+	cd "${srcdir}/systemjack"
+	make
+}
+
+package() {
+	cd "${srcdir}/systemjack"
+	make DESTDIR="${pkgdir}/" install
+}

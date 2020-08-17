@@ -3,7 +3,9 @@
 */tmp
 */*.tar.xz
 */*.tar.gz
+*/*.tar.zst
 jmpx-git/JMPX
 jack_capture/jack_capture
 sthttpd/sthttpd
 php-xxhash-git/php-xxhash
+systemjack-git/systemjack
