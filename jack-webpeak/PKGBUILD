@@ -28,7 +28,7 @@ sha256sums=('SKIP'
 
 
 pkgver() {
-	cd "${srcdir}/${pkgname%-}"
+	cd "${srcdir}/${pkgname%-git}"
 	git log -1 --format='%cd.%h' --date=short | tr -d -
 }
 
