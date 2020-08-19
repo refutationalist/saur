@@ -1,5 +1,6 @@
 # Maintainer: Sam Mulvey (Refutationalist) <archlinux@sammulvey.com>
 # Contributor: Filipe Laíns (FFY00) <lains@archlinux.org>
+# Contributor: Chris Chapman (cman) <chris.chapman@aggiemail.usu.edu>
 
 # Build Options
 _build_stubdom=${build_stubdom:-true}
@@ -18,7 +19,7 @@ _zlib=1.2.3
 pkgbase=xen
 pkgname=("xen" "xen-docs")
 pkgver=4.14.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Open-source type-1 or baremetal hypervisor'
 arch=('x86_64')
 url='https://xenproject.org/'
@@ -52,7 +53,7 @@ _stubdom_source=("http://xenbits.xen.org/xen-extfiles/gmp-$_gmp.tar.bz2"
 
 sha512sums=('ebce47a2f754955d8517123d69f62006634d97620fbbe3784869a0667466e586a249f57ffaf7846d5bcb45d69377cde43354c82c233fbb5407e55653b9a33ac0'
             'SKIP'
-            '95b489d8ce2ba85ba48a50d8b5e087c9f3955a2750a16206502e3fdaa2bbbcb2a316586c78ae02937659cb862ddb10479bd0139a77b7dd4235bf07bb7982ee14'
+            '4c3e8c66f76cf06f7983012e869b7d22d57caf81aacf6553442548d955a9682c0495a7f59c96d313ae58a9e61a71d21743b79bb2af49276c9a675d8d701b16c9'
             '1bbcbcd9fb8344a207409ec9f0064a45b726416f043f902ca587f5e4fa58497a759be4ffd584fa32318e960aa478864cc05ec026c444e8d27ca8e3248bd67420'
             'ccaa2ff82e4203b11e5dec9aeccac2e165721d8067e0094603ecaa7a70b78c9eb9e2287a32687883d26b6ceae6f8d2ad7636ddf949eb658637b3ceaa6999711b'
             '53ba61587cc2e84044e935531ed161e22c36d9e90b43cab7b8e63bcc531deeefacca301b5dff39ce89210f06f1d1e4f4f5cf49d658ed5d9038c707e3c95c66ef'
@@ -72,6 +73,9 @@ _stub_sums=('2e0b0fd23e6f10742a5517981e5171c6e88b0a93c83da701b296f5c0861d72c1978
 if [ "${_build_stubdom}" == "true" ]; then
 	source=("${source[@]}" "${_stubdom_source[@]}")
 	sha512sums=("${sha512sums[@]}" "${_stub_sums[@]}")
+
+	# Add in automagic dependency in order to build vtpm and vtpmmgr stubdoms
+	makedepends+=('cmake')
 
 	for file in "${_stubdom_source[@]}"; do
 		noextract+=( $(basename ${file}) )
