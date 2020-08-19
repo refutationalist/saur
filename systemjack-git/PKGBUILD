@@ -1,16 +1,23 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 pkgname=systemjack-git
 pkgver=r19.54f425b
-pkgrel=1
+pkgrel=2
 pkgdesc="running JACK audio apps via systemd"
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://ktqa.org/code"
 license=('AGPL3' 'BSD' 'GPL2')
 groups=()
-depends=('bash' 'jack' 'realtime-privileges')
+# needs base
+depends=('jack' 'realtime-privileges')
 makedepends=('git')
 provides=("systemjack")
-backup=('etc/systemjack/*')
+backup=(
+	'etc/systemjack/main.ini'
+	'etc/systemjack/capture.ini'
+	'etc/systemjack/ffmpeg.ini'
+	'etc/systemjack/patchpanel.ini'
+	'etc/systemjack/env.sh'
+)
 
 optdepends=(
 	'rtirq: IRQ balancing for PCI and PCIe sound cards'
