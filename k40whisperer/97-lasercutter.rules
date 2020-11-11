@@ -1,1 +1,0 @@
-SUBSYSTEM=="usb", ATTRS{idVendor}=="[VENDOR ID]", ATTRS{idProduct}=="[PRODUCT ID]", ENV{DEVTYPE}=="usb_device", MODE="0664", GROUP="lasercutter"

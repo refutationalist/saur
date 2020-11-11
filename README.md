@@ -18,16 +18,14 @@ Most of these packages are for use in my radio studio for shows including
   * [nrsc5](https://github.com/theori-io/nrsc5) "HD Radio" decoding software for RTL-SDR
   * [perfect-vga](http://laemeur.sdf.org/fonts/) VGA fonts that I use in terminals that are useable, which as of 2020-08 does not include gnome-terminal or any modern VTE derived terminals.
   * [systemjack](https://github.com/refutationalist/systemjack) a scaffold for building audio systems in Arch Linux using JACK and systemd
-
-### Probably Don't Use
-  * [k40whisperer](http://home.scorchworks.com/K40whisperer/k40whisperer.html) someone did the actual python work, so maybe use the one in [AUR](https://aur.archlinux.org/packages/k40whisperer/) instead.
+  * [xen](https://aur.archlinux.org/packages/xen/) -- see below
 
 ## Xen
 
 I originally started working on a [Xen](https://xenproject.org) package for 4.13.1 and modern Arch because I needed a solution to keep working while others were working on upstreaming packages and (hopefully) getting Xen out of AUR and into the official repos, and I shared my work in the hopes of helping them out.  It didn't work out that way, and I find myself managing the AUR package.  I'm currently in the process of making the package fit for AUR and pushing the changes there.
 
   * xen is the Xen package itself.  The PKGBUILD is a kitbash of what's in AUR combined with FFY00's work, with some simplifications and things I've wanted added on.  It creates `xen` and `xen-docs` packages.
-  * qemu-xen is a modification of the QEMU package in the [repo](https://www.archlinux.org/packages/extra/x86_64/qemu/) that includes full Xen support.  Without it, not everything in Xen works.  We're currently working to see how necessary this is.
+  * qemu-xen is a modification of the QEMU package in the [repo](https://www.archlinux.org/packages/extra/x86_64/qemu/) that includes full Xen support. I'm not really keeping up on it as I've added building QEMU as an option in the xen PKGBUILD, and that suits me just fine for now.
   * linux-lts-pvh is a kernel installed on the dom0 for PVH.  As of May 2020, [PVH](https://wiki.xen.org/wiki/Xen_Project_Software_Overview#PVH_.28x86.29) only supports direct kernel booting, and this kernel provides that.   It is linux-lts from the repos with modules and most drivers stripped out, the xenconfig defconfig applied, and stuff I used added directly to the kernel.  It does not require an initramfs, and nothing needs to be installed on a PVH domU.  Headers are compiled into the kernel for simplicty.  To use it, set `kernel = "/usr/share/linux-lts-pvh/kernel"` to your domU config.  It is a temporary thing until Xen's EFI booting method arrives.
 
 
@@ -36,6 +34,7 @@ I originally started working on a [Xen](https://xenproject.org) package for 4.13
   * mumble-jack-noconnect, [mumble](https://wiki.mumble.info/wiki/Main_Page) supports JACK by default now, and even supports [no autoconnect](https://vis.nu/blog/disable_jack_autoconnect_in_mumble_1.3_and_later).
   * [darkice](http://www.darkice.org/), I stopped using it, and someone else took over [AUR](https://aur.archlinux.org/packages/darkice/).
   * [sthttpd](https://github.com/refutationalist/sthttpd), performed terribly and I ended up switching to lighttpd on devices wher I'd otherwise use this.
+  * [k40whisperer](https://aur.archlinux.org/packages/k40whisperer/), someone else did the work and I'm lazy
 
 
 
