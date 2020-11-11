@@ -19,7 +19,7 @@ _zlib=1.2.3
 pkgbase=xen
 pkgname=("xen" "xen-docs")
 pkgver=4.14.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Open-source type-1 or baremetal hypervisor'
 arch=('x86_64')
 url='https://xenproject.org/'
@@ -41,15 +41,16 @@ source=("https://downloads.xenproject.org/release/xen/$pkgver/$pkgname-$pkgver.t
 		"xen-ucode-extract.sh"
 		"xen-intel-ucode.hook"
 		"xen-amd-ucode.hook"
-		"xsa286-4.14-0001-x86-pv-Drop-FLUSH_TLB_GLOBAL-in-do_mmu_update-for-XP.patch"
-		"xsa286-4.14-0002-x86-pv-Flush-TLB-in-response-to-paging-structure-cha.patch"
-		"xsa345-4.14_0001-x86-mm-Refactor-map_pages_to_xen-to-have-only-a-sing.patch"
-		"xsa345-4.14_0002-x86-mm-Refactor-modify_xen_mappings-to-have-one-exit.patch"
-		"xsa345-4.14_0003-x86-mm-Prevent-some-races-in-hypervisor-mapping-upda.patch"
-		"xsa346_xsa346-1.patch"
-		"xsa347_xsa347-4.14-1.patch"
-		"xsa347_xsa347-4.14-2.patch"
-		"xsa347_xsa347-4.14-3.patch"
+		"xsa286-4.13-1.patch::https://xenbits.xen.org/xsa/xsa286-4.14/0001-x86-pv-Drop-FLUSH_TLB_GLOBAL-in-do_mmu_update-for-XP.patch"
+		"xsa286-4.14-2.patch::https://xenbits.xen.org/xsa/xsa286-4.14/0002-x86-pv-Flush-TLB-in-response-to-paging-structure-cha.patch"
+		"xsa345-4.14-1.patch::https://xenbits.xen.org/xsa/xsa345-4.14/0001-x86-mm-Refactor-map_pages_to_xen-to-have-only-a-sing.patch"
+		"xsa345-4.14-2.patch::https://xenbits.xen.org/xsa/xsa345-4.14/0002-x86-mm-Refactor-modify_xen_mappings-to-have-one-exit.patch"
+		"xsa345-4.14-3.patch::https://xenbits.xen.org/xsa/xsa345-4.14/0003-x86-mm-Prevent-some-races-in-hypervisor-mapping-upda.patch"
+		"https://xenbits.xen.org/xsa/xsa346/xsa346-1.patch"
+		"https://xenbits.xen.org/xsa/xsa346/xsa346-2.patch"
+		"https://xenbits.xen.org/xsa/xsa347/xsa347-4.14-1.patch"
+		"https://xenbits.xen.org/xsa/xsa347/xsa347-4.14-2.patch"
+		"https://xenbits.xen.org/xsa/xsa347/xsa347-4.14-3.patch"
 )
 
 _stubdom_source=("http://xenbits.xen.org/xen-extfiles/gmp-$_gmp.tar.bz2"
@@ -76,9 +77,11 @@ sha512sums=('ebce47a2f754955d8517123d69f62006634d97620fbbe3784869a0667466e586a24
             'f16d0f11f29d79f4de2dcb37dc7aeec52de98addfab350bb644c35efbda621588a75c0ff306d355ed0d6739b6f7bb3706acb9d5972c3956f43988c23ebe08fe2'
             '5be23b19420691bc3f020ff05c2bc97a770999beb8d27a89db05940bc98b105ccdd0d37b8ae778ab6655ce68d2797bc41f08d4753a082f4749d43b493b9eb64a'
             '043366f1c745e9ab068a8ff60f703cce9831ea02c4980067fcc3243575543f069aee419c06ca8179667805ea04a8563b40086ae4efe979145439b954d956829d'
+            '2209b558482c976d2ae97552d0de91026b8d957257e13f98e6ac2bcb2ca72e22f11fef50b5a0533087e693af8a97e1568848fcf5eeb3c03db259ad25901a6dab'
             '65857a8b30b5d61283b4a4a29708260b5742f5ec8bbeaaa22dde15c730dac5864901a89dc8495c4eb7618bba8543a80839ad01d23f4c298978799d73a0083c16'
             'e02ecd756ceb02781b9dec14647132f4fbf575bea59948bcfd5fce85130282671b11f771c263d05d613700748a4221b4fd29a14e3f8108701b618aa1741e9292'
             '662993bb8312b77866327f5b4e448374a4a6076a9154b5150192f9dab477a98c25bce1bea246db137cea461e16a25c8e624a11ca26d988dde0db4edbf9af3b6f')
+
 
 
 _stub_sums=('2e0b0fd23e6f10742a5517981e5171c6e88b0a93c83da701b296f5c0861d72c19782daab589a7eac3f9032152a0fc7eff7f5362db8fccc4859564a9aa82329cf'
@@ -119,6 +122,8 @@ validpgpkeys=('23E3222C145F4475FA8060A783FE14C957E82BD9') # Xen.org Xen tree cod
 # TODO: Setup users, dirs, etc.
 
 prepare() {
+	patches=($(ls -d xsa*patch))
+
 	cd "${pkgbase}-${pkgver}"
 
 	# mostly from: https://github.com/olafhering/xen/commit/1a1d86fef44444e8e265fd8bc687f8238a0d1615
@@ -132,7 +137,8 @@ prepare() {
 
 	fi
 
-	for patch in "${source[@]}"; do
+
+	for patch in "${patches[@]}"; do
 		if [[ $patch =~ ^xsa ]]; then
 			echo "==> Applying security patch '${patch}'..."
 			patch -p1 < "../${patch}"
