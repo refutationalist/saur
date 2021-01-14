@@ -30,7 +30,7 @@ options=(!buildflags)
 makedepends=(
 	'zlib' 'python' 'ncurses' 'openssl' 'libx11' 'libuuid.so' 'yajl' 'libaio' 'glib2' 'pkgconf'
 	'bridge-utils' 'iproute2' 'inetutils' 'acpica' 'lib32-glibc' 'gnutls'
-	'vde2' 'lzo' 'pciutils' 'sdl'
+	'vde2' 'lzo' 'pciutils' 'sdl2'
 ) # last line from namcap, these depends are the xen depends
 # Actual makedepends.
 makedepends+=('wget' 'pandoc' 'valgrind' 'git' 'bin86' 'dev86' 'bison' 'gettext' 'flex' 'pixman' 'ocaml' 'fig2dev')
