@@ -1,0 +1,39 @@
+# Maintainer: Sam Mulvey <code@ktqa.org>
+pkgname=dumpload-git
+pkgver=r6
+pkgrel=1
+pkgdesc="single directory file dump"
+arch=(any)
+url="http://ktqa.org/code"
+license=('AGPL3')
+depends=(php)
+source=('git+https://github.com/refutationalist/dumpload')
+sha256sums=('SKIP')
+
+
+
+pkgver() {
+	cd "$srcdir"/dumpload
+	printf "r%s" "$(git rev-list --count HEAD)"
+}
+
+
+
+build() {
+
+	cd "$srcdir/dumpload"
+	./build.php
+}
+
+
+package() {
+	mkdir -p \
+		"$pkgdir"/usr/share/webapps \
+		"$pkgdir"/usr/share/dumpload
+
+
+	cp "$srcdir"/dumpload/dumpload.phar "$pkgdir"/usr/share/webapps
+	cp "$srcdir"/dumpload/share/* "$pkgdir"/usr/share/dumpload
+	cp "$srcdir"/dumpload/README.md "$pkgdir"/usr/share/dumpload
+
+}
