@@ -1,7 +1,7 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
 pkgname=linux-lts-pvh
 _pkgname=linux
-pkgver=5.10.26
+pkgver=5.10.30
 pkgrel=1
 pkgdesc="Linux kernel, LTS, for Xen PVH use"
 arch=(x86_64)
@@ -16,11 +16,9 @@ source=(
 	pvh_defconfig
 )
 
-sha256sums=('fc532833f1ac167f363f1b9de85db39d2d635ab516f66dc381bdd70804601482'
+sha256sums=('d40269b5ac5c8424ec808f4484c7f80947f8f2d549b1ef1a5149aec5b6a20640'
             'SKIP'
-            '0ea8eb4b5635264599c551cf3ff9f3a7f0d0c189958b4c10e4e8e52737bac2aa')
-
-
+            'e8ff304726115692f407451ce8dfc374aec39f230c8e8c197263bbd074f2e0bb')
 
 validpgpkeys=( 
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds 
