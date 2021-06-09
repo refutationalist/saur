@@ -2,7 +2,7 @@
 pkgname=linux-lts-pvh
 _pkgname=linux
 pkgver=5.10.42
-pkgrel=1
+pkgrel=2
 pkgdesc="Linux kernel, LTS, for Xen PVH use"
 arch=(x86_64)
 url="https://kernel.org/"
@@ -18,7 +18,7 @@ source=(
 
 sha256sums=('8ba027c73bd67b8ded2649a741d2f018db630c1cbc081700d8ffd07ab0d906e5'
             'SKIP'
-            'e8ff304726115692f407451ce8dfc374aec39f230c8e8c197263bbd074f2e0bb')
+            '2027723b31cab1d05e9f91b1b1fcc04b9c03082d1181ca117ccd040d99e0da02')
 
 validpgpkeys=( 
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds 
