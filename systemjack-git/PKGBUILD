@@ -1,7 +1,7 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 pkgname=systemjack-git
-pkgver=r19.54f425b
-pkgrel=2
+pkgver=r29.30cd324
+pkgrel=1
 pkgdesc="running JACK audio apps via systemd"
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://ktqa.org/code"
