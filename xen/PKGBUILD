@@ -210,6 +210,7 @@ package_xen() {
 		'zlib' 'python' 'ncurses' 'openssl' 'libx11' 'libuuid.so' 'yajl' 'libaio' 'glib2' 'pkgconf'
 		'bridge-utils' 'iproute2' 'inetutils' 'acpica' 'lib32-glibc' 'gnutls'
 		'vde2' 'lzo' 'pciutils' 'sdl2'
+		'pixman' 'libseccomp' 'libpng' 'libjpeg-turbo' # inhereted depends because of build environment
 	)
 
 	optdepends=(
