@@ -22,7 +22,7 @@ _zlib=1.2.3
 pkgbase=xen
 pkgname=("xen" "xen-docs")
 pkgver=4.15.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Open-source type-1 or baremetal hypervisor'
 arch=('x86_64')
 url='https://xenproject.org/'
@@ -56,6 +56,11 @@ validpgpkeys=('23E3222C145F4475FA8060A783FE14C957E82BD9') # Xen.org Xen tree cod
 # Follow the Xen securite mailing lists, and if a patch is applicable to our package
 # add the URL here.
 _patches=(
+	"aur-xsa379.patch"
+	"https://xenbits.xen.org/xsa/xsa380/xsa380-1.patch"
+	"https://xenbits.xen.org/xsa/xsa380/xsa380-2.patch"
+	"https://xenbits.xen.org/xsa/xsa382.patch"
+	"https://xenbits.xen.org/xsa/xsa383.patch"
 )
 
 
@@ -86,7 +91,13 @@ _sha512sums=(
 	"68d468b0a811bd8882992a605d16ab1e0e95dd5e4644bdcf1287ffb0db046dddcbdf740df7d7f32665cbb50088e9e4a7c7d69fbfbf42e460ebdc097caccdd7b2" # gcc-11.patch
 )
 
+
 _patch_sums=(
+	"03d1250ae52098bc7ba46ec3cfb5d7bd699a3c5c66dbd231dcc6776fb2d71b3c0f801fb3f1e6cdc102cf06b2b73b86734f61b0fc8ab2d88a54c2371eba31828a" # aur-xsa379.patch
+	"9c65e5860aa4cea90224ebf9340d314ba1cf4f687fb5ccc8489dbc3465a03a467411639c00e31b6090f09813e0102a94a833a47da4427b673369b9e4b977b4bd" # xsa380-1.patch
+	"61a87c2baff2b84af14d53556c918a1ff4ca1a6189b05cd2fcf8a1366c5af5dc1dbf7168d8f79c821c0e6ee629d72145514087844f0469a5f96668171157b393" # xsa380-2.patch
+	"6c5e3388fcfb0dcae30d5f315bf95d263c82519d2cbf2a8a88d280b5b0b1c1ed4cce7a1a85fabbf57c785ad9dc23e8e5e4773c631c00e036aada604ff8e7fa03" # xsa382.patch
+	"d5106df26e6c4512d88ea6748c403117a2b61cb40f6d6c08a76f160352b79f94dd67cbb3419a33f2c6cfc7bbd644baed0498e366a6bf00d8031df728a47f36ea" # xsa383.patch
 )
 
 
@@ -100,8 +111,6 @@ _stub_sums=(
 	"4928b5b82f57645be9408362706ff2c4d9baa635b21b0d41b1c82930e8c60a759b1ea4fa74d7e6c7cae1b7692d006aa5cb72df0c3b88bf049779aa2b566f9d35" # tpm_emulator-0.7.4.tar.gz
 	"021b958fcd0d346c4ba761bcf0cc40f3522de6186cf5a0a6ea34a70504ce9622b1c2626fce40675bc8282cf5f5ade18473656abc38050f72f5d6480507a2106e" # zlib-1.2.3.tar.gz
 )
-
-
 
 # Simplify things for makepkg
 source=( "${_source[@]}" "${_patches[@]}" )
