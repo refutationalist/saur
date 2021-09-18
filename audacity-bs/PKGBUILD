@@ -19,10 +19,10 @@
 pkgname=audacity-bs
 _projname=audacity
 _location=/opt/audacity-bs
-pkgver=3.0.2
+pkgver=3.0.4
 pkgrel=1
 # This is kind of intentional.  I try not to be this much of a jackass.
-pkgdesc="UNSUPPORTED bullshit audacity until AudacityTeam gets its releng shit together"
+pkgdesc="UNSUPPORTED bullshit audacity until tenacity is ready"
 arch=('x86_64')
 url="https://audacityteam.org"
 license=('GPL2' 'CCPL')
