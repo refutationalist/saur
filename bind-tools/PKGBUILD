@@ -1,0 +1,61 @@
+# I don't need everything the official package pulls in.  Specifically: python
+# Maintainer: Sam Mulvey <code@ktqa.org>
+# With help from the official bind PKGBUILD
+pkgname=bind-tools
+pkgver=9.16.21
+pkgrel=1
+pkgdesc="The Arch Way for me, but not for thee.  (dig, host, nslookup)"
+arch=("x86_64" "aarch64")
+url='https://www.isc.org/software/bind/'
+license=('MPL2')
+depends=(libxml2 json-c libidn2 libuv lmdb)
+conflicts=("bind")
+validpgpkeys=('7E1C91AC8030A5A59D1EFAB9750F3C87723E4012') #ISC Code Signing Key 2021 – 2022 (codesign@isc.org)
+source=("https://ftp.isc.org/isc/bind9/${pkgver}/bind-${pkgver}.tar.xz"{,.asc})
+sha256sums=('65da5fd4fb80b7d0d7452876f81fd6d67cdcee54a5e3c1d65610334665dfa815'
+            'SKIP')
+
+
+build() {
+	cd "bind-$pkgver"
+	# support to chase DNSSEC signature chains
+	CFLAGS+=' -DDIG_SIGCHASE'
+	# compile with gcc10, https://gcc.gnu.org/gcc-10/porting_to.html
+	CFLAGS+=' -fcommon'
+	./configure \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--sbindir=/usr/bin \
+		--localstatedir=/var \
+		--disable-static \
+		--without-python \
+		--with-openssl \
+		--with-libidn2 \
+		--with-json-c \
+		--with-libxml2 \
+		--with-libtool
+	cd "lib"
+	make
+	cd "../bin/dig"
+	make
+
+
+}
+
+
+package() {
+	cd "bind-$pkgver"
+	install -dm755 "$pkgdir/usr/share/licenses/$pkgname/"
+	install -Dm644 LICENSE COPYRIGHT "$pkgdir/usr/share/licenses/$pkgname/"
+
+	cd "lib"
+	make DESTDIR="$pkgdir" install
+	rm -Rf "$pkgdir//usr/include"
+
+	cd "../bin/dig/.libs"
+	install -Dm755 dig "$pkgdir/usr/bin/dig"
+	install -Dm755 host "$pkgdir/usr/bin/host"
+	install -Dm755 nslookup "$pkgdir/usr/bin/nslookup"
+
+
+}

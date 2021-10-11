@@ -15,7 +15,6 @@ Most of these packages are for use in my radio studio for shows including [Ask a
   * [systemjack](https://github.com/refutationalist/systemjack) a scaffold for building audio systems in Arch Linux using JACK and systemd
   * [dumpload](https://github.com/refutationalist/dumpload) a basic web file dump
   * [xen](https://aur.archlinux.org/packages/xen/) -- see below
-  * [linux-s0ix-git](https://gitlab.com/smbruce/linux-stable-s0ix) -- mainline linux with the AMD s0ix patches added, for my AMD laptops.  This probably goes away at 5.15.
 
 ## Xen
 
