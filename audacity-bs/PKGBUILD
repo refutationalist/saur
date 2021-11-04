@@ -14,12 +14,12 @@
 # and the profanity is designed to scare you off.
 
 
-# GREETZ: osch
+# GREETZ: osch, audacity-git folks on AUR
 
 pkgname=audacity-bs
 _projname=audacity
 _location=/opt/audacity-bs
-pkgver=3.0.4
+pkgver=3.1.0
 pkgrel=1
 # This is kind of intentional.  I try not to be this much of a jackass.
 pkgdesc="UNSUPPORTED bullshit audacity until tenacity is ready"
@@ -27,34 +27,72 @@ arch=('x86_64')
 url="https://audacityteam.org"
 license=('GPL2' 'CCPL')
 groups=('pro-audio')
-depends=('libmad' 'libid3tag' 'gtk3' 'glib2' 'soundtouch' 'ffmpeg' 'vamp-plugin-sdk'
-'portsmf' 'portmidi' 'twolame' 'suil' 'lilv' 'lv2' 'serd' 'sord' 'sratom' 'python'
-'flac' 'libvorbis' 'libogg' 'vamp-plugin-sdk' 'portaudio' 'libsoxr' 'libsndfile' 'lame'
-'expat')
-makedepends=('cmake' 'autoconf' 'automake' 'libtool' 'git')
+# gtk3 -> gtk2 until it's fixed
+depends=(
+  flac
+  gtk2
+  libid3tag
+  libmad
+  libvorbis
+  lilv
+  lv2
+  portaudio
+  portsmf
+  soundtouch
+  suil
+  twolame
+  vamp-plugin-sdk
+  ffmpeg
+)
+makedepends=(
+  cmake
+  conan
+  gcc
+  git
+  gst-plugins-bad-libs
+  gstreamer
+  jack
+  libnotify
+  libsoup
+  nasm
+  sdl2
+)
 provides=("audacity")
 source=("https://github.com/audacity/audacity/archive/Audacity-${pkgver}.tar.gz" "audacity-bs")
-sha512sums=('1ea5b84b3938a448c4ab3b6a97432e4fb59f62d14f65f277047258c473501952ed53dea8860def875183ff09dd92e6e58949db876984c07a964373052bb5943e'
+sha512sums=('ddaad6af31fc96357fdb3f1f8b5e8039c4158545e472bcac01440ae0b0ed54d7839b84b756b13f23c013bac93da8753064194452e4d29fd73a74ec36f1394d88'
             'd1704ad61a62a63b9925a82fed506d9a7cba4b44eaaf4318ac196c1527416fb90a35934c70e2a030c322df6d3332a6f8081818d232116e2a9bf45185e8ac85c9')
 
 
 prepare() {
 	mv "audacity-Audacity-${pkgver}" "${_projname}"
-	mkdir build
-	cd build
-	cmake \
-		-DCMAKE_INSTALL_PREFIX="${_location}" \
-		-DCMAKE_BUILD_TYPE=Release \
-		-Daudacity_use_ffmpeg=loaded \
-		-Daudacity_use_wxwidgets=local \
-		-Daudacity_use_sqlite=local \
-		-DwxBUILD_TOOLKIT=gtk3 \
-		"../${_projname}"
+	mkdir {conan,build}
 }
 
 build() {
 	cd "${srcdir}/build"
-	make
+
+	# Calling cmake compiles stuff now because conan.
+
+	CC=gcc CONAN_USER_HOME="${srcdir}/conan" cmake \
+		-DCMAKE_INSTALL_PREFIX="${_location}" \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DAUDACITY_BUILD_LEVEL=2 \
+		-Daudacity_use_wxwidgets=local \
+		-Daudacity_conan_allow_prebuilt_binaries=Off \
+		-Daudacity_use_ffmpeg:STRING=loaded \
+        -Daudacity_lib_preference=system \
+        -Daudacity_obey_system_dependencies=On \
+		-Daudacity_has_networking=Off \
+		-Daudacity_use_sbsms=local \
+		"../${_projname}"
+
+	# THINGS WHAT ARE BROKE
+	#-Daudacity_use_ffmpeg=local \
+	#-Daudacity_use_wxwidgets=local \
+	#-Daudacity_use_sqlite=local \
+	#-DwxBUILD_TOOLKIT=gtk3 \
+
+	CONAN_USER_HOME="${srcdir}/conan" cmake --build .
 }
 
 package() {
