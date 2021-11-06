@@ -1,0 +1,17 @@
+pkgname=ttf-vcr-eas
+pkgver=3.0
+pkgrel=1
+pkgdesc="80s chargen font"
+url="https://www.fontzip.com/vcr-eas"
+arch=(any)
+license=(custom)
+source=("https://www.fontzip.com/storage/2018/08/14/vcr-eas/vcr-eas.zip" "license.txt")
+sha256sums=('d64f755db0bbdf3a2bf009d054383c5cca056f19ad2605009c90f750b3f32b9a'
+            '4bfdaccd2146c86ee146666c7868f091c95086359aaf3f6cf39ecb62df944e59')
+
+
+package() {
+	mkdir -p "${pkgdir}/usr/share/fonts/TTF" "${pkgdir}/usr/share/licenses/ttf-vcr-eas"
+	install -m644 "${srcdir}/VCREAS 3.0.ttf"  "${pkgdir}/usr/share/fonts/TTF/vcr-eas.ttf"
+	install -m644 "${srcdir}/license.txt" "${pkgdir}/usr/share/licenses/ttf-vcr-eas/license.ttf"
+}
