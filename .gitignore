@@ -4,6 +4,7 @@
 */*.tar.xz
 */*.tar.gz
 */*.tar.zst
+*.backup
 jmpx-git/JMPX
 jack_capture/jack_capture
 sthttpd/sthttpd

@@ -129,7 +129,7 @@ fi
 if [ "${_build_qemu}" == "true" ]; then
 	_config_qemu=""
 	# qemu needs ninja to build as of 4.16.0
-	makedepends+=(ninja)
+	makedepends+=('ninja')
 else
 	_config_qemu="--with-system-qemu=/usr/bin/qemu-system-x86_64"
 fi
