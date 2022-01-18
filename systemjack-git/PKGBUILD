@@ -8,7 +8,7 @@ url="https://ktqa.org/code"
 license=('AGPL3' 'BSD' 'GPL2')
 groups=()
 # needs base
-depends=('jack' 'realtime-privileges')
+depends=('jack2' 'realtime-privileges' 'jack-example-tools')
 makedepends=('git')
 provides=("systemjack")
 backup=(
