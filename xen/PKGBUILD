@@ -20,9 +20,9 @@ _tpm_emulator=0.7.4
 _zlib=1.2.3
 
 pkgbase=xen
-pkgname=("xen" "xen-docs")
+pkgname=('xen' 'xen-docs' 'xen-libs')
 pkgver=4.16.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Open-source type-1 or baremetal hypervisor'
 arch=('x86_64')
 url='https://xenproject.org/'
@@ -36,7 +36,7 @@ makedepends=(
 	'vde2' 'lzo' 'pciutils' 'sdl2' 'systemd-libs'
 ) # last line from namcap, these depends are the xen depends
 # Actual makedepends.
-makedepends+=('systemd' 'wget' 'pandoc' 'valgrind' 'git' 'bin86' 'dev86' 'bison' 'gettext' 'flex' 'pixman' 'ocaml' 'fig2dev')
+makedepends+=('systemd' 'wget' 'pandoc' 'valgrind' 'git' 'bin86' 'dev86' 'bison' 'gettext' 'flex' 'pixman' 'ocaml' 'ocaml-findlib' 'fig2dev')
 
 _source=(
 	"https://downloads.xenproject.org/release/xen/$pkgver/$pkgname-$pkgver.tar.gz"{,.sig}
@@ -168,10 +168,6 @@ prepare() {
 	sed 's,/var/run,/run,g' -i tools/xenmon/xenbaked.c
 	sed 's,/var/run,/run,g' -i tools/xenmon/xenmon.py
 	sed 's,/var/run,/run,g' -i tools/pygrub/src/pygrub
-}
-
-build() {
-	cd "${pkgbase}-${pkgver}"
 
 	if [ "${_build_stubdom}" == "true" ]; then
 		echo "NOTE: Xen build with stubdom support."
@@ -194,6 +190,10 @@ build() {
 		--with-sysconfig-leaf-dir=conf.d \
 		--with-system-ovmf=/usr/share/ovmf/x64/OVMF.fd \
 		--with-system-seabios=/usr/share/qemu/bios-256k.bin
+}
+
+build_xen() {
+	cd "${pkgbase}-${pkgver}"
 
 	make "${_common_make_flags[@]}"
 }
@@ -281,11 +281,60 @@ package_xen() {
 	rm -r "${pkgdir}/usr/share/doc"
 	rm -r "${pkgdir}/usr/share/man"
 
+
+	# Remove libraries (included in separate xen-libs package),
+	rm -r "${pkgdir}/usr/include"
+	rm -r "${pkgdir}/usr/lib"
+}
+
+build_xen-docs() {
+	cd "${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" build-docs
 }
 
 package_xen-docs() {
 	pkgdesc="Xen hypervisor documentation and man pages"
 	arch=("any")
+
 	cd "${pkgbase}-${pkgver}"
 	make "${_common_make_flags[@]}" DESTDIR="$pkgdir" install-docs
+}
+
+build_xen-libs() {
+	pushd "${pkgbase}-${pkgver}/tools/libs"
+	make "${_common_make_flags[@]}" DESTDIR="${pkgdir}"
+	popd
+
+	pushd "${pkgbase}-${pkgver}/tools/ocaml/libs"
+	make "${_common_make_flags[@]}" DESTDIR="${pkgdir}"
+	popd
+
+	pushd "${pkgbase}-${pkgver}/tools/xenstore"
+	make "${_common_make_flags[@]}" DESTDIR="${pkgdir}"
+
+}
+package_xen-libs() {
+	pkgdesc="Xen hypervisor client libraries"
+	arch=("any")
+
+	pushd "${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install-tools-public-headers
+	popd
+
+	pushd "${pkgbase}-${pkgver}/tools/libs"
+	make DESTDIR="${pkgdir}" install
+	popd
+
+	pushd "${pkgbase}-${pkgver}/tools/ocaml/libs"
+	make DESTDIR="${pkgdir}" install
+	popd
+
+	pushd "${pkgbase}-${pkgver}/tools/xenstore"
+	make DESTDIR="${pkgdir}" install
+
+	# Remove binaries and configuration files
+	rm -r "${pkgdir}/usr/bin"
+	rm -r "${pkgdir}/var"
+
+	rm -r "${pkgdir}/usr/lib/pkgconfig"
 }
