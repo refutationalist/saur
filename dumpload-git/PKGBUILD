@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 pkgname=dumpload-git
-pkgver=r7
+pkgver=r9
 pkgrel=1
 pkgdesc="single directory file dump"
 arch=(any)
