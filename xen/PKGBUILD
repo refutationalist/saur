@@ -292,8 +292,11 @@ package_xen() {
 	rm -r "${pkgdir}/usr/share/doc"
 	rm -r "${pkgdir}/usr/share/man"
 
-	# remove potential stubdom files
-	rm -r "${pkgdir}/usr/lib/xen/boot"
+	# remove stubdom files
+        rm -f "${pkgdir}/usr/lib/xen/boot/vtpmmgr-stubdom.gz" \
+                "${pkgdir}/usr/lib/xen/boot/vtpm-stubdom.gz" \
+                "${pkgdir}/usr/lib/xen/boot/xenstorepvh-stubdom.gz" \
+                "${pkgdir}/usr/lib/xen/boot/xenstore-stubdom.gz"
 
 	# remove qemu
 	if [ "${_build_qemu}" == "true" ]; then
