@@ -1,0 +1,34 @@
+diff -Naur orig.wsServer/Makefile wsServer/Makefile
+--- orig.wsServer/Makefile	2022-04-25 23:53:40.436106560 -0700
++++ wsServer/Makefile	2022-04-25 23:54:45.492777189 -0700
+@@ -28,17 +28,11 @@
+ VALIDATE_UTF8 ?= yes
+ 
+ # Prefix
+-ifeq ($(PREFIX),)
+-    PREFIX := /usr/local
+-endif
++PREFIX := /usr
+ 
+ # Detect machine type
+ MACHINE := $(shell uname -m)
+-ifeq ($(MACHINE), x86_64)
+-	LIBDIR = $(PREFIX)/lib64
+-else
+-	LIBDIR = $(PREFIX)/lib
+-endif
++LIBDIR = $(PREFIX)/lib
+ 
+ # Check if AFL fuzzing enabled
+ ifeq ($(AFL_FUZZ), yes)
+@@ -135,8 +129,8 @@
+ # Generate wsserver.pc
+ wsserver.pc:
+ 	@install -d $(DESTDIR)$(PKGDIR)
+-	@echo 'prefix='$(DESTDIR)$(PREFIX)    >  $(DESTDIR)$(PKGDIR)/wsserver.pc
+-	@echo 'libdir='$(DESTDIR)$(LIBDIR)    >> $(DESTDIR)$(PKGDIR)/wsserver.pc
++	@echo 'prefix='$(PREFIX)    >  $(DESTDIR)$(PKGDIR)/wsserver.pc
++	@echo 'libdir='$(LIBDIR)    >> $(DESTDIR)$(PKGDIR)/wsserver.pc
+ 	@echo 'includedir=$${prefix}/include' >> $(DESTDIR)$(PKGDIR)/wsserver.pc
+ 	@echo 'Name: wsServer'                >> $(DESTDIR)$(PKGDIR)/wsserver.pc
+ 	@echo 'Description: Tiny WebSocket Server Library' >> $(DESTDIR)$(PKGDIR)/wsserver.pc

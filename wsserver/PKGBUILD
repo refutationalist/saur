@@ -1,0 +1,41 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=wsserver-git
+pkgver=r160.7b0293e
+pkgrel=1
+pkgdesc="a simple websocket library in C"
+arch=("x86_64" "aarch64")
+url="https://github.com/Theldus/wsServer"
+license=('LGPL3')
+depends=('libevent')
+makedepends=('cmake')
+provides=('wsserver')
+source=("git+https://github.com/Theldus/wsServer" "makefile.patch")
+sha256sums=('SKIP'
+            'f8efc8b3931af6b685a29aed9c1688a7789d1cd69936b1547da6c89558cb62b0')
+
+
+pkgver() {
+	cd "${srcdir}/wsServer"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "${srcdir}/wsServer"
+	patch -p1 < "${srcdir}/makefile.patch"
+}
+
+
+build() {
+	cd "wsServer"
+	sed 's#usr/local#usr#g' -i Makefile
+	sed 's#lib64#lib#g' -i Makefile
+	sed "s#libdir='(DESTDIR)$(PREFIX)#$(PREFIX)#g" -i Makefile
+	#sed 's#DESTDIR#LOCALDESTDIR#g' -i Makefile
+	make
+}
+
+
+package() {
+	cd "wsServer"
+	make DESTDIR="$pkgdir/" install
+}
