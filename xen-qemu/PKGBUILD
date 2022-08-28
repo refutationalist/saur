@@ -7,7 +7,7 @@ pkgdesc="A xen-specific QEMU, built to qemu-builtin standards"
 arch=("x86_64")
 url="https://www.qemu.org"
 license=(GPL2 LGPL2.1)
-depends=()
+depends=(curl xen numactl)  # lot of deps are apparently covered by xen
 makedepends=(ninja meson)
 provides=(qemu-xen xen-qemu xen-qemu-builtin)
 conflicts=(xen-qemu-builtin)
@@ -58,5 +58,7 @@ build() {
 
 package() {
 	cd "${srcdir}/build"
+	# meson direct was failing me, but this worked.
+	# might be a backwards compatible thing
 	make DESTDIR="$pkgdir/" install
 }
