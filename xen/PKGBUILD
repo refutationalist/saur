@@ -9,6 +9,7 @@ _boot_dir=${boot_dir:-/boot}
 _efi_dir=${efi_dir:-/boot}
 _efi_mountpoint=${efi_mountpoint:-/boot}
 
+# External files used by Xen
 # Check http://xenbits.xen.org/xen-extfiles/ for updates
 _gmp=4.3.2
 _grub=0.97
@@ -19,9 +20,18 @@ _polarssl=1.1.4
 _tpm_emulator=0.7.4
 _zlib=1.2.3
 
+
+# Flags passed to make
+_common_make_flags=(
+  "BOOT_DIR=${_boot_dir}"
+  "EFI_DIR=${_efi_dir}"
+  "EFI_MOUNTPOINT=${_efi_mountpoint}"
+  "XEN_VENDORVERSION=-${pkgrel}arch"
+)
+
 pkgbase=xen
 pkgname=("xen" "xen-docs")
-pkgver=4.16.1
+pkgver=4.16.stable
 pkgrel=1
 pkgdesc='Open-source type-1 or baremetal hypervisor'
 arch=('x86_64')
@@ -30,7 +40,7 @@ license=('GPL2')
 options=(!buildflags)
 
 makedepends=(
-	'zlib' 'python' 'ncurses' 'openssl' 'libx11' 'libuuid.so' 'yajl' 'libaio' 'glib2' 'pkgconf'
+	'zlib' 'python' 'ncurses' 'openssl' 'libx11' 'libuuid.so' 'yajl' 'libaio' 'glib2' 'pkgconf' 'git'
 	'bridge-utils' 'iproute2' 'inetutils' 'acpica' 'lib32-glibc' 'gnutls'
 	'vde2' 'lzo' 'pciutils' 'sdl2' 'systemd-libs'
 	'systemd' 'wget' 'pandoc' 'valgrind' 'git' 'bin86' 'dev86' 'bison' 'gettext' 'flex' 'pixman' 'ocaml' 'ocaml-findlib' 'fig2dev'
@@ -39,7 +49,7 @@ _stubdom_makedepends=('cmake')
 _qemu_makedepends=('ninja')
 
 _source=(
-	"https://downloads.xenproject.org/release/xen/$pkgver/$pkgname-$pkgver.tar.gz"{,.sig}
+	"git+https://xenbits.xen.org/git-http/xen.git#branch=stable-4.16"
 	"efi-xen.cfg"
 	"xen.conf"
 	"tmpfiles.conf"
@@ -52,7 +62,7 @@ _source=(
 
 )
 
-validpgpkeys=('23E3222C145F4475FA8060A783FE14C957E82BD9') # Xen.org Xen tree code signing (signatures on the xen hypervisor and tools) <pgp@xen.org>
+#validpgpkeys=('23E3222C145F4475FA8060A783FE14C957E82BD9') # Xen.org Xen tree code signing (signatures on the xen hypervisor and tools) <pgp@xen.org>
 
 
 # Follow the Xen securite mailing lists, and if a patch is applicable to our package
@@ -76,8 +86,7 @@ _stubdom_source=(
 
 # from cheap hack known as break_out_sums.sh
 _sha512sums=(
-        "eeabba9c263cd2425bca083e32b5ebfc6c716c00553759c144fd4b6f64a89836b260787fa25ba22c1f5c4ea65aaad7c95b8c2c1070d3377b1c43c9517aa7032a" # xen-4.16.1.tar.gz
-        "SKIP" # xen-4.16.1.tar.gz.sig
+		"SKIP"
         "1bbcbcd9fb8344a207409ec9f0064a45b726416f043f902ca587f5e4fa58497a759be4ffd584fa32318e960aa478864cc05ec026c444e8d27ca8e3248bd67420" # efi-xen.cfg
         "ccaa2ff82e4203b11e5dec9aeccac2e165721d8067e0094603ecaa7a70b78c9eb9e2287a32687883d26b6ceae6f8d2ad7636ddf949eb658637b3ceaa6999711b" # xen.conf
         "53ba61587cc2e84044e935531ed161e22c36d9e90b43cab7b8e63bcc531deeefacca301b5dff39ce89210f06f1d1e4f4f5cf49d658ed5d9038c707e3c95c66ef" # tmpfiles.conf
@@ -104,6 +113,7 @@ _stub_sums=(
         "4928b5b82f57645be9408362706ff2c4d9baa635b21b0d41b1c82930e8c60a759b1ea4fa74d7e6c7cae1b7692d006aa5cb72df0c3b88bf049779aa2b566f9d35" # tpm_emulator-0.7.4.tar.gz
         "021b958fcd0d346c4ba761bcf0cc40f3522de6186cf5a0a6ea34a70504ce9622b1c2626fce40675bc8282cf5f5ade18473656abc38050f72f5d6480507a2106e" # zlib-1.2.3.tar.gz
 )
+
 
 
 
@@ -147,32 +157,23 @@ else
 	_config_qemu="--with-system-qemu=/usr/bin/qemu-system-x86_64"
 fi
 
-_common_make_flags=(
-  "BOOT_DIR=${_boot_dir}"
-  "EFI_DIR=${_efi_dir}"
-  "EFI_MOUNTPOINT=${_efi_mountpoint}"
-  "XEN_VENDORVERSION=-${pkgrel}-arch"
-)
 
 # TODO: Setup users, dirs, etc.
 
 prepare() {
 
-	cd "${pkgbase}-${pkgver}"
+	cd "${pkgbase}"
 
 	if [ "${_build_stubdom}" == "true" ]; then
 
 		for file in "${_stubdom_source[@]}"; do
 			cp ../$(basename ${file}) stubdom/
+			echo "==> Applying GCC 12.1 fixes for stubdom..."
+			cp ../vtpm-gcc12-fixes.patch stubdom/
+			patch -p1 < ../add-stubdom-fixes.patch
 		done
 
 	fi
-
-	echo "==> Applying GCC 12.1 fixes..."
-	patch -p1 < ../gcc12-fixes.patch
-	cp ../vtpm-gcc12-fixes.patch stubdom/
-	patch -p1 < ../add-stubdom-fixes.patch
-
 
 	for patchurl in "${_patches[@]}"; do
 		patch=$(basename $patchurl)
@@ -189,7 +190,7 @@ prepare() {
 }
 
 build() {
-	cd "${pkgbase}-${pkgver}"
+	cd "${pkgbase}"
 
 	if [ "${_build_stubdom}" == "true" ]; then
 		echo "NOTE: Xen build with stubdom support."
@@ -250,7 +251,7 @@ package_xen() {
 	)
 
 
-	cd "${pkgbase}-${pkgver}"
+	cd "${pkgbase}"
 
 	make "${_common_make_flags[@]}" DESTDIR="$pkgdir" install
 
@@ -331,7 +332,7 @@ package_xen() {
 package_xen-docs() {
 	pkgdesc="Xen hypervisor documentation and man pages"
 	arch=("any")
-	cd "${pkgbase}-${pkgver}"
+	cd "${pkgbase}"
 	make "${_common_make_flags[@]}" DESTDIR="$pkgdir" install-docs
 }
 
@@ -341,7 +342,7 @@ package_xen-stubdom() {
 	arch=("x86_64")
 	depends=("xen")
 
-	cd "${srcdir}/${pkgbase}-${pkgver}/stubdom"
+	cd "${srcdir}/${pkgbase}/stubdom"
 	make DESTDIR="${pkgdir}" install
 }
 
@@ -350,7 +351,7 @@ package_xen-qemu-builtin() {
 	arch=("x86_64")
 	depends=("xen")
 
-	cd "${srcdir}/${pkgbase}-${pkgver}/tools/qemu-xen-build"
+	cd "${srcdir}/${pkgbase}/tools/qemu-xen-build"
 	make DESTDIR="${pkgdir}" install
 }
 
