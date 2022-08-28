@@ -1,0 +1,62 @@
+# Maintainer: Refutationalist <archlinux@sammulvey.com>
+pkgname=xen-qemu
+_srcname=qemu
+pkgver=7.0.0
+pkgrel=1
+pkgdesc="A xen-specific QEMU, built to qemu-builtin standards"
+arch=("x86_64")
+url="https://www.qemu.org"
+license=(GPL2 LGPL2.1)
+depends=()
+makedepends=(ninja meson)
+provides=(qemu-xen xen-qemu xen-qemu-builtin)
+conflicts=(xen-qemu-builtin)
+replaces=(xen-qemu-builtin)
+source=(
+	https://download.qemu.org/qemu-${pkgver}.tar.xz{,.sig}
+)
+sha512sums=('44ecd10c018a3763e1bc87d1d35b98890d0d5636acd69fe9b5cadf5024d5af6a31684d60cbe1c3370e02986434c1fb0ad99224e0e6f6fe7eda169992508157b1'
+            'SKIP')
+validpgpkeys=('CEACC9E15534EBABB82D3FA03353C9CEF108B584') # Michael Roth <flukshun@gmail.com>
+
+
+build() {
+
+	cd $srcdir
+	mkdir build
+	cd build
+
+	"${srcdir}/${_srcname}-${pkgver}/configure" \
+		--enable-xen \
+		--target-list=i386-softmmu \
+		--enable-trace-backend=log \
+		--prefix=/usr \
+		--libdir=/usr/lib/xen/lib \
+		--includedir=/usr/lib/xen/include \
+		--extra-cflags="-DXC_WANT_COMPAT_EVTCHN_API=1  -DXC_WANT_COMPAT_GNTTAB_API=1 -DXC_WANT_COMPAT_MAP_FOREIGN_API=1 -DXC_WANT_COMPAT_DEVICEMODEL_API=1" \
+		--extra-ldflags=-Wl,-rpath,/usr/lib/xen/lib \
+		--bindir=/usr/lib/xen/bin \
+		--datadir=/usr/share/qemu-xen \
+		--localstatedir=/var \
+		--docdir=/usr/lib/xen/share/doc \
+		--mandir=/usr/lib/xen/share/man \
+		--libexecdir=/usr/lib/xen/libexec \
+		--firmwarepath=/usr/lib/xen/share/qemu-firmware \
+		--disable-kvm \
+		--disable-docs \
+		--disable-guest-agent \
+		--python=python3 \
+		--cpu=x86_64 
+
+	ninja
+
+		
+
+
+
+}
+
+package() {
+	cd "${srcdir}/build"
+	make DESTDIR="$pkgdir/" install
+}
