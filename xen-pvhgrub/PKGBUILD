@@ -1,0 +1,61 @@
+# Maintainer: Refutationalist <archlinux@sammulvey.com>
+pkgname=xen-pvhgrub
+pkgver=2.11.119.3c60d90
+pkgrel=1
+_srcname=grub
+_commit=d9b4638c50b16d4722e66d334e2c1a674b4a45cc
+_gnulib_commit=9f48fb992a3d7e96610c4ce8be969cff2d61a01b
+pkgdesc="a version of GRUB2 for booting Xen PVH domUs"
+arch=(x86_64)
+url="https://www.gnu.org/software/grub/"
+license=(GPL3)
+makedepends=(git xz python texinfo gettext device-mapper)
+depends=(xen)
+options=(!buildflags)
+
+
+source=(
+	"git+https://git.savannah.gnu.org/git/grub.git#commit=${_commit}"
+	"git+https://git.savannah.gnu.org/git/gnulib.git#commit=${_gnulib_commit}"
+	"grub.cfg"
+)
+noextract=('grub.cfg')
+sha512sums=(
+	'SKIP'
+	'SKIP'
+	'a58744858b20f5eea047fb7278d28c33434280bcd90f2494e74bea0122ca08bc6447ec7955d6eee6d9e95ae7ca2e6ad2c5600d79c59b97e03e68e217e39bca43'
+)
+
+prepare() {
+	cd "$srcdir/${_srcname}"
+	./bootstrap  \
+		--gnulib-srcdir="${srcdir}/gnulib/" \
+		--no-git
+}
+
+
+build() {
+	cd "$srcdir/${_srcname}"
+
+	TARGET_LDFLAGS=-static ./configure  \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--with-platform=xen_pvh \
+		--enable-device-mapper
+
+	# this will compile a ton of stuff we'll never, ever need.
+	make
+
+	./grub-mkstandalone \
+		--grub-mkimage=./grub-mkimage \
+		-o pvhgrub \
+		-O i386-xen_pvh \
+		-d grub-core/ "/boot/grub/grub.cfg=../grub.cfg"
+}
+
+
+package() {
+	cd "$srcdir/${_srcname}"
+	mkdir -p "${pkgdir}/usr/lib/xen/bin"
+	install -m644 pvhgrub "${pkgdir}/usr/lib/xen/bin"
+}
