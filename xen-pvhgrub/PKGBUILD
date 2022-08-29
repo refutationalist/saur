@@ -18,11 +18,14 @@ source=(
 	"git+https://git.savannah.gnu.org/git/grub.git#commit=${_commit}"
 	"git+https://git.savannah.gnu.org/git/gnulib.git#commit=${_gnulib_commit}"
 	"grub.cfg"
+	"README.md"
 )
-noextract=('grub.cfg')
+noextract=('grub.cfg' 'README.md')
 sha512sums=('SKIP'
             'SKIP'
-            '538ec7d6e33baaf7d1c708ed1ae6313691a04c331fd7d2cc2b47f56f2b5c218c75081b20204be68934bf88b6497b937917555424e3a379e12a481921093d7ce8')
+            '538ec7d6e33baaf7d1c708ed1ae6313691a04c331fd7d2cc2b47f56f2b5c218c75081b20204be68934bf88b6497b937917555424e3a379e12a481921093d7ce8'
+            'f814f8559b10de2425cb96d5f1374fa317a781cc50dab883f8014535c9a13f5c98524bed5b8e05a272e849138b87db43e12790e0673d53ee683287e7779f1540')
+
 
 
 prepare() {
@@ -55,6 +58,7 @@ build() {
 
 package() {
 	cd "$srcdir/${_srcname}"
-	mkdir -p "${pkgdir}/usr/lib/xen/bin"
+	mkdir -p "${pkgdir}/usr/lib/xen/bin" "${pkgdir}/usr/share/doc/xen-pvh"
 	install -m644 pvhgrub "${pkgdir}/usr/lib/xen/bin"
+	install -m644 "${srcdir}/README.md" "${pkgdir}/usr/share/doc/xen-pvh"
 }
