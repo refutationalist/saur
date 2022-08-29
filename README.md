@@ -16,7 +16,7 @@ There's also a game I'm kind of addicted to.
 ## Standalone Packages
 
   * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) -- in AUR.  A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.  **In AUR.**
-  * [silentjack](https://aur.archlinux.org/packages/silentjack) -- recently adodpted, not often updated, fairly stable software. **In AUR**
+  * [silentjack](https://aur.archlinux.org/packages/silentjack) -- recently adodpted, not often updated, fairly stable software. **In AUR.**
   * [JMPX](http://jontio.zapto.org/hda1/paradise/jmpxencoder/jmpx.html) -- an FM stereo (MPX) encoder with fun widgets
   * [wsServer](https://github.com/Theldus/wsServer) -- A rather simple websocket library.   Currently points to my fork that allows binding to localhost and basic IPv6 support.
   * [rimworld](https://rimworldgame.com/) -- the non-steam Rimworld package from AUR, with the ability to add Ideology and a simpler method of adding future DLCs
@@ -29,12 +29,48 @@ There's also a game I'm kind of addicted to.
  
 ## Xen
 
- * [xen](https://aur.archlinux.org/packages/xen/) -- see below
+ * [xen](https://aur.archlinux.org/packages/xen/) -- the Xen virtualization platform 
+ * [xen-qemu](https://qemu.org) -- QEMU compiled for Xen
+ * [xen-pvhgrub](https://www.gnu.org/software/grub/) -- GRUB2 compiled for Xen PVH support
+
+### Building Xen
+
+It is recommended to build Xen packages in a clean VM or chroot.   Xen is a split package, and there are several options to building Xen:
+
+  1) ``build_stubdom`` -- Build the components to run Xen stubdoms, mainly for [dom0 disaggregation](https://wiki.xenproject.org/wiki/Dom0_Disaggregation).  Components for stubdom are broken off into ``xen-stubdom`` if built.  Defaults to false.
+  2) ``boot_dir``-- Your boot directory.  Defaults to ``/boot``.
+  3) ``efi_dir``, ``efi_mountpoint`` -- Your EFI directory and mountpoint.   Defaults to ``/boot``.
+
+Pass these arguments to makepkg as variables:
+
+```
+$ build_stubdom=true efi_dir="/boot/EFI" makepkg
+```
+
+If you build stubdom, note that it brings in a number of other components.   Also note that as of 4.16.2, this package uses the stable git branch rather than the release tarball.
+
+This PKGBUILD is split and will create the main ``xen`` package, a ``xen-docs`` documentation package, and optionally a ``xen-stubdom`` package holding the stubdom components.
+
+
+### QEMU for Xen
+
+*Attention Conservation Notice:* Build and install this package if you're running Xen on Arch.
+
+If you want to run PV or HVM domU's, PCI passthrough, or even VNC consoles on your PVH domU's, you need QEMU.  ``xen-qemu`` provides a QEMU compatible with Xen.   On the other hand, if you're running basic domUs in a PVH environment, QEMU is not needed.  But you'll probably want it anyway.
+
+Xen support in QEMU has been upstreamed for quite some time but QEMU in ``[extra]`` does not support it, as building it requires Xen libraries.  We have previously depended on a builtin version of QEMU that Xen builds, but it lags behind QEMU official and is difficult to patch.  As of 4.16.2, we now build QEMU for Xen separately from QEMU.  The build options are pulled directly from Xen's QEMU build and are designed to not interfere with QEMU from ``[extra]``.
+
+
+### xen-pvhgrub
+
+PVH is the new virtualization method and has a number of advantages.  This package is a version of GRUB2 that will allow a PVH domU to boot kernels installed inside the domU.   Instructions are available in the package directory.
+
+### Future Plans for Xen in Arch
+
+The Xen package has been in AUR for some time and I am only the most recent maintainer for the package.  As of 2022-08, I'd have to jump through a lot of hoops to get Xen into the repos so it's not a target.  That said, I'm trying to set things up so that bringing the packages into the repositories would not be too onerous.  Splitting QEMU off is a step forward, but moving to the stable branch in git might be a step back as the builds are less reproducable.  Pinning the build to a specific commit may help.  Also, signed commits from upstream would be good as we lost the ability to test the tarball against a GPG cert.
+
+The support for stubdoms from upstream is questionable, and several maintainers have attempted to phase out the support.  My comporomise has been to split stubdom off into a separate package.  As PVH gets support for things like PCI or GPU passthrough, the need for stubdom will become much smaller.
 
 
 I originally started working on a [Xen](https://xenproject.org) package for 4.13.1 and modern Arch because I needed a solution to keep working while others were working on upstreaming packages and (hopefully) getting Xen out of AUR and into the official repos, and I shared my work in the hopes of helping them out.  It didn't work out that way, and I find myself managing the AUR package.  I'm currently in the process of making the package fit for AUR and pushing the changes there.
-
-  * xen is the Xen package itself.  The PKGBUILD is a kitbash of what's in AUR combined with FFY00's work, with some simplifications and things I've wanted added on.  It creates `xen` and `xen-docs` packages.
-  * linux-pvh is a kernel installed on the dom0 for PVH.  As of May 2020, [PVH](https://wiki.xen.org/wiki/Xen_Project_Software_Overview#PVH_.28x86.29) only supports direct kernel booting, and this kernel provides that.   It is a vanilla kernel with modules and most drivers stripped out, the xenconfig defconfig applied, and stuff I used added directly to the kernel.  It does not require an initramfs, and nothing needs to be installed on a PVH domU.  Headers are compiled into the kernel for simplicty.  To use it, set `kernel = "/usr/share/linux-lts-pvh/kernel"` to your domU config.  It is a temporary thing until Xen's EFI booting method arrives.
-
 
