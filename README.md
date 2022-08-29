@@ -1,6 +1,6 @@
 # Sam's AUR
 
-This is a personal repo of packages for [Arch Linux](http://archlinux.org).  Some of these are forks wanting a merge, modifications of modified software, or in acouple of cases, packages I'm maintaining in AUR.
+This is a personal repo of packages for [Arch Linux](http://archlinux.org).  Some of these are forks wanting a merge, modifications of modified software, or in a couple of cases, packages I'm maintaining in AUR.
 
 Most of these packages are for use in my radio studio for shows including [Ask an Atheist with Sam Mulvey](https://atheist.radio), [Radio Tacoma KTAH-LP 101.9](http://radiotacoma.org), and [KTQA-LP](http://ktqa.org).
 
@@ -8,14 +8,14 @@ There's also a game I'm kind of addicted to.
 
 
 
-## My Software
+## My Stuff
   * [jack-webpeak](https://github.com/refutationalist/jack-webpeak) -- my fork of `jack-peak` which can output to a web socket.
   * [systemjack-git](https://github.com/refutationalist/systemjack) -- a scaffold for building audio systems in Arch Linux using JACK and systemd
   * [dumpload](https://github.com/refutationalist/dumpload) -- a basic web file dump
 
 ## Standalone Packages
 
-  * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) -- in AUR.  A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.  **In AUR.**
+  * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) -- A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.  **In AUR.**
   * [silentjack](https://aur.archlinux.org/packages/silentjack) -- recently adodpted, not often updated, fairly stable software. **In AUR.**
   * [JMPX](http://jontio.zapto.org/hda1/paradise/jmpxencoder/jmpx.html) -- an FM stereo (MPX) encoder with fun widgets
   * [wsServer](https://github.com/Theldus/wsServer) -- A rather simple websocket library.   Currently points to my fork that allows binding to localhost and basic IPv6 support.
