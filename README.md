@@ -71,6 +71,3 @@ The Xen package has been in AUR for some time and I am only the most recent main
 
 The support for stubdoms from upstream is questionable, and several maintainers have attempted to phase out the support.  My comporomise has been to split stubdom off into a separate package.  As PVH gets support for things like PCI or GPU passthrough, the need for stubdom will become much smaller.
 
-
-I originally started working on a [Xen](https://xenproject.org) package for 4.13.1 and modern Arch because I needed a solution to keep working while others were working on upstreaming packages and (hopefully) getting Xen out of AUR and into the official repos, and I shared my work in the hopes of helping them out.  It didn't work out that way, and I find myself managing the AUR package.  I'm currently in the process of making the package fit for AUR and pushing the changes there.
-
