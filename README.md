@@ -58,7 +58,7 @@ This PKGBUILD is split and will create the main ``xen`` package, a ``xen-docs`` 
 
 If you want to run PV or HVM domU's, PCI passthrough, or even VNC consoles on your PVH domU's, you need QEMU.  ``xen-qemu`` provides a QEMU compatible with Xen.   On the other hand, if you're running basic domUs in a PVH environment, QEMU is not needed.  But you'll probably want it anyway.
 
-Xen support in QEMU has been upstreamed for quite some time but QEMU in ``[extra]`` does not support it, as building it requires Xen libraries.  We have previously depended on a builtin version of QEMU that Xen builds, but it lags behind QEMU official and is difficult to patch.  As of 4.16.2, we now build QEMU for Xen separately from QEMU.  The build options are pulled directly from Xen's QEMU build and are designed to not interfere with QEMU from ``[extra]``.
+Xen support in QEMU has been upstreamed for quite some time but QEMU in ``[extra]`` does not support it, as building it requires Xen libraries.  We have previously depended on a builtin version of QEMU that Xen builds, but it lags behind QEMU official and is difficult to patch.  As of 4.16.2, we now build QEMU for Xen separately.  The build options are pulled directly from Xen's built-in build and are designed to not interfere with QEMU from ``[extra]``.
 
 
 ### xen-pvhgrub
