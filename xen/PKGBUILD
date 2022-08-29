@@ -30,9 +30,10 @@ _common_make_flags=(
 
 pkgbase=xen
 pkgname=("xen" "xen-docs")
-pkgver=4.16.stable
+pkgver=4.16.2
+_branch="stable-4.16"
 pkgrel=1
-pkgdesc='Open-source type-1 or baremetal hypervisor'
+pkgdesc='Open-source type-1 or baremetal hypervisor - stable branch'
 arch=('x86_64')
 url='https://xenproject.org/'
 license=('GPL2')
@@ -47,7 +48,7 @@ makedepends=(
 _stubdom_makedepends=('cmake')
 
 _source=(
-	"git+https://xenbits.xen.org/git-http/xen.git#branch=stable-4.16"
+	"git+https://xenbits.xen.org/git-http/xen.git#branch=${_branch}"
 	"efi-xen.cfg"
 	"xen.conf"
 	"tmpfiles.conf"
@@ -170,6 +171,11 @@ prepare() {
 	sed 's,/var/run,/run,g' -i tools/xenmon/xenbaked.c
 	sed 's,/var/run,/run,g' -i tools/xenmon/xenmon.py
 	sed 's,/var/run,/run,g' -i tools/pygrub/src/pygrub
+}
+
+pkgver() {
+	cd "${srcdir}/${pkgbase}"
+	./version.sh --full xen/Makefile
 }
 
 build() {
