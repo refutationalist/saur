@@ -47,6 +47,11 @@ makedepends=(
 ) # last line from namcap, these depends are the xen depends
 _stubdom_makedepends=('cmake')
 
+optdepends=(
+	'xen-qemu: needed for PV and HVM domUs'
+	'xen-pvhgrub: bootloader for PVH domains'
+)
+
 _source=(
 	"git+https://xenbits.xen.org/git-http/xen.git#branch=${_branch}"
 	"efi-xen.cfg"
