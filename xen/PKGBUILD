@@ -30,9 +30,9 @@ _common_make_flags=(
 
 pkgbase=xen
 pkgname=("xen" "xen-docs")
-pkgver=4.16.2
+pkgver=4.16.3pre
 _branch="stable-4.16"
-pkgrel=2
+pkgrel=1
 pkgdesc='Open-source type-1 or baremetal hypervisor - stable branch'
 arch=('x86_64')
 url='https://xenproject.org/'
@@ -59,50 +59,8 @@ _source=(
 
 # Follow the Xen securite mailing lists, and if a patch is applicable to our package
 # add the URL here.
+# NOTE: Patch order is important.
 _patches=(
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-oxenstored-01.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-oxenstored-02.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-oxenstored-03.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-oxenstored-04.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-oxenstored-05.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-oxenstored-06.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-oxenstored-07.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-oxenstored-08.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-01.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-02.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-03.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-04.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-05.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-06.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-07.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-08.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-09.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-10.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-11.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-12.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-13.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-14.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-15.patch"
-	"https://xenbits.xen.org/xsa/xsa326/xsa326-4.16-xenstored-16.patch"
-	"https://xenbits.xen.org/xsa/xsa412-4.16.patch"
-	"https://xenbits.xen.org/xsa/xsa414.patch"
-	"https://xenbits.xen.org/xsa/xsa415.patch"
-	"https://xenbits.xen.org/xsa/xsa416-4.16.patch"
-	"https://xenbits.xen.org/xsa/xsa417.patch"
-	"https://xenbits.xen.org/xsa/xsa418/xsa418-4.16-01.patch"
-	"https://xenbits.xen.org/xsa/xsa418/xsa418-4.16-02.patch"
-	"https://xenbits.xen.org/xsa/xsa418/xsa418-4.16-03.patch"
-	"https://xenbits.xen.org/xsa/xsa418/xsa418-4.16-04.patch"
-	"https://xenbits.xen.org/xsa/xsa418/xsa418-4.16-05.patch"
-	"https://xenbits.xen.org/xsa/xsa418/xsa418-4.16-06.patch"
-	"https://xenbits.xen.org/xsa/xsa418/xsa418-4.16-07.patch"
-	"https://xenbits.xen.org/xsa/xsa419/xsa419-oxenstored.patch"
-	"https://xenbits.xen.org/xsa/xsa419/xsa419-xenstored-01.patch"
-	"https://xenbits.xen.org/xsa/xsa419/xsa419-xenstored-02.patch"
-	"https://xenbits.xen.org/xsa/xsa419/xsa419-xenstored-03.patch"
-	"https://xenbits.xen.org/xsa/xsa420.patch"
-	"https://xenbits.xen.org/xsa/xsa421/xsa421-01.patch"
-	"https://xenbits.xen.org/xsa/xsa421/xsa421-02.patch"
 )
 
 
@@ -134,49 +92,6 @@ _sha512sums=(
 
 
 _patch_sums=(
-	"71f8f01188b5c5c33c73b66a5e34ec35d566503b5beda1af395203d05bc3e451f451b48382e582addcd76dd3311fba01f1eaaebad0c590dd869fc0badf62d4f4" # xsa326-4.16-oxenstored-01.patch
-	"5561baec5eb3136c2847112dc005fc0554a79f7f0ae004b80e7e8db38a89a83717478f51fe6eb168c927d65a837291d4c09523aca72ad01636eb7bec6e952088" # xsa326-4.16-oxenstored-02.patch
-	"0c9eba7e2d0fa577c6801bab501f20479b9134543a0b2368dde59a66828daee2f2972a814d25207974f757b37692b2cf63f88442653441916f7ce51b9b0c5469" # xsa326-4.16-oxenstored-03.patch
-	"a29a1f85a250e5f94540ae81575e294abcbcafdb1c02803af67e6bda15b8ce896e8c1c5dfedc2bee61ba6b0592c9b17baaebcbf968e453d22559480fb37b8f85" # xsa326-4.16-oxenstored-04.patch
-	"7523db46a2509d2ab50c33fbef2cb8144449a30f3e7b5258f2c8a2600ef4b714a9ca25382a3182112358d042dd2dfb4a97e41f4d11bcef2fd273417992eafdd4" # xsa326-4.16-oxenstored-05.patch
-	"2fe29fe7710d34e4db8cd6aa1ff349df5d70062ea767548d0fd68376a9dfa0670fce88c4dc7922ae0b311d2e9df4aa79318c16fa8612e3247768df1c4fb6c93f" # xsa326-4.16-oxenstored-06.patch
-	"4a1c07fb1503ab49ee560b98b0f6f7a78616f1d391c7332325f7fd50e463bee9ecc8066c5e37f66c8640ee55d4fd6ecd4548e38ab46c83306369d754f7504d3a" # xsa326-4.16-oxenstored-07.patch
-	"239434958839aec4aa4b8c8ddf254ba44e7b4af817e3218d86b07acf2edbf86549f99b2692d788f277afaf3dab486b4d4cff84e3b15ea972892f67e0ca841baa" # xsa326-4.16-oxenstored-08.patch
-	"a735eb2da031e5ba6a255c65a112c099a1d248addb6e51d595ebc033a338ee7ed203bf592b18ddda070441a7ed04ae80c5b16d8f7a171468b43be97c4f0403fb" # xsa326-4.16-xenstored-01.patch
-	"aa24fb53734a46c9b3f96f3d58145bc14c865380452a7992bd6eb883b4a4100c0183090bb7a6d294d291d60bec26fbf80a33108fab325074f87995ab32712d0d" # xsa326-4.16-xenstored-02.patch
-	"7c72ea534a867b156f5c0358facc53c13f8f6ad293d1241786c4b7beab417835110e31ffbd2f9cf186c391dc3a3436fb0b1eca670da87d4d7d971fa15c09defd" # xsa326-4.16-xenstored-03.patch
-	"7b51e6dc124f40ba7f35c4e87544fa09a010e1ca22f898d4afed520cbb678b584be92ac42ec7d20f5e789a73d63c0a4af03eca07bd55516f92e041fad1a0271d" # xsa326-4.16-xenstored-04.patch
-	"47839b019063696be185d982b445ce86655a578c0aa55c4d1a862d457a60440c9bf1e5f62afae215707de9324cff6a48b464fbf3ac3ce89eadbf6fe6fb4de967" # xsa326-4.16-xenstored-05.patch
-	"866011ef8dce9b8977b6c148e109e444c2b42fea1eba37ef9f8e2df1bc22dcf1e8a2238d8253db1d206a31201bf8f6711001a082f711bf1fee890d9a16e42c80" # xsa326-4.16-xenstored-06.patch
-	"c1fcf2aa976100fd2ffc7ee60f78dc0d2f4a6370b0bfc6c1b8317b50a16f4ae4535355c2e025501364afcea336bbc2d35afe7a1db890131a2931df7ab1a9e6e2" # xsa326-4.16-xenstored-07.patch
-	"2e686235a070c00be3733b3f2222b2b04c94095a5b619136131e77e3bb0dd04b0a54791189d913ac9c0ef71ab58647dece2897867c46345f5f53c1f24bec3129" # xsa326-4.16-xenstored-08.patch
-	"04bfedff12052024a46f3fde3e2368ae3e12fe5c92c9793c8023881595a5364eb385dee5bd4ae8038704e75d3f45eedc9555b974edfe8322c032c2b6e07416ad" # xsa326-4.16-xenstored-09.patch
-	"500bcf0469b4250f4d5c86aa5f3fb432acdb2b79c099236aa4175afbe5c644f6a8a56a8fec99f89ac26983cac462fe30d9e2f985ca98da75fc2708d69284730e" # xsa326-4.16-xenstored-10.patch
-	"96cb1a9369a745c968b92abe2680f597a29a0fd4695440c45899aef80fed13dc2f5ab2c5435e02075c6c82a84def7933d5b48a3d6ecd27ba2a44eab2dedf8930" # xsa326-4.16-xenstored-11.patch
-	"349f9c4200940a026be472e0d4585088d0e291ecfe160bc6f3024a3d3064a2354c0119576eb6e0e9112c16b3e4e7069de157bd457a713759616bdcc6f534c3dc" # xsa326-4.16-xenstored-12.patch
-	"56a23ee9ec375c6c5187d38b070529a869d574af7df820b9b1d67f0d0f7e004b22df97cc236ea20d5ef790a348a07026df8b30e006ecb52557fa548d8af32579" # xsa326-4.16-xenstored-13.patch
-	"89b9f4017d893e0b87bc945892094d33dced8f69e5193670876cee89c9515f55d26362a385f1a6eb337b146f0f6c5ccd8c96838d005d02c2b0a3913243469975" # xsa326-4.16-xenstored-14.patch
-	"5756c2c0c831c52282cda5cfd9428728393820dd3f8806e1859123b49fdd8595484826108696e19198a5fe23060aa79f6cd49df00c75dd00b6ab620a1879458f" # xsa326-4.16-xenstored-15.patch
-	"f87796e50f9741b3b358a1118de16a5a7a81b098c61614eca9a03cb08e261cb46245a2a8cb815519e5dbd92d29785dd7449536ddcf2e1054f79be70c2534b6e6" # xsa326-4.16-xenstored-16.patch
-	"c7042ef783303826b8a5e2094786685874bb2da5ed62f04db7125921248b5ea2132182d85dd016bb98a325cac3b16c33812747233181b90a57d855a7a63fe8d3" # xsa412-4.16.patch
-	"e53741b5f1915be945e3f7c588fe468254ac46fe1b48a7c796e4ce9ef121abd443834d37d280420288753664594647b0003d30dc96e727d118544b4adec24fa6" # xsa414.patch
-	"5f0b7bcf92bf6269171aace395d97a0808d6fc3bc460e24c05cfb8b31f8bec2d49fc85b548b459ac3c199fd8af6a4bf36c26ab9944da9a2ff5cc3056583c4266" # xsa415.patch
-	"1705c327fb77097530a113cd72966b949a5fc67856b3a696c4e6f9daa0331369ad7ebb73bf1d793e09cf678251eb59f07ea894044121ae45ee0c5cd9977498fa" # xsa416-4.16.patch
-	"7dc6db362bcd1f97a9ded13f86d298d24fe58f0bd8caaa85fbef8bc977342a3dfe801341791c377d9c30ad11bc9d1ba7f342de270251d026f7822e7c1cbeb555" # xsa417.patch
-	"b9a2f7918fe2efba6ed4451ecb6e7111499cf0ba782367045f1d498042c0cb29bb5fc2ba6cbbb916f368f13c0041b5e02633f824cc1914e36d788c904f03ad81" # xsa418-4.16-01.patch
-	"1f4c2fb926428f033babdae14b1b19a68d4b0ad0892669140444e88407210844e13d8dd6c4188d8c1619816b26c1b8d3f9f084b1d5ef00b9d3ee9466a85e4136" # xsa418-4.16-02.patch
-	"1ecd0d9894ebd9fb4ca0b42ed5dbde05fd5fb0bc6fc781e6836b2773e9ed3ea41af43a5f962ee4c6a2bb63f480b2dba79f6ddc8ac7404ff12ccce0fab8a312a9" # xsa418-4.16-03.patch
-	"47406068b1aadd1612ad0333b2ed35bb28a72c3a19d3bd3e332778e5c099b2e50407203a339ac08127f16f280d91ef177fe56f5b6c07e936b927a3ff6437dbe1" # xsa418-4.16-04.patch
-	"54f2f7ee1f36ca1b5277f18152b8fb8e7fbfdf356aa384c4bc1024b173cd2323348e6f6d6d1f34c93d3500ac3abe55b3caf5930e2f6a71c2fe5edc7b77c914ec" # xsa418-4.16-05.patch
-	"b7f1e067ccd4c78e0bb1f75a5735aede31bff9bd9c9383d148da42b927cb291f8afc59be25a6043d167fcfba2c2c18905c373f06c10c166ca642b4360283c062" # xsa418-4.16-06.patch
-	"e863d58d9daa408a785bd8a553809c1e39fd0813c5da836aa8be41d75fc1c9c17233c5feac95635215b62a4d0ed1ae4fde169ec0d46d0ef58664ebaa4c39eecf" # xsa418-4.16-07.patch
-	"aa2d281458a62db5d6d3c39194ffc6f82b7cedd17a28eabd972316c088ee5ef11c766625e1f9edce396069ca391c284df2a3bcc2dfa7dddf35d08a77e978f045" # xsa419-oxenstored.patch
-	"dc0f2facb693b35a7bc381e86a274dce2a5abc8afcd467dd13c5a2e7d6068a37e2aa6cecb08cd6d5169de39bfe6feba2d64d78ac2157b06f8d643eff36b8c083" # xsa419-xenstored-01.patch
-	"dd07b5ea71cec5304970aeb36a48393e9180b28e68023dc0176382cc698a85b82ecf9dd9d02d03e18a6f15b8abfcc3082a20fdc6e09e05011a73dc1959370d52" # xsa419-xenstored-02.patch
-	"cf2b9ffea583f1208a8cdce382bfdb367c2891ea70e9d6dc3d40e7696999f5c32a28900f65ce1728c1a0c02e3f7542f483d806c7aa619a8e99df0c30279825ef" # xsa419-xenstored-03.patch
-	"a6111459a12555f185f0902bce92f92d4987166ef2b98dd446d416d7a61536b2461d63e92a5d304c3ec753cdf2b13be71ced41aa328b7d121decb19505255e93" # xsa420.patch
-	"7c15ed211beb2bf56478107d4b4af70332c46e2789f10e7124a6b7bca708c04e7bca5b276ad1fd21151aa71c1c4cc4e7c1da419a610864a0eda5c54b5d80ed22" # xsa421-01.patch
-	"572a4f30459fab65b408d8667e9bef09d95397b476508dcbbc89d4a57a8a93b4125b93da7f570ea5b6bbb6458a44bfe1a61a7001d43116ba560accc1205210fb" # xsa421-02.patch
 )
 
 
@@ -259,7 +174,7 @@ prepare() {
 
 pkgver() {
 	cd "${srcdir}/${pkgbase}"
-	./version.sh --full xen/Makefile
+	./version.sh --full xen/Makefile | sed 's/-//'
 }
 
 build() {
@@ -280,7 +195,8 @@ build() {
 		--with-system-qemu=/usr/lib/xen/bin/qemu-system-i386 \
 		--with-sysconfig-leaf-dir=conf.d \
 		--with-system-ovmf=/usr/share/ovmf/x64/OVMF.fd \
-		--with-system-seabios=/usr/share/qemu/bios-256k.bin
+		--with-system-seabios=/usr/share/qemu/bios-256k.bin \
+		--disable-ocaml
 
 	make "${_common_make_flags[@]}"
 }
