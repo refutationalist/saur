@@ -10,11 +10,17 @@ do_sums() {
 	local files=("$@")
 
 
+
 	echo "${name}=("
 	for file in "${files[@]}"; do
-		local bn=$(basename $file)
-		local cksum=($(sha512sum "${bn}"))
-		printf "\t\"%s\" # %s\n" $cksum $bn
+
+		if [[ $file == *"git"* ]]; then
+			echo -e "\t\"SKIP\""
+		else
+			local bn=$(basename $file)
+			local cksum=($(sha512sum "${bn}"))
+			printf "\t\"%s\" # %s\n" $cksum $bn
+		fi
 	done
 	printf ")\n\n\n"
 }
