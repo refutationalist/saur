@@ -2,7 +2,7 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 # With help from the official bind PKGBUILD
 pkgname=bind-tooling
-pkgver=9.18.6
+pkgver=9.18.11
 pkgrel=1
 pkgdesc="The Arch Way for me, but not for thee.  (dig, host, nslookup)"
 arch=("x86_64" "aarch64")
@@ -11,9 +11,11 @@ license=('MPL2')
 depends=(libxml2 json-c libidn2 libuv lmdb)
 conflicts=("bind" "bind-tools")
 replaces=("bind-tools")
-validpgpkeys=('7E1C91AC8030A5A59D1EFAB9750F3C87723E4012') #ISC Code Signing Key 2021 – 2022 (codesign@isc.org)
+validpgpkeys=('D99CCEAF879747014F038D63182E23579462EFAA' #Michal Nowak
+              '706B6C28620E76F91D11F7DF510A642A06C52CEC') #Michał Kępień
+
 source=("https://ftp.isc.org/isc/bind9/${pkgver}/bind-${pkgver}.tar.xz"{,.asc})
-sha256sums=('d43a0fed03c774d1685d203598218c0b7774a88fcc390a0170710d5feb7fbff1'
+sha256sums=('8ff3352812230cbcbda42df87cad961f94163d3da457c5e4bef8057fd5df2158'
             'SKIP')
 
 build() {
