@@ -17,7 +17,6 @@ There's also a game I'm kind of addicted to.
 
   * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) -- A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.  **In AUR.**
   * [silentjack](https://aur.archlinux.org/packages/silentjack) -- recently adodpted, not often updated, fairly stable software. **In AUR.**
-  * [JMPX](http://jontio.zapto.org/hda1/paradise/jmpxencoder/jmpx.html) -- an FM stereo (MPX) encoder with fun widgets
   * [wsServer](https://github.com/Theldus/wsServer) -- A rather simple websocket library.   Currently points to my fork that allows binding to localhost and basic IPv6 support.
   * [rimworld](https://rimworldgame.com/) -- the non-steam Rimworld package from AUR, with the ability to add Ideology and a simpler method of adding future DLCs
   * [jack_capture](https://github.com/refutationalist/jack_capture) -- This is my personal fork of jack_capture.  My changes have been merged but there hasn't been a release for them yet.  Use [jack_capture-git](https://aur.archlinux.org/packages/jack_capture-git) in AUR.
