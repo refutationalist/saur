@@ -1,0 +1,52 @@
+# Maintainer: Sam Mulvey <code@ktqa.org>
+pkgname=novnc-lighttpd
+pkgver=1.4.0
+pkgrel=0
+epoch=
+pkgdesc="noVNC simplified for lighttpd and defined connection"
+arch=("any")
+url="https://novnc.com"
+license=('MPL2')
+backup=(
+	etc/webapps/novnc-lighttpd/settings.js
+)
+source=(
+	"https://github.com/novnc/noVNC/archive/refs/tags/v${pkgver}.tar.gz"
+	"settings.js"
+	"uijs.patch"
+)
+noextract=("settings.js" "uijs.patch")
+
+sha256sums=('89b0354c94ad0b0c88092ec7a08e28086d3ed572f13660bac28d5470faaae9c1'
+            'eb01589d5b6adc32af30ab67902452a5cb6cb179ce897ec97305308c35573ae5'
+            '879c336fdd34d9bd9a245e765c5b9fa24ea1c54c880726cd3d9dd30c85dd2314')
+
+prepare() {
+	cd "${srcdir}/noVNC-${pkgver}"
+
+	# patch
+	cd app
+	patch -p1 ui.js "${srcdir}/uijs.patch"
+
+	# remove cruft
+	cd ..
+	rm -Rf AUTHORS docs/ karma.conf.js tests \
+		package.json README.md snap/ utils/ vnc_lite.html
+	mv vnc.html index.html
+
+
+}
+
+package() {
+
+	mkdir -p "${pkgdir}/etc/webapps/novnc-lighttpd" \
+		"${pkgdir}/usr/share/webapps" \
+		"${pkgdir}/usr/share/novnc-lighttpd"
+
+	cp -R "${srcdir}/noVNC-${pkgver}" "${pkgdir}/usr/share/webapps/novnc-lighttpd"
+	mv "${pkgdir}/usr/share/webapps/novnc-lighttpd/LICENSE.txt" \
+		"${pkgdir}/usr/share/novnc-lighttpd"
+
+	cp "${srcdir}/settings.js" "${pkgdir}/etc/webapps/novnc-lighttpd"
+	ln -sv /etc/webapps/novnc-lighttpd/settings.js "${pkgdir}/usr/share/webapps/novnc-lighttpd"
+}
