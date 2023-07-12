@@ -1,11 +1,15 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 pkgname=novnc-lighttpd
 pkgver=1.4.0
-pkgrel=0
+pkgrel=1
 epoch=
 pkgdesc="noVNC simplified for lighttpd and defined connection"
 arch=("any")
 url="https://novnc.com"
+optdepends=(
+	'lighttpd: the server this is designed for'
+	'tigervnc: standard VNC server'
+)
 license=('MPL2')
 backup=(
 	etc/webapps/novnc-lighttpd/settings.js
@@ -14,12 +18,15 @@ source=(
 	"https://github.com/novnc/noVNC/archive/refs/tags/v${pkgver}.tar.gz"
 	"settings.js"
 	"uijs.patch"
+	"lighttpd.conf-example"
 )
 noextract=("settings.js" "uijs.patch")
 
 sha256sums=('89b0354c94ad0b0c88092ec7a08e28086d3ed572f13660bac28d5470faaae9c1'
             'eb01589d5b6adc32af30ab67902452a5cb6cb179ce897ec97305308c35573ae5'
-            '879c336fdd34d9bd9a245e765c5b9fa24ea1c54c880726cd3d9dd30c85dd2314')
+            '879c336fdd34d9bd9a245e765c5b9fa24ea1c54c880726cd3d9dd30c85dd2314'
+            '8fe88d339af1e163db38cab5774bd3e07c91e8d698b885459e976a6fb276a299')
+
 
 prepare() {
 	cd "${srcdir}/noVNC-${pkgver}"
@@ -46,6 +53,7 @@ package() {
 	cp -R "${srcdir}/noVNC-${pkgver}" "${pkgdir}/usr/share/webapps/novnc-lighttpd"
 	mv "${pkgdir}/usr/share/webapps/novnc-lighttpd/LICENSE.txt" \
 		"${pkgdir}/usr/share/novnc-lighttpd"
+	cp "${srcdir}/lighttpd.conf-example" "${pkgdir}/usr/share/novnc-lighttpd"
 
 	cp "${srcdir}/settings.js" "${pkgdir}/etc/webapps/novnc-lighttpd"
 	ln -sv /etc/webapps/novnc-lighttpd/settings.js "${pkgdir}/usr/share/webapps/novnc-lighttpd"

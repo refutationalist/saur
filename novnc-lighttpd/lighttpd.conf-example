@@ -1,0 +1,19 @@
+
+# It is presumed you've done the proper 
+# authentication bits
+
+# Load Modules
+server.modules += ( "mod_wstunnel", "mod_alias" )
+
+# Create Tunnel
+$HTTP["url"] =~ "^/console/socket" {
+	wstunnel.server = ( "" => ( ( "host" => "127.0.0.1", "port" => "5900" ) ) )
+	wstunnel.frame-type = "binary" 
+	wstunnel.ping-interval = 30
+	server.stream-request-body  = 2
+	server.stream-response-body = 2
+}
+
+# Alias flat files
+alias.url += ( "/console" => "/usr/share/webapps/novnc-lighttpd" )
+
