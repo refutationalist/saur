@@ -1,0 +1,11 @@
+## It's assumed that PHP is already configured
+
+# TFM
+server.modules += ( "mod_setenv" )
+alias.url += ( "/files" => "/usr/share/webapps/tinyfilemanager" )
+$HTTP["url"] =~ "^/files" {
+	setenv.add-environment = (
+		"TFM_CONFIG" => "/etc/webapps/tinyfilemanager/config.php"
+	)
+}
+

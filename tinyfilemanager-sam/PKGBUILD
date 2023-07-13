@@ -1,0 +1,41 @@
+# Maintainer: Sam Mulvey <code@ktqa.org>
+pkgname=tinyfilemanager-sam
+pkgver=r367.8280878
+pkgrel=1
+pkgdesc="Web based, simple, fast and small file manager, refutationalist version"
+arch=('any')
+url="https://github.com/refutationalist/tinyfilemanager"
+license=('GPL3')
+depends=('php' 'zip' 'tar')
+backup=(etc/webapps/tinyfilemanager/*)
+source=(
+	"git+https://github.com/refutationalist/tinyfilemanager"
+	"config.php.example::https://tinyfilemanager.github.io/config-sample.txt"\
+	"lighttpd.conf.example"
+)
+sha256sums=('SKIP'
+            '2a1d086ce777b6588e2a243bf2d8a01117b07c91217d238a4c5a343a6b53d91a'
+            'da833cb58b8981f2123a4ce4fbfbc6661bb0ae8080cdd5c763e04ec1c48ddba4')
+
+
+
+
+pkgver() {
+	cd "${srcdir}/tinyfilemanager"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "${srcdir}/tinyfilemanager"
+	php make_offline.php
+}
+
+
+package() {
+	mkdir -p "${pkgdir}/usr/share/webapps"  \
+		"${pkgdir}/etc/webapps/tinyfilemanager" \
+		"${pkgdir}/usr/share/tinyfilemanager"
+
+	cp -R "${srcdir}/tinyfilemanager/offline" "${pkgdir}/usr/share/webapps/tinyfilemanager"
+	cp "${srcdir}/config.php.example" "${srcdir}/lighttpd.conf.example" "${pkgdir}/usr/share/tinyfilemanager"
+}
