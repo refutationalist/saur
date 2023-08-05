@@ -1,0 +1,41 @@
+# Maintainer: Sam Mulvey <code@ktqa.org>
+_pkgname=aooserver
+pkgname="${_pkgname}-git"
+pkgver=r22.b495747
+pkgrel=1
+pkgdesc="sonobus connection server"
+arch=('x86_64' 'armv7h' 'aarch64')
+url="https://github.com/essej/aooserver"
+license=('GPL3')
+
+
+source=(
+	'git+https://github.com/essej/aooserver'
+	'mutex_fix.patch'
+)
+sha256sums=('SKIP'
+            '9fc98281acda668f7f04198d68b9804feb53d195b1e9a6e666793d17c3640386')
+
+
+
+pkgver() {
+	cd "$srcdir/$_pkgname"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "$srcdir/$_pkgname"
+	patch -p1 < ../mutex_fix.patch
+}
+	
+
+
+build() {
+	cd "${srcdir}/${_pkgname}/Builds/LinuxMakefile"
+	CONFIG=Release make
+}
+
+package() {
+	mkdir -p "${pkgdir}/usr/bin"
+	install -m755 "${srcdir}/${_pkgname}/Builds/LinuxMakefile/build/aooserver" "${pkgdir}/usr/bin"
+}
