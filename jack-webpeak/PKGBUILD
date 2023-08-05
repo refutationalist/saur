@@ -1,12 +1,12 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
 pkgname=jack-webpeak-git
-pkgver=20200816.da04734
-pkgrel=3
+pkgver=20220507.64a8ac1
+pkgrel=1
 pkgdesc="simple peak-signal meter for JACK with websocket support"
 arch=('x86_64' 'aarch64')
 url="https://github.com/refutationalist/jack-webpeak"
 license=('GPL2')
-depends=('jack' 'libwebsock')
+depends=('jack' 'wsserver')
 provides=('jack-webpeak')
 makedepends=('git' 'pkgconf') 
 optdepends=(
