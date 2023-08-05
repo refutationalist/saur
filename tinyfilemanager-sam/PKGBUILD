@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 pkgname=tinyfilemanager-sam
-pkgver=r367.8280878
+pkgver=r368.7e78965
 pkgrel=1
 pkgdesc="Web based, simple, fast and small file manager, refutationalist version"
 arch=('any')
