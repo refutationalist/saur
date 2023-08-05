@@ -12,11 +12,11 @@ license=('GPL3')
 source=(
 	'git+https://github.com/essej/aooserver'
 	'mutex_fix.patch'
+	'service'
 )
 sha256sums=('SKIP'
-            '9fc98281acda668f7f04198d68b9804feb53d195b1e9a6e666793d17c3640386')
-
-
+        '9fc98281acda668f7f04198d68b9804feb53d195b1e9a6e666793d17c3640386'
+        '6be1a948ae16c4fecc4fee70c69dabe0110db90eb1f23d5030dffab95736d6c5')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
@@ -27,8 +27,6 @@ prepare() {
 	cd "$srcdir/$_pkgname"
 	patch -p1 < ../mutex_fix.patch
 }
-	
-
 
 build() {
 	cd "${srcdir}/${_pkgname}/Builds/LinuxMakefile"
@@ -36,6 +34,7 @@ build() {
 }
 
 package() {
-	mkdir -p "${pkgdir}/usr/bin"
+	mkdir -p "${pkgdir}/usr/bin" "${pkgdir}/usr/lib/systemd/system"
 	install -m755 "${srcdir}/${_pkgname}/Builds/LinuxMakefile/build/aooserver" "${pkgdir}/usr/bin"
+	install -m644 "${srcdir}/service" "${pkgdir}/usr/lib/systemd/system/aooserver.service"
 }
