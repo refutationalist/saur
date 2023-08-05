@@ -6,6 +6,7 @@ pkgrel=1
 pkgdesc="sonobus connection server"
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://github.com/essej/aooserver"
+depends=(curl)
 license=('GPL3')
 
 
