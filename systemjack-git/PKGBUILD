@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 pkgname=systemjack-git
-pkgver=r29.30cd324
+pkgver=r33.2218d07
 pkgrel=1
 pkgdesc="running JACK audio apps via systemd"
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -25,6 +25,7 @@ optdepends=(
 	'calf: an effects rack'
 	'ffmpeg: icecast streaming and other misc'
 	'mumble: low latency streaming over the internet'
+	'sonobus: better low latency audio transport'
 	'non-mixer: a software mixer'
 	'meterbridge: graphical metering in patchpanel'
 	'silentjack: silence detection'
