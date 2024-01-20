@@ -1,0 +1,39 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=jackwsmix
+pkgver=20240119.a69ae62
+pkgrel=1
+pkgdesc="jackminimix with websocket support"
+arch=('x86_64' 'aarch64')
+url="https://github.com/refutationalist/jackwsmix"
+license=('GPL2')
+depends=('jack' 'wsserver' 'json-c')
+provides=('jackwsmix')
+makedepends=('git') 
+
+source=(
+	'git+https://github.com/refutationalist/jackwsmix'
+)
+sha256sums=('SKIP')
+
+
+pkgver() {
+	cd "${srcdir}/${pkgname%-git}"
+	git log -1 --format='%cd.%h' --date=short | tr -d -
+}
+
+prepare() {
+	cd "${srcdir}/${pkgname}"
+	./autogen.sh
+	./configure --prefix=/usr
+}
+
+build() {
+	cd "$srcdir/${pkgname}"
+	make
+}
+
+package() {
+	cd "$srcdir/${pkgname}"
+	make DESTDIR="$pkgdir/" install
+
+}
