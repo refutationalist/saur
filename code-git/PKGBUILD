@@ -1,5 +1,5 @@
 pkgname=code-git
-pkgver=20240123.008146e0db
+pkgver=20240124.048cf99814
 pkgrel=1
 pkgdesc="Collabora Online Development Edition -- compiled from source"
 arch=("x86_64")
