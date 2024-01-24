@@ -1,0 +1,91 @@
+pkgname=code-git
+pkgver=20240123.008146e0db
+pkgrel=1
+pkgdesc="Collabora Online Development Edition -- compiled from source"
+arch=("x86_64")
+url="https://collaboraonline.github.io/"
+license=('MPL')
+depends=('cpio' 'collaboraoffice-bin' 'poco' 'libpng' 'python-lxml' 'python-polib')
+makedepends=('collaboraoffice-bin-headers' 'npm' 'cppunit' 'rsync')
+optdepends=()
+install=install
+source=("git+https://github.com/CollaboraOnline/online.git" "sysusers" "tmpfiles")
+sha256sums=('SKIP'
+            '6053850ab1e3ce4607c98c2683ce260154305aa68205006d325d067e3f19c5b0'
+            '2b211d7635884c91b404eb2d81be8a3fe5dfd506212791787d129820548d485f')
+#options=(!strip)
+backup=(
+  etc/coolwsd/coolkitconfig.xcu
+  etc/coolwsd/coolwsd.xml
+  etc/sysconfig/coolwsd
+)
+
+
+
+
+
+
+## Compile time limitations for open connections and documents
+_connections=100
+_documents=50
+
+
+pkgver() {
+	cd "${srcdir}/online"
+	git log -1 --format='%cd.%h' --date=short | tr -d -
+}
+
+
+prepare() {
+	
+	echo "==> NOTE: Building with limits of ${_connections} max connections and ${_documents} max documents"
+	echo "==> Running autogen.sh"
+	cd "${srcdir}/online"
+	./autogen.sh
+	echo "==> running configure"
+
+	# setcap is for packaging
+	# SSL is disabled since this needs to be behind a reverse proxy
+	./configure \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--runstatedir=/run \
+		--with-lokit-path=/opt/collaboraoffice/include \
+		--with-lo-path=/opt/collaboraoffice \
+		--with-max-connections=${_connections} \
+		--with-max-documents=${_documents} \
+		--disable-setcap \
+		--disable-ssl
+}
+
+build() {
+	cd "${srcdir}/online"
+	make 
+}
+
+
+package() {
+	cd "${srcdir}/online"
+	make DESTDIR="$pkgdir/" install
+
+	mkdir -p "${pkgdir}/usr/share/doc/coolwsd/example" \
+		"${pkgdir}/usr/lib/systemd/system" \
+		"${pkgdir}/etc/sysconfig"
+		#"${pkgdir}/opt/lool/child-roots"
+
+	mv "${pkgdir}/etc/apache2" "${pkgdir}/etc/nginx" "${pkgdir}/usr/share/doc/coolwsd/example"
+
+
+	install -Dm0644 "${srcdir}/sysusers" "${pkgdir}/usr/lib/sysusers.d/coolwsd.conf"
+	install -Dm0644 "${srcdir}/tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/coolwsd.conf"
+
+	# add dependency on systemd
+	install -Dm0644 "${srcdir}/online/coolwsd.service" "${pkgdir}/usr/lib/systemd/system"
+	sed -i '/^\[Unit\]/ a \
+After=systemd-tmpfiles-setup.service' "${pkgdir}/usr/lib/systemd/system/coolwsd.service"
+
+	# https://github.com/CollaboraOnline/Docker-CODE/issues/32
+	echo 'SLEEPFORDEBUGGER=0' > "${pkgdir}/etc/sysconfig/coolwsd"
+
+
+}

@@ -1,0 +1,38 @@
+pkgname=('collaboraoffice-bin' 'collaboraoffice-bin-headers')
+pkgbase=collaboraoffice-bin
+pkgver=23.05
+pkgrel=1
+pkgdesc="libreoffice build for collabora online"
+arch=("x86_64")
+url="https://collaboraonline.github.io/"
+license=('MPL')
+depends=('fontconfig' 'freetype2' 'libpng' 'glib2' 'harfbuzz' 'expat' 'graphite' 'bzip2' 'pcre')
+source=("https://github.com/CollaboraOnline/online/releases/download/for-code-assets/core-co-${pkgver}-assets.tar.gz")
+noextract=("core-co-${pkgver}-assets.tar.gz")
+sha256sums=('e47a4e51d825f79aaacdc154478d5ab1cdc4dd7d3cbb4f0dcacc610dade30a37')
+options=(!strip)
+install=install
+
+
+prepare() {
+	cd "${srcdir}"
+	tar zxvf "core-co-${pkgver}-assets.tar.gz"
+}
+
+package_collaboraoffice-bin() {
+	provides=('collaboraoffice')
+	conflicts=('collaboraoffice')
+	mkdir -p "${pkgdir}/opt/collaboraoffice"
+	cd "${srcdir}/instdir"
+	cp -R * "${pkgdir}/opt/collaboraoffice"
+}
+
+package_collaboraoffice-bin-headers() {
+	pkgdesc="libreoffice build for collabora online - development headers"
+	provides=('collaboraoffice-headers')
+	conflicts=('collaboraoffice-headers')
+	mkdir -p "${pkgdir}/opt/collaboraoffice/include"
+	cd "${srcdir}/include"
+	cp -R * "${pkgdir}/opt/collaboraoffice/include"
+	
+}
