@@ -101,6 +101,11 @@ _patches=(
 )
 
 
+# (Modified) patches pulled from down stream that are useful for our package.
+_feature_patches=(
+)
+
+
 # Sources required for building stubdom
 _stubdom_source=(
 	"vtpm-gcc12-fixes.patch"  # based on above patch
@@ -132,6 +137,9 @@ _sha512sums=(
 _patch_sums=(
 )
 
+_feature_patch_sums=(
+)
+
 
 _stub_sums=(
 	"2397795a0a4999a6efee3d8291356673d1757bc1b34dd2015378ef6ea8800ee1317c7d9f902d82bd62ff8d451223ad51ced5e3a6d66e8e79930a7f513cc2b805" # vtpm-gcc12-fixes.patch
@@ -148,13 +156,9 @@ _stub_sums=(
 
 
 # Simplify things for makepkg
-source=( "${_source[@]}" "${_patches[@]}" )
-sha512sums=( "${_sha512sums[@]}" "${_patch_sums[@]}" )
-
-for file in "${_patches[@]}"; do
-	noextract+=( $(basename ${file}) )
-done
-
+source=( "${_source[@]}" "${_patches[@]}" "${_feature_patches[@]}" )
+sha512sums=( "${_sha512sums[@]}" "${_patch_sums[@]}" "${_feature_patch_sums[@]}" )
+noextract+=( "${_patches[@]##*/}" "${_feature_patches[@]##*/}" )
 
 # stubdom handling
 if [ "${_build_stubdom}" == "true" ]; then
@@ -182,6 +186,16 @@ fi
 prepare() {
 
 	cd "${pkgbase}"
+
+	# This is required for applying patches with git am. Assume no user is set
+	# up.
+	git config user.name user
+	git config user.email user@localhost
+
+	for patchurl in "${_feature_patches[@]}"; do
+		patch=$(basename $patchurl)
+		git am "../${patch}"
+	done
 
 	if [ "${_build_stubdom}" == "true" ]; then
 
