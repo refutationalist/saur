@@ -107,8 +107,11 @@ _feature_patches=(
 	"0201-EFI-early-Add-noexit-to-inhibit-calling-ExitBootServ.patch"
 	"0202-efi-Ensure-incorrectly-typed-runtime-services-get-ma.patch"
 	"0203-Add-xen.cfg-options-for-mapbs-and-noexitboot.patch"
+	"0607-libvchan-use-xengntshr_unshare-instead-of-munmap-dir.patch"
 	"0608-x86-time-Don-t-use-EFI-s-GetTime-call-by-default.patch"
 	"0613-Fix-buildid-alignment.patch"
+	"0614-vchan-socket-proxy-add-reconnect-marker-support.patch"
+	"0615-tools-libxl-enable-in-band-reconnect-marker-for-stub.patch"
 	"0626-Validate-EFI-memory-descriptors.patch"
 	"0630-Drop-ELF-notes-from-non-EFI-binary-too.patch"
 )
@@ -150,8 +153,11 @@ _feature_patch_sums=(
 	"11e37c6f2b2d8356d4a6fea2ae452b6674eca1ac793cfedf00ae350705f34b117fe72e76c519953c0190524332c406698eb85daa96408bebcd12a497d1f61d79" # 0201-EFI-early-Add-noexit-to-inhibit-calling-ExitBootServ.patch
 	"884f7f050085b6cc1c73d7ccbb6f946447c6fb09680686238630fa8b7dc7a68045836c7f60bdf5c8d3f938ab1f3d3182e92d02e2b9f2ed1c9bbfdd76ef6d0667" # 0202-efi-Ensure-incorrectly-typed-runtime-services-get-ma.patch
 	"d252beeb794477aa5d88cd0607eabb903f89f54465a0adf47f03cb95476b605ec5136b5e8aabd91af165af887ec68eb52f7190a3c7c929076e18a5f5fd58ce15" # 0203-Add-xen.cfg-options-for-mapbs-and-noexitboot.patch
+	"c7548bc76b6f08e71a2df3083255e522a993812dc3568823a443b76db34b63625f65eb54837759ba0ce5d08a5aca10cad59c38e9fe4953ffbafaa5ce81ac1a55" # 0607-libvchan-use-xengntshr_unshare-instead-of-munmap-dir.patch
 	"7bad18013917be286c447d43d6bca2893ecba2e9f9ea33227515d7bdd1c97bdbd27cfdc187db8d8f782f72e4c89231b9e1f7d4d08a5c33c92b30598d426cf8ce" # 0608-x86-time-Don-t-use-EFI-s-GetTime-call-by-default.patch
 	"807923061899007ea5eb08f445ae6bcf35b07e44a3b6644f4ba05513819ce72d34e1824f2316019bc1688c1e9ddaa4e6512d9940641f04e2e63e1087a527b210" # 0613-Fix-buildid-alignment.patch
+	"9e8e2af77de1f2154078ffa2f55049230a7c38ffc14ba1859bb08d1b34a81c21d18a6ac7b4cc65bdabc56ee8b84ba5a3dbe4451fe79a9049223bda6c6b1fbe74" # 0614-vchan-socket-proxy-add-reconnect-marker-support.patch
+	"205e4b6fd3d94fae07079a47f9fcaa92cb0a97beba4fa64b3e5e4c00d50aa20689ff4c6226f65a81547217d7f0824c38afb204e451ac7360d028ec3cbc140942" # 0615-tools-libxl-enable-in-band-reconnect-marker-for-stub.patch
 	"e2105aa4f07bc3b9cf2b39ee0dc4e72d1dc3fc99212c126ba2889d79cc07c04ed0d33a0edb405c7ab48575fe225893c1c916ae808cd94dba00a910fd94c15ee8" # 0626-Validate-EFI-memory-descriptors.patch
 	"5e7ebb5ec7ea27b236707b0c761f52a9502c540471989d28dfb577cfadd9e995c09ae6baaae52fc76cd08afba4d04f241483f6c07a501ba445ecfdaa14d0c79e" # 0630-Drop-ELF-notes-from-non-EFI-binary-too.patch
 )
