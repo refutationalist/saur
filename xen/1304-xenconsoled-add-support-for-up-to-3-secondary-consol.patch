@@ -1,0 +1,56 @@
+From 83a4404a7ab89d2ca256943031829ae6a7f2711d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>
+Date: Tue, 7 Aug 2018 04:16:18 +0200
+Subject: [PATCH 4/6] xenconsoled: add support for up to 3 secondary consoles
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Based on previous few commits, this adds basic support for multiple
+consoles in xenconsoled. A static number of them - up to 3 (+ one
+primary).
+
+Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+---
+ tools/console/daemon/io.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/tools/console/daemon/io.c b/tools/console/daemon/io.c
+index cc4744ca77..3afc44bb67 100644
+--- a/tools/console/daemon/io.c
++++ b/tools/console/daemon/io.c
+@@ -132,6 +132,30 @@ static struct console_type console_type[] = {
+ 		.use_gnttab = true,
+ 		.use_reserved_gnttab = true,
+ 	},
++	{
++		.xsname = "/device/console/1",
++		.ttyname = "tty",
++		.log_suffix = "-con1",
++		.optional = true,
++		.use_gnttab = true,
++		.have_state = true,
++	},
++	{
++		.xsname = "/device/console/2",
++		.ttyname = "tty",
++		.log_suffix = "-con2",
++		.optional = true,
++		.use_gnttab = true,
++		.have_state = true,
++	},
++	{
++		.xsname = "/device/console/3",
++		.ttyname = "tty",
++		.log_suffix = "-con3",
++		.optional = true,
++		.use_gnttab = true,
++		.have_state = true,
++	},
+ #if defined(CONFIG_ARM)
+ 	{
+ 		.xsname = "/vuart/0",
+-- 
+2.43.0
+

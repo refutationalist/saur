@@ -1,0 +1,193 @@
+From 58be95af7d907d8fd1ea650bcd6dedbd78ca2ea2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>
+Date: Tue, 7 Aug 2018 04:16:16 +0200
+Subject: [PATCH 2/6] xenconsoled: add support for consoles using 'state'
+ xenstore entry
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Add support for standard xenbus initialization protocol using 'state'
+xenstore entry. It will be necessary for secondary consoles.
+For consoles supporting it, read 'state' entry on the frontend and
+proceed accordingly - either init console or close it. When closing,
+make sure all the in-transit data is flushed (both from shared ring and
+from local buffer), if possible. This is especially important for
+MiniOS-based qemu stubdomain, which closes console just after writing
+device model state to it.
+For consoles without 'state' field behavior is unchanged - on any watch
+event try to connect console, as long as domain is alive.
+
+Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+---
+ tools/console/daemon/io.c | 86 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 83 insertions(+), 3 deletions(-)
+
+diff --git a/tools/console/daemon/io.c b/tools/console/daemon/io.c
+index 14488d58e0..5dca0421fb 100644
+--- a/tools/console/daemon/io.c
++++ b/tools/console/daemon/io.c
+@@ -26,6 +26,7 @@
+ #include <xengnttab.h>
+ #include <xenstore.h>
+ #include <xen/io/console.h>
++#include <xen/io/xenbus.h>
+ #include <xen/grant_table.h>
+ 
+ #include <stdlib.h>
+@@ -108,6 +109,7 @@ struct console {
+ 	struct domain *d;
+ 	bool optional;
+ 	bool use_gnttab;
++	bool have_state;
+ };
+ 
+ struct console_type {
+@@ -116,6 +118,7 @@ struct console_type {
+ 	const char *log_suffix;
+ 	bool optional;
+ 	bool use_gnttab;
++	bool have_state;  // uses 'state' xenstore entry
+ };
+ 
+ static struct console_type console_type[] = {
+@@ -155,6 +158,8 @@ typedef void (*VOID_ITER_FUNC_ARG2)(struct console *,  void *);
+ typedef int (*INT_ITER_FUNC_ARG3)(struct console *,
+ 				  struct domain *dom, void **);
+ 
++static void handle_tty_write(struct console *con);
++
+ static inline bool console_enabled(struct console *con)
+ {
+ 	return con->local_port != -1;
+@@ -664,6 +669,20 @@ static int xs_gather(struct xs_handle *xs, const char *dir, ...)
+ 	return ret;
+ }
+ 
++static void set_backend_state(struct console *con, int state)
++{
++	char path[PATH_MAX], state_str[2], *be_path;
++
++	snprintf(state_str, sizeof(state_str), "%d", state);
++	snprintf(path, sizeof(path), "%s/backend", con->xspath);
++	be_path = xs_read(xs, XBT_NULL, path, NULL);
++	if (be_path) {
++		snprintf(path, sizeof(path), "%s/state", be_path);
++		xs_write(xs, XBT_NULL, path, state_str, 1);
++		free(be_path);
++	}
++}
++
+ static void console_unmap_interface(struct console *con)
+ {
+ 	if (con->interface == NULL)
+@@ -780,10 +799,70 @@ static int console_create_ring(struct console *con)
+ 	if (log_guest && (con->log_fd == -1))
+ 		con->log_fd = create_console_log(con);
+ 
++	/* if everything ok, signal backend readiness, in backend tree */
++	set_backend_state(con, XenbusStateConnected);
++
+  out:
+ 	return err;
+ }
+ 
++/* gracefully close console */
++static int console_close(struct console *con) {
++
++	if (con->interface && con->master_fd != -1 && con->buffer.data) {
++		/* handle remaining data in buffers */
++		buffer_append(con);
++
++		/* write it out, if possible */
++		if (con->master_pollfd_idx != -1) {
++			if (fds[con->master_pollfd_idx].revents &
++					POLLOUT)
++				handle_tty_write(con);
++		}
++	}
++
++	console_close_tty(con);
++	console_unmap_interface(con);
++	set_backend_state(con, XenbusStateClosed);
++
++	return 0;
++}
++
++
++static int handle_console_state(struct console *con) {
++	int err, state;
++
++	if (!con->have_state)
++		return console_create_ring(con);
++
++	err = xs_gather(xs, con->xspath,
++			"state", "%u", &state,
++			NULL);
++	if (err)
++		/* no 'state' entry, assume removal */
++		state = XenbusStateClosed;
++
++	switch (state) {
++		case XenbusStateInitialising:
++		case XenbusStateInitWait:
++			/* wait for frontent init */
++			return 0;
++		case XenbusStateInitialised:
++		case XenbusStateConnected:
++			/* ok, init backend (also on restart) */
++			return console_create_ring(con);
++		case XenbusStateClosing:
++		case XenbusStateClosed:
++			/* close requested */
++			return console_close(con);
++		default:
++			dolog(LOG_ERR,
++			      "Invalid state %d set by console %s of domain %d\n",
++			      state, con->xspath, con->d->domid);
++			return 1;
++	}
++}
++
+ static int watch_domain(struct console *con, struct domain *dom, void **data)
+ {
+ 	bool watch = data;
+@@ -794,7 +873,7 @@ static int watch_domain(struct console *con, struct domain *dom, void **data)
+ 	if (watch) {
+ 		success = xs_watch(xs, con->xspath, domid_str);
+ 		if (success)
+-			console_create_ring(con);
++			handle_console_state(con);
+ 		else
+ 			xs_unwatch(xs, con->xspath, domid_str);
+ 	} else {
+@@ -833,6 +912,7 @@ static int console_init(struct console *con, struct domain *dom, void **data)
+ 	con->log_suffix = (*con_type)->log_suffix;
+ 	con->optional = (*con_type)->optional;
+ 	con->use_gnttab = (*con_type)->use_gnttab;
++	con->have_state = (*con_type)->have_state;
+ 	xsname = (*con_type)->xsname;
+ 	xspath = xs_get_domain_path(xs, dom->domid);
+ 	s = realloc(xspath, strlen(xspath) +
+@@ -1152,7 +1232,7 @@ static void handle_xs(void)
+ 		/* We may get watches firing for domains that have recently
+ 		   been removed, so dom may be NULL here. */
+ 		if (dom && dom->is_dead == false)
+-			console_iter_int_arg1(dom, console_create_ring);
++			console_iter_int_arg1(dom, handle_console_state);
+ 	}
+ 
+ 	free(vec);
+@@ -1381,7 +1461,7 @@ void handle_io(void)
+ 
+ 			console_iter_void_arg2(d, console_evtchn_unmask, (void *)&now);
+ 
+-			console_iter_void_arg2(d, maybe_add_console_evtchn_fd, 
++			console_iter_void_arg2(d, maybe_add_console_evtchn_fd,
+ 					       (void *)&next_timeout);
+ 
+ 			console_iter_void_arg1(d, maybe_add_console_tty_fd);
+-- 
+2.43.0
+

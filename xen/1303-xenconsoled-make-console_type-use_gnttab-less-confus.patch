@@ -1,0 +1,139 @@
+From b6457b40fab555e1d4e7b1553502bb0e9071d1c4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>
+Date: Tue, 7 Aug 2018 04:16:17 +0200
+Subject: [PATCH 3/6] xenconsoled: make console_type->use_gnttab less confusing
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Before this commit 'use_gnttab' means xenconsoled should first try
+special GNTTAB_RESERVED_CONSOLE entry, and only then fallback to
+ring-ref xenstore entry (being gfn of actual ring).
+In case of secondary consoles, ring-ref entry contains grant table
+reference (not gfn of it), which makes the old meaning of use_gnttab
+really confusing (should be false for such consoles).
+To solve this, add new entry in console_type (and console) structures
+named 'use_reserverd_gnttab' with the old meaning of 'use_gnttab', then
+use 'ues_gnttab' for consoles where ring-ref holds grant table
+reference.
+
+Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+---
+ tools/console/daemon/io.c | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
+
+diff --git a/tools/console/daemon/io.c b/tools/console/daemon/io.c
+index 5dca0421fb..cc4744ca77 100644
+--- a/tools/console/daemon/io.c
++++ b/tools/console/daemon/io.c
+@@ -7,12 +7,12 @@
+  *  This program is free software; you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+  *  the Free Software Foundation; under version 2 of the License.
+- * 
++ *
+  *  This program is distributed in the hope that it will be useful,
+  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  *  GNU General Public License for more details.
+- * 
++ *
+  *  You should have received a copy of the GNU General Public License
+  *  along with this program; If not, see <http://www.gnu.org/licenses/>.
+  */
+@@ -109,6 +109,7 @@ struct console {
+ 	struct domain *d;
+ 	bool optional;
+ 	bool use_gnttab;
++	bool use_reserved_gnttab;
+ 	bool have_state;
+ };
+ 
+@@ -118,6 +119,7 @@ struct console_type {
+ 	const char *log_suffix;
+ 	bool optional;
+ 	bool use_gnttab;
++	bool use_reserved_gnttab;
+ 	bool have_state;  // uses 'state' xenstore entry
+ };
+ 
+@@ -128,6 +130,7 @@ static struct console_type console_type[] = {
+ 		.log_suffix = "",
+ 		.optional = false,
+ 		.use_gnttab = true,
++		.use_reserved_gnttab = true,
+ 	},
+ #if defined(CONFIG_ARM)
+ 	{
+@@ -633,7 +636,7 @@ out:
+ 	console_close_tty(con);
+ 	return 0;
+ }
+- 
++
+ /* Takes tuples of names, scanf-style args, and void **, NULL terminated. */
+ static int xs_gather(struct xs_handle *xs, const char *dir, ...)
+ {
+@@ -687,14 +690,14 @@ static void console_unmap_interface(struct console *con)
+ {
+ 	if (con->interface == NULL)
+ 		return;
+-	if (xgt_handle && con->ring_ref == -1)
++	if (xgt_handle && con->use_gnttab)
+ 		xengnttab_unmap(xgt_handle, con->interface, 1);
+ 	else
+ 		xenforeignmemory_unmap(xfm_handle, con->interface, 1);
+ 	con->interface = NULL;
+ 	con->ring_ref = -1;
+ }
+- 
++
+ static int console_create_ring(struct console *con)
+ {
+ 	int err, remote_port, ring_ref, rc;
+@@ -731,12 +734,19 @@ static int console_create_ring(struct console *con)
+ 
+ 	if (!con->interface && xgt_handle && con->use_gnttab) {
+ 		/* Prefer using grant table */
+-		con->interface = xengnttab_map_grant_ref(xgt_handle,
+-			dom->domid, GNTTAB_RESERVED_CONSOLE,
+-			PROT_READ|PROT_WRITE);
+-		con->ring_ref = -1;
++		if (con->use_reserved_gnttab) {
++			con->interface = xengnttab_map_grant_ref(xgt_handle,
++					dom->domid, GNTTAB_RESERVED_CONSOLE,
++					PROT_READ|PROT_WRITE);
++			con->ring_ref = -1;
++		} else {
++			con->interface = xengnttab_map_grant_ref(xgt_handle,
++					dom->domid, ring_ref,
++					PROT_READ|PROT_WRITE);
++			con->ring_ref = ring_ref;
++		}
+ 	}
+-	if (!con->interface) {
++	if (!con->interface && (!con->use_gnttab || con->use_reserved_gnttab)) {
+ 		xen_pfn_t pfn = ring_ref;
+ 
+ 		/* Fall back to xc_map_foreign_range */
+@@ -772,7 +782,7 @@ static int console_create_ring(struct console *con)
+ 		err = errno;
+ 		goto out;
+ 	}
+- 
++
+ 	rc = xenevtchn_bind_interdomain(con->xce_handle,
+ 		dom->domid, remote_port);
+ 
+@@ -912,6 +922,7 @@ static int console_init(struct console *con, struct domain *dom, void **data)
+ 	con->log_suffix = (*con_type)->log_suffix;
+ 	con->optional = (*con_type)->optional;
+ 	con->use_gnttab = (*con_type)->use_gnttab;
++	con->use_reserved_gnttab = (*con_type)->use_reserved_gnttab;
+ 	con->have_state = (*con_type)->have_state;
+ 	xsname = (*con_type)->xsname;
+ 	xspath = xs_get_domain_path(xs, dom->domid);
+-- 
+2.43.0
+
