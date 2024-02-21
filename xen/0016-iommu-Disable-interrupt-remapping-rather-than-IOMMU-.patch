@@ -1,0 +1,66 @@
+From c6d91f81db4e24473f177a7d33d836c64d9e90e9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Rafa=C3=ABl=20Kooi?=
+ <48814281+RA-Kooi@users.noreply.github.com>
+Date: Thu, 8 Feb 2024 05:21:20 +0100
+Subject: [PATCH 16/18] iommu: Disable interrupt remapping rather than IOMMU on
+ broken chipsets
+
+Taken from XenServer. While not ideal, it's much better than disabling
+the IOMMU entirely. I am unsure if this has effects on PCI passthrough
+on affected systems, but this should slightly improve security on them.
+---
+ xen/drivers/passthrough/amd/iommu_init.c | 6 ++++--
+ xen/drivers/passthrough/vtd/quirks.c     | 8 ++++----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/xen/drivers/passthrough/amd/iommu_init.c b/xen/drivers/passthrough/amd/iommu_init.c
+index 9c01a49435..530ea1c2cd 100644
+--- a/xen/drivers/passthrough/amd/iommu_init.c
++++ b/xen/drivers/passthrough/amd/iommu_init.c
+@@ -1349,7 +1349,7 @@ static bool __init amd_sp5100_erratum28(void)
+         byte = pci_conf_read8(PCI_SBDF(0, bus, 0x14, 0), 0xad);
+         if ( (byte >> 3) & 1 )
+         {
+-            printk(XENLOG_WARNING "AMD-Vi: SP5100 erratum 28 detected, disabling IOMMU.\n"
++            printk(XENLOG_WARNING "AMD-Vi: SP5100 erratum 28 detected, disabling Interrupt Remapping.\n"
+                    "If possible, disable SATA Combined mode in BIOS or contact your vendor for BIOS update.\n");
+             return 1;
+         }
+@@ -1389,7 +1389,9 @@ int __init amd_iommu_prepare(bool xt)
+ 
+     if ( iommu_intremap && amd_iommu_perdev_intremap &&
+          amd_sp5100_erratum28() )
+-        goto error_out;
++    {
++        iommu_intremap = 0;
++    }
+ 
+     /* We implies no IOMMU if ACPI indicates no MSI. */
+     if ( unlikely(acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_MSI) )
+diff --git a/xen/drivers/passthrough/vtd/quirks.c b/xen/drivers/passthrough/vtd/quirks.c
+index ea7d3ee78b..2aa062d21a 100644
+--- a/xen/drivers/passthrough/vtd/quirks.c
++++ b/xen/drivers/passthrough/vtd/quirks.c
+@@ -355,15 +355,15 @@ static void __init tylersburg_intremap_quirk(void)
+             if ( rev >= 0x22 )
+                 continue;
+             printk(XENLOG_WARNING VTDPREFIX
+-                   "Disabling IOMMU due to Intel 5500/5520 chipset errata #47 and #53\n");
+-            iommu_enable = false;
++                   "Disabling Interrupt remapping due to Intel 5500/5520 chipset errata #47 and #53\n");
++            iommu_intremap = false;
+             break;
+ 
+         case 0x34058086:
+             printk(XENLOG_WARNING VTDPREFIX
+-                   "Disabling IOMMU due to Intel X58 chipset %s\n",
++                   "Disabling Interrupt remapping due to Intel X58 chipset %s\n",
+                    rev < 0x22 ? "errata #62 and #69" : "erratum #69");
+-            iommu_enable = false;
++            iommu_intremap = false;
+             break;
+         }
+ 
+-- 
+2.43.0
+
