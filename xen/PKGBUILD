@@ -154,6 +154,7 @@ _feature_patches=(
 	"0005-x86-hpet-Pre-cleanup.patch"
 	"0006-x86-hpet-Use-singe-apic-vector-rather-than-irq_descs.patch"
 	"0007-x86-hpet-Post-cleanup.patch"
+	"0011-x86-HVM-Avoid-cache-flush-operations-during-hvm_load.patch"
 )
 
 
@@ -242,6 +243,7 @@ _feature_patch_sums=(
 	"129fa7ec5930e98a99c15f1efdc0c23ea508492d95095bf1ed84e2a98b131fc0e8523acafe15e44c257ca6d1217a291e30057533daeb78826c368336d2fd0e61" # 0005-x86-hpet-Pre-cleanup.patch
 	"51e95193d3d2a27c9ad7e5fc24a73d88688b7183fee3c037b9f3e8e10ac97427ba869c5c1a5fc6004e5d3d41da66cc63a0c06fe3fd10d6ae4604a744a5d3d776" # 0006-x86-hpet-Use-singe-apic-vector-rather-than-irq_descs.patch
 	"1d016e8f8c0e6a76453e21fefb87949a12be24a48c84d1fdac67aea500e7a6b3721399fd8911f73ddfdfffad8831598a4afc8e207fde8a34a3b52e97c4e23478" # 0007-x86-hpet-Post-cleanup.patch
+	"cdb5e6347e58a39e4af8ab3ab8207f931ef36a1718b896a0262469cce1a4a45c912aa82731381e492c75d2597125e7c12585f3c88287dfb9d7696f93d2942f9f" # 0011-x86-HVM-Avoid-cache-flush-operations-during-hvm_load.patch
 )
 
 
