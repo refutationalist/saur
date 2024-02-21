@@ -132,6 +132,7 @@ _feature_patches=(
 	"0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch"
 	"0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch"
 	"1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch"
+	"1007-libxl-allow-kernel-cmdline-without-kernel-if-stubdom.patch"
 )
 
 
@@ -196,6 +197,7 @@ _feature_patch_sums=(
 	"7ec27a84ef901d07700a846135f4f56cd7683989d19b6496cad5eda77705d529367cc915bb77dd10623d0315718d42f15efa701699906c184eaf75995f108a32" # 0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch
 	"7af1939e38d42bc52eb03a5c12143e25bf04949821b30a2a6f098c9d4c2e5c04d621418abe275a0cc38bb92ebd3f6671641f271f4c7130fdb45aec09b732c566" # 0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch
 	"370d44cbc801d0e814dbd4413ea2e42424a880b5084f9876937b281eb73f6eb46a4807ea765d30d539b7ec41e3eda5fb18aa7f8ca506c32c18c359a91fd80fcf" # 1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch
+	"02bc6a2feee14cdb40e91a7052f1c87f34b79c442ef483c44d04e5470127cfb47e0069e79aa1c0d063110fe2b568040d3fbc38ccb8fbfeacfe7b7ab7fa53a12a" # 1007-libxl-allow-kernel-cmdline-without-kernel-if-stubdom.patch
 )
 
 
