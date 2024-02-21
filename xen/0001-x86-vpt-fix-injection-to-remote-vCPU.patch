@@ -1,0 +1,139 @@
+From f2695e0438c42fd2dfaed2e4e32b2035c9cd48ca Mon Sep 17 00:00:00 2001
+From: Roger Pau Monne <roger.pau@citrix.com>
+Date: Fri, 12 Jun 2020 17:56:38 +0200
+Subject: [PATCH 01/18] x86/vpt: fix injection to remote vCPU
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+vpt timers are usually added to the per-vCPU list of the vCPU where
+they get setup, but depending on the timer source type that vCPU might
+be different than the one where the interrupt vector gets injected.
+
+For example the PIT timer use a PIC or IO-APIC pin in order to select
+the destination vCPU and vector, which might not match the vCPU they
+are configured from.
+
+If such a situation happens pt_intr_post won't be called, and thus the
+vpt will be left in a limbo where the next interrupt won't be
+scheduled. Fix this by generalizing the special handling done to
+IO-APIC level interrupts to be applied always when the destination
+vCPU of the injected vector is different from the vCPU where the vpt
+belongs to (ie: usually the one it's been configured from).
+
+A further improvement as noted in a comment added to the code might be
+to move the vpt so it's handled by the same vCPU where the vector gets
+injected.
+
+Signed-off-by: Roger Pau MonnÃ© <roger.pau@citrix.com>
+---
+ xen/arch/x86/hvm/vpt.c | 80 +++++++++++++++++++++---------------------
+ 1 file changed, 40 insertions(+), 40 deletions(-)
+
+diff --git a/xen/arch/x86/hvm/vpt.c b/xen/arch/x86/hvm/vpt.c
+index 8f53e88d67..01acf48adf 100644
+--- a/xen/arch/x86/hvm/vpt.c
++++ b/xen/arch/x86/hvm/vpt.c
+@@ -367,59 +367,59 @@ int pt_update_irq(struct vcpu *v)
+          * interrupt delivery case. Otherwise return -1 to do nothing.
+          */
+         vlapic_set_irq(vcpu_vlapic(v), irq, 0);
+-        pt_vector = irq;
+-        break;
++        return irq;
+ 
+     case PTSRC_isa:
+         hvm_isa_irq_deassert(v->domain, irq);
+         if ( platform_legacy_irq(irq) && vlapic_accept_pic_intr(v) &&
+              v->domain->arch.hvm.vpic[irq >> 3].int_output )
+-            hvm_isa_irq_assert(v->domain, irq, NULL);
++            pt_vector = hvm_isa_irq_assert(v->domain, irq, NULL);
+         else
+-        {
+             pt_vector = hvm_isa_irq_assert(v->domain, irq, vioapic_get_vector);
+-            /*
+-             * hvm_isa_irq_assert may not set the corresponding bit in vIRR
+-             * when mask field of IOAPIC RTE is set. Check it again.
+-             */
+-            if ( pt_vector < 0 || !vlapic_test_irq(vcpu_vlapic(v), pt_vector) )
+-                pt_vector = -1;
+-        }
++
++        if ( pt_vector < 0 )
++            return pt_vector;
++
+         break;
+ 
+     case PTSRC_ioapic:
+         pt_vector = hvm_ioapic_assert(v->domain, irq, level);
+-        if ( pt_vector < 0 || !vlapic_test_irq(vcpu_vlapic(v), pt_vector) )
+-        {
+-            pt_vector = -1;
+-            if ( level )
++        if ( pt_vector < 0 )
++            return pt_vector;
++
++        break;
++    }
++
++    ASSERT(pt_vector >= 0);
++    if ( !vlapic_test_irq(vcpu_vlapic(v), pt_vector) )
++    {
++        time_cb *cb = NULL;
++        void *cb_priv;
++
++        /*
++         * Vector has been injected to a different vCPU, call pt_irq_fired and
++         * execute the callback, since the destination vCPU(s) won't call
++         * pt_intr_post for it.
++         *
++         * TODO: move this vpt to one of the vCPUs where the vector gets
++         * injected.
++         */
++        pt_vcpu_lock(v);
++        /* Make sure the timer is still on the list. */
++        list_for_each_entry ( pt, &v->arch.hvm.tm_list, list )
++            if ( pt == earliest_pt )
+             {
+-                /*
+-                 * Level interrupts are always asserted because the pin assert
+-                 * count is incremented regardless of whether the pin is masked
+-                 * or the vector latched in IRR, so also execute the callback
+-                 * associated with the timer.
+-                 */
+-                time_cb *cb = NULL;
+-                void *cb_priv = NULL;
+-
+-                pt_vcpu_lock(v);
+-                /* Make sure the timer is still on the list. */
+-                list_for_each_entry ( pt, &v->arch.hvm.tm_list, list )
+-                    if ( pt == earliest_pt )
+-                    {
+-                        pt_irq_fired(v, pt);
+-                        cb = pt->cb;
+-                        cb_priv = pt->priv;
+-                        break;
+-                    }
+-                pt_vcpu_unlock(v);
+-
+-                if ( cb != NULL )
+-                    cb(v, cb_priv);
++                pt_irq_fired(v, pt);
++                cb = pt->cb;
++                cb_priv = pt->priv;
++                break;
+             }
+-        }
+-        break;
++        pt_vcpu_unlock(v);
++
++        if ( cb != NULL )
++            cb(v, cb_priv);
++
++        pt_vector = -1;
+     }
+ 
+     return pt_vector;
+-- 
+2.43.0
+

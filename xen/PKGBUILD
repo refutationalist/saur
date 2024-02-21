@@ -146,6 +146,9 @@ _feature_patches=(
 	"1304-xenconsoled-add-support-for-up-to-3-secondary-consol.patch"
 	"1305-xenconsoled-deduplicate-error-handling.patch"
 	"1306-libxl-use-xenconsoled-even-for-multiple-stubdomain-s.patch"
+
+	# Patches taken from XenServer's patchset.
+	"0001-x86-vpt-fix-injection-to-remote-vCPU.patch"
 )
 
 
@@ -224,6 +227,9 @@ _feature_patch_sums=(
 	"f0e6381f1204b7741074c5eda0a36a36ea853509d0c7b3824e0bf435e42fcfc299245eb6afb2e57b3408f28fb780e53a83d3033cecfa13a875275985e3480ad0" # 1304-xenconsoled-add-support-for-up-to-3-secondary-consol.patch
 	"aaf5c08a47005d914aa69ab7ca89773d25c125f6d3d89d0626c519feee0d0207bb19f6a19e869d0fc4353a403d9680aa01f5213ac6d27327ba749095b0a77590" # 1305-xenconsoled-deduplicate-error-handling.patch
 	"b3160b15e9afa712086db2479998d18d44fe540f11fb8d0f0e8c7d3a4e19a7aca3a56f8fcfca4c354d4e88fd4becf18a529e48006ad0792a6c23a49a63e14aa1" # 1306-libxl-use-xenconsoled-even-for-multiple-stubdomain-s.patch
+
+	# Patches taken from XenServer's patchset.
+	"1558d337a8181810614c9d110e42c939e57a6860b594f6670e77fcbe1450a984be4cdbcb866ae850bdd57dee2686cd2ab5607315592f18c40f86eedc560ed681" # 0001-x86-vpt-fix-injection-to-remote-vCPU.patch
 )
 
 
