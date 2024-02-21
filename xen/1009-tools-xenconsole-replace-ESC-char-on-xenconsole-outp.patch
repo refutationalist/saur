@@ -1,0 +1,154 @@
+From d28479ab8a77a46adbcd1484e0a4091457cf70c0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>
+Date: Sun, 10 Feb 2019 02:11:50 +0100
+Subject: [PATCH 1009/1018] tools/xenconsole: replace ESC char on xenconsole
+ output by default
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+And add --no-replace-escape option to disable it.
+This is done to prevent domU from exploiting hypothetical bug in
+terminal emulator.
+
+Add an -r/--no-replace-escape option to xenconsole client to disable
+replacing ESC. Carry it from xl command through env variable.
+
+Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+---
+ tools/console/client/main.c | 21 ++++++++++++++++++---
+ tools/xl/xl_cmdtable.c      |  1 +
+ tools/xl/xl_console.c       |  8 +++++++-
+ 3 files changed, 26 insertions(+), 4 deletions(-)
+
+diff --git a/tools/console/client/main.c b/tools/console/client/main.c
+index d2dcc3ddca..4660770f34 100644
+--- a/tools/console/client/main.c
++++ b/tools/console/client/main.c
+@@ -77,6 +77,7 @@ static void usage(const char *program) {
+ 	       "  -n, --num N      use console number N\n"
+ 	       "  --type TYPE      console type. must be 'pv', 'serial' or 'vuart'\n"
+ 	       "  --start-notify-fd N file descriptor used to notify parent\n"
++	       "  -r, --no-replace-escape Do not replace ESC character with dot\n"
+ 	       "  --escape E       escape sequence to exit console\n"
+ 	       , program);
+ }
+@@ -175,7 +176,7 @@ static void restore_term(int fd, struct termios *old)
+ }
+ 
+ static int console_loop(int fd, struct xs_handle *xs, char *pty_path,
+-			bool interactive, char escape_character)
++			bool interactive, char escape_character, bool replace_escape)
+ {
+ 	int ret, xs_fd = xs_fileno(xs), max_fd = -1;
+ 
+@@ -249,6 +250,12 @@ static int console_loop(int fd, struct xs_handle *xs, char *pty_path,
+ 				fd = -1;
+ 				continue;
+ 			}
++			if (replace_escape) {
++				int i;
++				for (i = 0; i < len; i++)
++					if (msg[i] == '\033')
++						msg[i] = '.';
++			}
+ 
+ 			if (!write_sync(STDOUT_FILENO, msg, len)) {
+ 				perror("write() failed");
+@@ -325,7 +332,7 @@ int main(int argc, char **argv)
+ {
+ 	struct termios attr;
+ 	int domid;
+-	const char *sopt = "hn:";
++	const char *sopt = "hn:r";
+ 	int ch;
+ 	unsigned int num = 0;
+ 	int opt_ind=0;
+@@ -336,6 +343,7 @@ int main(int argc, char **argv)
+ 		{ "help",    0, 0, 'h' },
+ 		{ "start-notify-fd", 1, 0, 's' },
+ 		{ "interactive", 0, 0, 'i' },
++		{ "no-replace-escape", 0, 0, 'r' },
+ 		{ "escape",  1, 0, 'e' },
+ 		{ 0 },
+ 
+@@ -346,9 +354,13 @@ int main(int argc, char **argv)
+ 	char *end;
+ 	console_type type = CONSOLE_INVAL;
+ 	bool interactive = 0;
++	bool replace_escape = 1;
+ 	const char *console_names = "serial, pv, vuart";
+ 	char escape_character = DEFAULT_ESCAPE_CHARACTER;
+ 
++	if (getenv("XEN_CONSOLE_REPLACE_ESCAPE"))
++		replace_escape = atoi(getenv("XEN_CONSOLE_REPLACE_ESCAPE"));
++
+ 	while((ch = getopt_long(argc, argv, sopt, lopt, &opt_ind)) != -1) {
+ 		switch(ch) {
+ 		case 'h':
+@@ -388,6 +400,9 @@ int main(int argc, char **argv)
+ 				exit(EINVAL);
+ 			}
+ 			break;
++		case 'r':
++			replace_escape = 0;
++			break;
+ 		default:
+ 			fprintf(stderr, "Invalid argument\n");
+ 			fprintf(stderr, "Try `%s --help' for more information.\n", 
+@@ -506,7 +521,7 @@ int main(int argc, char **argv)
+ 		close(start_notify_fd);
+ 	}
+ 
+-	console_loop(spty, xs, path, interactive, escape_character);
++	console_loop(spty, xs, path, interactive, escape_character, replace_escape);
+ 
+ 	free(path);
+ 	free(dom_path);
+diff --git a/tools/xl/xl_cmdtable.c b/tools/xl/xl_cmdtable.c
+index 62bdb2aeaa..8ea8a9e8bb 100644
+--- a/tools/xl/xl_cmdtable.c
++++ b/tools/xl/xl_cmdtable.c
+@@ -142,6 +142,7 @@ const struct cmd_spec cmd_table[] = {
+       "[options] <Domain>\n"
+       "-t <type>       console type, pv , serial or vuart\n"
+       "-n <number>     console number\n"
++      "-r              do not replace ESC character with dot\n"
+       "-e <escape>     escape character"
+     },
+     { "vncviewer",
+diff --git a/tools/xl/xl_console.c b/tools/xl/xl_console.c
+index 5633c6f6f7..b827216552 100644
+--- a/tools/xl/xl_console.c
++++ b/tools/xl/xl_console.c
+@@ -27,10 +27,11 @@ int main_console(int argc, char **argv)
+     uint32_t domid;
+     int opt = 0, num = 0;
+     libxl_console_type type = 0;
++    bool replace_escape = true;
+     const char *console_names = "pv, serial, vuart";
+     char* escape_character = NULL;
+ 
+-    SWITCH_FOREACH_OPT(opt, "n:t:e:", NULL, "console", 1) {
++    SWITCH_FOREACH_OPT(opt, "n:t:r:e:", NULL, "console", 1) {
+     case 't':
+         if (!strcmp(optarg, "pv"))
+             type = LIBXL_CONSOLE_TYPE_PV;
+@@ -49,8 +50,13 @@ int main_console(int argc, char **argv)
+     case 'e':
+         escape_character = optarg;
+         break;
++    case 'r':
++        replace_escape = false;
++        break;
+     }
+ 
++    setenv("XEN_CONSOLE_REPLACE_ESCAPE", replace_escape ? "1" : "0", 1);
++
+     domid = find_domain(argv[optind]);
+     if (!type)
+         libxl_primary_console_exec(ctx, domid, -1, escape_character);
+-- 
+2.43.0
+
