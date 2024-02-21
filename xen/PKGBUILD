@@ -132,6 +132,7 @@ _feature_patches=(
 	"0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch"
 	"0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch"
 	"1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch"
+	"1008-libxl-Force-emulating-readonly-disks-as-SCSI.patch"
 )
 
 
@@ -196,6 +197,7 @@ _feature_patch_sums=(
 	"7ec27a84ef901d07700a846135f4f56cd7683989d19b6496cad5eda77705d529367cc915bb77dd10623d0315718d42f15efa701699906c184eaf75995f108a32" # 0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch
 	"7af1939e38d42bc52eb03a5c12143e25bf04949821b30a2a6f098c9d4c2e5c04d621418abe275a0cc38bb92ebd3f6671641f271f4c7130fdb45aec09b732c566" # 0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch
 	"370d44cbc801d0e814dbd4413ea2e42424a880b5084f9876937b281eb73f6eb46a4807ea765d30d539b7ec41e3eda5fb18aa7f8ca506c32c18c359a91fd80fcf" # 1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch
+	"819b8d3e756d09625261a5ff46c9b7d4003127b4403268a61d2e66238015e3eb33b8adcc67e7e4943933fdb54cecd21d7527900b398b61d5939e4daee4bd70bb" # 1008-libxl-Force-emulating-readonly-disks-as-SCSI.patch
 )
 
 
