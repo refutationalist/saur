@@ -154,6 +154,7 @@ _feature_patches=(
 	"0005-x86-hpet-Pre-cleanup.patch"
 	"0006-x86-hpet-Use-singe-apic-vector-rather-than-irq_descs.patch"
 	"0007-x86-hpet-Post-cleanup.patch"
+	"0010-efi-Workaround-page-fault-during-runtime-service.patch"
 )
 
 
@@ -242,6 +243,7 @@ _feature_patch_sums=(
 	"129fa7ec5930e98a99c15f1efdc0c23ea508492d95095bf1ed84e2a98b131fc0e8523acafe15e44c257ca6d1217a291e30057533daeb78826c368336d2fd0e61" # 0005-x86-hpet-Pre-cleanup.patch
 	"51e95193d3d2a27c9ad7e5fc24a73d88688b7183fee3c037b9f3e8e10ac97427ba869c5c1a5fc6004e5d3d41da66cc63a0c06fe3fd10d6ae4604a744a5d3d776" # 0006-x86-hpet-Use-singe-apic-vector-rather-than-irq_descs.patch
 	"1d016e8f8c0e6a76453e21fefb87949a12be24a48c84d1fdac67aea500e7a6b3721399fd8911f73ddfdfffad8831598a4afc8e207fde8a34a3b52e97c4e23478" # 0007-x86-hpet-Post-cleanup.patch
+	"b1ad0fe54dbb7de49348059a81f3c247b66ed29afbd547d4a73f5fc2714a0fd42c6eb64f7c4740ecd7ac81dd44bbd5f6d59465d7b6f366f1527bcf7673defbb8" # 0010-efi-Workaround-page-fault-during-runtime-service.patch
 )
 
 
