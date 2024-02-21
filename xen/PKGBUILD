@@ -128,9 +128,10 @@ _feature_patches=(
 	"0625-libxl-Allow-stubdomain-to-control-interupts-of-PCI-d.patch"
 	"0626-Validate-EFI-memory-descriptors.patch"
 	"0630-Drop-ELF-notes-from-non-EFI-binary-too.patch"
+	"0643-cpufreq-enable-HWP-by-default.patch"
 	"0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch"
 	"0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch"
-  "0643-cpufreq-enable-HWP-by-default.patch"
+	"1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch"
 )
 
 
@@ -191,9 +192,10 @@ _feature_patch_sums=(
 	"03893d596b384796c521e53ab66380b0503a53c0e9bbeeb1c9988508f45eb07b24750dc49c3f0ff65a9e649da492a18020fa67002b62adfb69bb522af7522291" # 0625-libxl-Allow-stubdomain-to-control-interupts-of-PCI-d.patch
 	"e2105aa4f07bc3b9cf2b39ee0dc4e72d1dc3fc99212c126ba2889d79cc07c04ed0d33a0edb405c7ab48575fe225893c1c916ae808cd94dba00a910fd94c15ee8" # 0626-Validate-EFI-memory-descriptors.patch
 	"5e7ebb5ec7ea27b236707b0c761f52a9502c540471989d28dfb577cfadd9e995c09ae6baaae52fc76cd08afba4d04f241483f6c07a501ba445ecfdaa14d0c79e" # 0630-Drop-ELF-notes-from-non-EFI-binary-too.patch
+	"ae1be4d3fc8b42210cdf27d383411136e77b1e1009ece8166f081f01d04f80004387b2e30566d3f57817b176aed2d421181804e6160fea3866c000e52f135870" # 0643-cpufreq-enable-HWP-by-default.patch
 	"7ec27a84ef901d07700a846135f4f56cd7683989d19b6496cad5eda77705d529367cc915bb77dd10623d0315718d42f15efa701699906c184eaf75995f108a32" # 0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch
 	"7af1939e38d42bc52eb03a5c12143e25bf04949821b30a2a6f098c9d4c2e5c04d621418abe275a0cc38bb92ebd3f6671641f271f4c7130fdb45aec09b732c566" # 0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch
-  "ae1be4d3fc8b42210cdf27d383411136e77b1e1009ece8166f081f01d04f80004387b2e30566d3f57817b176aed2d421181804e6160fea3866c000e52f135870" # 0643-cpufreq-enable-HWP-by-default.patch
+	"370d44cbc801d0e814dbd4413ea2e42424a880b5084f9876937b281eb73f6eb46a4807ea765d30d539b7ec41e3eda5fb18aa7f8ca506c32c18c359a91fd80fcf" # 1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch
 )
 
 
