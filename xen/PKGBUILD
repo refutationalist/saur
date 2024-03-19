@@ -59,6 +59,7 @@ makedepends=(
 	'libuuid.so'
 	'libx11'
 	'lzo'
+	'nasm'
 	'ncurses'
 	'openssl'
 	'pandoc'
@@ -222,11 +223,11 @@ build() {
 		--libdir=/usr/lib \
 		--with-rundir=/run \
 		--enable-systemd \
+		--enable-ovmf \
 		--disable-qemu-traditional \
 		${_config_stubdom} \
 		--with-system-qemu=/usr/lib/xen/bin/qemu-system-i386 \
 		--with-sysconfig-leaf-dir=conf.d \
-		--with-system-ovmf=/usr/share/ovmf/x64/OVMF.fd \
 		--with-system-seabios=/usr/share/qemu/bios-256k.bin \
 		--disable-ocamltools
 
@@ -245,7 +246,6 @@ package_xen() {
 
 	optdepends=(
 		'xen-qemu: HVM and PV support'
-		'edk2-ovmf: UEFI support'
 		'seabios: SeaBIOS payload support'
 		'xen-docs: HTML documentation and man pages'
 		'grub-xen-git: GRUB and pvgrub2 bootloader support'
