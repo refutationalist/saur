@@ -91,6 +91,7 @@ _source=(
 	"xen-ucode-extract.sh"
 	"xen-intel-ucode.hook"
 	"xen-amd-ucode.hook"
+	"config"
 )
 
 # Follow the Xen securite mailing lists, and if a patch is applicable to our package
@@ -124,6 +125,7 @@ _sha512sums=(
 	"a9230ec6ef9636ac3f3e4b72b1747ee8c4648a8bf4bd8dc3650365e34f1f67474429dbdd24996907d277b0ff5f235574643e781cb3ff37da954e899ddadbe0d6" # xen-ucode-extract.sh
 	"7a832de9b35f4b77ee80d33310b23886f4d48d1d42c3d6ef6f8e2b428bec7332a285336864b61cfa01d9a14c2023674015beb7527bd5849b069f2be88e6500cd" # xen-intel-ucode.hook
 	"99921b94a29fa7988c7fb5c17da8e598e777c972d6cae8c8643c991e5ff911a25525345ea8913945313d5c49fecf9da8cc3b83d47ab03928341e917b304370a9" # xen-amd-ucode.hook
+	"8ab84146c75f436f488fa22d05925230215c258c11cad8ab10c1f0142d628ecd876fd9d6124c18e4a406166afe59bfdedb3829d557e0361d2475a26f434cd0fb" # config
 )
 
 
@@ -203,6 +205,12 @@ prepare() {
 	sed 's,/var/run,/run,g' -i tools/xenmon/xenbaked.c
 	sed 's,/var/run,/run,g' -i tools/xenmon/xenmon.py
 	sed 's,/var/run,/run,g' -i tools/pygrub/src/pygrub
+
+	cd xen
+	echo "==> Setting config..."
+	cp ../../config .config
+	make olddefconfig
+	diff -u ../../config .config || :
 }
 
 pkgver() {
