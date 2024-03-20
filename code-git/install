@@ -8,14 +8,14 @@ post_upgrade() {
   setcap cap_sys_admin=ep /usr/bin/loolmount
   
 
-  systemd-sysusers loolwsd.conf
-  systemd-tmpfiles --create loolwsd.conf
-  chown lool:lool etc/loolwsd/loolwsd.xml
-  chmod 640       etc/loolwsd/loolwsd.xml
+  systemd-sysusers coolwsd.conf
+  systemd-tmpfiles --create coolwsd.conf
+  chown cool:cool etc/coolwsd/coolwsd.xml
+  chmod 640       etc/coolwsd/coolwsd.xml
 
-  chown -R lool:lool opt/lool
+  chown -R cool:cool opt/cool
 
-  su lool --shell=/bin/sh -c 'set -x; loolwsd-systemplate-setup /opt/lool/systemplate /opt/collaboraoffice'
+  su lool --shell=/bin/sh -c 'set -x; coolwsd-systemplate-setup /opt/cool/systemplate /opt/collaboraoffice'
 
   systemctl daemon-reload
 }
@@ -35,12 +35,12 @@ post_install() {
 ==>  1) It is expected that this service will be run behind a reverse proxy.
 ==>     See the Collabora Online documentation regarding built-in SSL.
 ==> 
-==>  2) The username and password must be set in /etc/loolwsd/loolwsd.xml
+==>  2) The username and password must be set in /etc/coolwsd/coolwsd.xml
 ==>     for the admin console.
 ==> 
-==>  3) In /etc/loolwsd/loolwsd.xml, the host should be set to a value
+==>  3) In /etc/coolwsd/coolwsd.xml, the host should be set to a value
 ==>     different than “localhost”.  You may also want to force the
-==>     server_name in /etc/loolwsd/loolwsd.xml.
+==>     server_name in /etc/coolwsd/coolwsd.xml.
 ==>
 ==> 
 THEEND

@@ -1,5 +1,5 @@
 pkgname=code-git
-pkgver=20240124.048cf99814
+pkgver=20240124.db903a3d1d
 pkgrel=1
 pkgdesc="Collabora Online Development Edition -- compiled from source"
 arch=("x86_64")
@@ -11,8 +11,8 @@ optdepends=()
 install=install
 source=("git+https://github.com/CollaboraOnline/online.git" "sysusers" "tmpfiles")
 sha256sums=('SKIP'
-            '6053850ab1e3ce4607c98c2683ce260154305aa68205006d325d067e3f19c5b0'
-            '2b211d7635884c91b404eb2d81be8a3fe5dfd506212791787d129820548d485f')
+            '1be901b3c452d72b595a5596df802a01f9936e9f12d8e623eacb4b5372bf3f85'
+            'c2651d22eded3ba14dbec0438d902fdf3af7fb22bb6bcf35b0038d1125d75445')
 #options=(!strip)
 backup=(
   etc/coolwsd/coolkitconfig.xcu
@@ -71,7 +71,6 @@ package() {
 	mkdir -p "${pkgdir}/usr/share/doc/coolwsd/example" \
 		"${pkgdir}/usr/lib/systemd/system" \
 		"${pkgdir}/etc/sysconfig"
-		#"${pkgdir}/opt/lool/child-roots"
 
 	mv "${pkgdir}/etc/apache2" "${pkgdir}/etc/nginx" "${pkgdir}/usr/share/doc/coolwsd/example"
 

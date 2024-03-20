@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
 pkgname=jack-webpeak-git
-pkgver=20220507.64a8ac1
+pkgver=20240119.7c7188a
 pkgrel=1
 pkgdesc="simple peak-signal meter for JACK with websocket support"
 arch=('x86_64' 'aarch64')
