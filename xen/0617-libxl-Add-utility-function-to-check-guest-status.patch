@@ -1,0 +1,57 @@
+From 5998e60f71cc6f2904fb2e5e742ec3433e5b7b0c Mon Sep 17 00:00:00 2001
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+Date: Mon, 26 Sep 2022 10:57:55 -0400
+Subject: [PATCH 17/26] libxl: Add utility function to check guest status
+
+This is used to check that a guest has not been destroyed and to obtain
+information about it.  It will be used in subsequent patches.
+
+Signed-off-by: Demi Marie Obenour <demi@invisiblethingslab.com>
+---
+ tools/libs/light/libxl_dom_suspend.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/tools/libs/light/libxl_dom_suspend.c b/tools/libs/light/libxl_dom_suspend.c
+index ce501a9326..5fac2fe36a 100644
+--- a/tools/libs/light/libxl_dom_suspend.c
++++ b/tools/libs/light/libxl_dom_suspend.c
+@@ -321,22 +321,31 @@ static void suspend_common_wait_guest_watch(libxl__egc *egc,
+     suspend_common_wait_guest_check(egc, dsps);
+ }
+ 
++static int check_guest_status(libxl__gc *gc, const uint32_t domid,
++                              xc_domaininfo_t *info, const char *what)
++{
++    int ret = xc_domain_getinfo_single(CTX->xch, domid, info);
++
++    if (ret < 0) {
++        LOGED(ERROR, domid, "guest we were %s has been destroyed", what);
++        return ERROR_FAIL;
++    }
++
++    return 0;
++}
++
+ static void suspend_common_wait_guest_check(libxl__egc *egc,
+         libxl__domain_suspend_state *dsps)
+ {
+     STATE_AO_GC(dsps->ao);
+     xc_domaininfo_t info;
+-    int ret;
+     int shutdown_reason;
+ 
+     /* Convenience aliases */
+     const uint32_t domid = dsps->domid;
+ 
+-    ret = xc_domain_getinfo_single(CTX->xch, domid, &info);
+-    if (ret < 0) {
+-        LOGED(ERROR, domid, "guest we were suspending has been destroyed");
++    if (check_guest_status(gc, domid, &info, "suspending"))
+         goto err;
+-    }
+ 
+     if (!(info.flags & XEN_DOMINF_shutdown))
+         /* keep waiting */
+-- 
+2.43.0
+
