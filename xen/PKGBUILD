@@ -107,6 +107,7 @@ _feature_patches=(
 	"0201-EFI-early-Add-noexit-to-inhibit-calling-ExitBootServ.patch"
 	"0202-efi-Ensure-incorrectly-typed-runtime-services-get-ma.patch"
 	"0203-Add-xen.cfg-options-for-mapbs-and-noexitboot.patch"
+	"0604-libxl-create-writable-error-xenstore-dir.patch"
 	"0608-x86-time-Don-t-use-EFI-s-GetTime-call-by-default.patch"
 	"0613-Fix-buildid-alignment.patch"
 	"0616-libxl-Add-a-utility-function-for-domain-resume.patch"
@@ -155,6 +156,7 @@ _feature_patch_sums=(
 	"11e37c6f2b2d8356d4a6fea2ae452b6674eca1ac793cfedf00ae350705f34b117fe72e76c519953c0190524332c406698eb85daa96408bebcd12a497d1f61d79" # 0201-EFI-early-Add-noexit-to-inhibit-calling-ExitBootServ.patch
 	"884f7f050085b6cc1c73d7ccbb6f946447c6fb09680686238630fa8b7dc7a68045836c7f60bdf5c8d3f938ab1f3d3182e92d02e2b9f2ed1c9bbfdd76ef6d0667" # 0202-efi-Ensure-incorrectly-typed-runtime-services-get-ma.patch
 	"d252beeb794477aa5d88cd0607eabb903f89f54465a0adf47f03cb95476b605ec5136b5e8aabd91af165af887ec68eb52f7190a3c7c929076e18a5f5fd58ce15" # 0203-Add-xen.cfg-options-for-mapbs-and-noexitboot.patch
+	"0d59f8da999b9ad42cd82880f6dab6efff4452f7e1b8f4d22e966848dd96fccc34cc1349a1e83aa4c32acd48ad482ef99fe6a8a14e139a3496e5f9132c4c40be" # 0604-libxl-create-writable-error-xenstore-dir.patch
 	"7bad18013917be286c447d43d6bca2893ecba2e9f9ea33227515d7bdd1c97bdbd27cfdc187db8d8f782f72e4c89231b9e1f7d4d08a5c33c92b30598d426cf8ce" # 0608-x86-time-Don-t-use-EFI-s-GetTime-call-by-default.patch
 	"807923061899007ea5eb08f445ae6bcf35b07e44a3b6644f4ba05513819ce72d34e1824f2316019bc1688c1e9ddaa4e6512d9940641f04e2e63e1087a527b210" # 0613-Fix-buildid-alignment.patch
 	"653732bb05d359118e16fa2fdf5637d49493563ad606e467e9e38afdd796382d2c07e671481850c317a1ee04daf9198df248b6d7010a831c8815c33cf41f1ac1" # 0616-libxl-Add-a-utility-function-for-domain-resume.patch
