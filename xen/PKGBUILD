@@ -112,8 +112,8 @@ _feature_patches=(
 	"0606-libxl-do-not-fail-device-removal-if-backend-domain-i.patch"
 	"0607-libvchan-use-xengntshr_unshare-instead-of-munmap-dir.patch"
 	"0608-x86-time-Don-t-use-EFI-s-GetTime-call-by-default.patch"
-	"0608-x86-time-Don-t-use-EFI-s-GetTime-call-by-default.patch"
 	"0609-libxl-automatically-enable-gfx_passthru-if-IGD-is-as.patch"
+	"0611-libxl-do-not-require-filling-backend_domid-to-remove.patch"
 	"0613-Fix-buildid-alignment.patch"
 	"0614-vchan-socket-proxy-add-reconnect-marker-support.patch"
   "0615-tools-libxl-enable-in-band-reconnect-marker-for-stub.patch"
@@ -169,7 +169,7 @@ _feature_patch_sums=(
 	"c7548bc76b6f08e71a2df3083255e522a993812dc3568823a443b76db34b63625f65eb54837759ba0ce5d08a5aca10cad59c38e9fe4953ffbafaa5ce81ac1a55" # 0607-libvchan-use-xengntshr_unshare-instead-of-munmap-dir.patch
   "7bad18013917be286c447d43d6bca2893ecba2e9f9ea33227515d7bdd1c97bdbd27cfdc187db8d8f782f72e4c89231b9e1f7d4d08a5c33c92b30598d426cf8ce" # 0608-x86-time-Don-t-use-EFI-s-GetTime-call-by-default.patch
 	"c83af1cdf296f05b7deef7fdb6ae4c44075c2c92bf1a0703f4963646cd252d0490171705573b1b41c9416ea4e53a21f02573d6511240e763b0f25f3e9e63211e" # 0609-libxl-automatically-enable-gfx_passthru-if-IGD-is-as.patch
-
+	"fede52636f5a3a653f51d5d9f65dcd17f11ff4d409a1a4df4dd8443cd59510eb3c6424c492bd8253f8ee60d883b92650baa0ec0e3e9104e63a9f94338df25d7a" # 0611-libxl-do-not-require-filling-backend_domid-to-remove.patch
 	"807923061899007ea5eb08f445ae6bcf35b07e44a3b6644f4ba05513819ce72d34e1824f2316019bc1688c1e9ddaa4e6512d9940641f04e2e63e1087a527b210" # 0613-Fix-buildid-alignment.patch
   "9e8e2af77de1f2154078ffa2f55049230a7c38ffc14ba1859bb08d1b34a81c21d18a6ac7b4cc65bdabc56ee8b84ba5a3dbe4451fe79a9049223bda6c6b1fbe74" # 0614-vchan-socket-proxy-add-reconnect-marker-support.patch
 	"205e4b6fd3d94fae07079a47f9fcaa92cb0a97beba4fa64b3e5e4c00d50aa20689ff4c6226f65a81547217d7f0824c38afb204e451ac7360d028ec3cbc140942" # 0615-tools-libxl-enable-in-band-reconnect-marker-for-stub.patch
