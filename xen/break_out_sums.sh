@@ -26,7 +26,8 @@ do_sums() {
 }
 
 echo "## START HERE"
-do_sums "_sha512sums" "${_source[@]}"
-do_sums "_patch_sums" "${_patches[@]}"
-do_sums "_stub_sums" "${_stubdom_source[@]}"
+do_sums "_sha512sums"			"${_source[@]}"
+do_sums "_patch_sums"			"${_patches[@]}"
+do_sums "_feature_patch_sums"	"${_feature_patches[@]}"
+do_sums "_stub_sums"			"${_stubdom_source[@]}"
 echo "## END HERE"
