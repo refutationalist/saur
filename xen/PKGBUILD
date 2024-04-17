@@ -125,8 +125,11 @@ _feature_patches=(
 	"0620-libxl-Add-additional-domain-suspend-resume-logs.patch"
 	"0621-libxl-workaround-for-Windows-PV-drivers-removing-con.patch"
 	"0622-libxl-check-control-feature-before-issuing-pvcontrol.patch"
+  "0625-libxl-Allow-stubdomain-to-control-interupts-of-PCI-d.patch"
 	"0626-Validate-EFI-memory-descriptors.patch"
 	"0630-Drop-ELF-notes-from-non-EFI-binary-too.patch"
+	"0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch"
+	"0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch"
 )
 
 
@@ -184,8 +187,11 @@ _feature_patch_sums=(
 	"04f0c48d916d201e68c2203fd6ac50857ec8ddc99a0e60754ebe6b22508e45fae9b21725476dfc1639211729aa108f5c49efa79860d6f31d415d89dc5b408634" # 0620-libxl-Add-additional-domain-suspend-resume-logs.patch
 	"31f88b392e8c04929ee63e2b067f93fa015a2c52d0731356f5888a3ab878f2c9c9eb1d21e4fb26a32c7d93c458c7049afac3991a3c6ef34c96f218183da84192" # 0621-libxl-workaround-for-Windows-PV-drivers-removing-con.patch
 	"420eb0da3f241308c787c97c2c5404a16560d83efb6d985c5abd7fc6073917931ed5eca74444f195329202652c559a846e46238d30a2aeafd456b4cdeb0312ff" # 0622-libxl-check-control-feature-before-issuing-pvcontrol.patch
-	"e2105aa4f07bc3b9cf2b39ee0dc4e72d1dc3fc99212c126ba2889d79cc07c04ed0d33a0edb405c7ab48575fe225893c1c916ae808cd94dba00a910fd94c15ee8" # 0626-Validate-EFI-memory-descriptors.patch
+  "03893d596b384796c521e53ab66380b0503a53c0e9bbeeb1c9988508f45eb07b24750dc49c3f0ff65a9e649da492a18020fa67002b62adfb69bb522af7522291" # 0625-libxl-Allow-stubdomain-to-control-interupts-of-PCI-d.patch
+  "e2105aa4f07bc3b9cf2b39ee0dc4e72d1dc3fc99212c126ba2889d79cc07c04ed0d33a0edb405c7ab48575fe225893c1c916ae808cd94dba00a910fd94c15ee8" # 0626-Validate-EFI-memory-descriptors.patch
 	"5e7ebb5ec7ea27b236707b0c761f52a9502c540471989d28dfb577cfadd9e995c09ae6baaae52fc76cd08afba4d04f241483f6c07a501ba445ecfdaa14d0c79e" # 0630-Drop-ELF-notes-from-non-EFI-binary-too.patch
+	"7ec27a84ef901d07700a846135f4f56cd7683989d19b6496cad5eda77705d529367cc915bb77dd10623d0315718d42f15efa701699906c184eaf75995f108a32" # 0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch
+	"7af1939e38d42bc52eb03a5c12143e25bf04949821b30a2a6f098c9d4c2e5c04d621418abe275a0cc38bb92ebd3f6671641f271f4c7130fdb45aec09b732c566" # 0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch
 )
 
 
