@@ -378,7 +378,7 @@ package_xen() {
 	rm -r "${pkgdir}/usr/share/man"
 
 	# remove stubdom files
-	rm -f
+	rm -f \
 		"${pkgdir}/usr/lib/xen/boot/vtpmmgr-stubdom.gz"     \
 		"${pkgdir}/usr/lib/xen/boot/vtpm-stubdom.gz"        \
 		"${pkgdir}/usr/lib/xen/boot/xenstorepvh-stubdom.gz" \
