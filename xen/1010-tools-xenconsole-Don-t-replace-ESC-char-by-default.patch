@@ -1,0 +1,103 @@
+From d4cbc5688b4a16bc8041d0d36427b723831278af Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Rafa=C3=ABl=20Kooi?=
+ <48814281+RA-Kooi@users.noreply.github.com>
+Date: Sat, 17 Feb 2024 22:29:10 +0100
+Subject: [PATCH] tools/xenconsole: Don't replace ESC char by default
+
+The patch to replace the ESC char by default is generally for the
+paranoid. Think if you're testing malware in a domU. Default to
+compatible behavior.
+---
+ docs/man/xl.1.pod.in        | 7 +++++++
+ tools/console/client/main.c | 6 +++---
+ tools/xl/xl_cmdtable.c      | 2 +-
+ tools/xl/xl_console.c       | 4 ++--
+ 4 files changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/docs/man/xl.1.pod.in b/docs/man/xl.1.pod.in
+index bed8393473..351f69d6b5 100644
+--- a/docs/man/xl.1.pod.in
++++ b/docs/man/xl.1.pod.in
+@@ -240,6 +240,13 @@ emulated serial for HVM guests and PV console for PV guests.
+ 
+ Connect to console number I<NUM>. Console numbers start from 0.
+ 
++=item I<-r>
++
++Replace the ESC char with a dot. This protects the host from a hypothetical
++exploit being executed by the domU. This does break a lot of terminal tools
++such as less or vim. You don't want this unless you're paranoid or testing
++malware.
++
+ =item I<-e escapechar>
+ 
+ Customize the escape sequence used to detach from the domain console to
+diff --git a/tools/console/client/main.c b/tools/console/client/main.c
+index 4660770f34..8068f0e97c 100644
+--- a/tools/console/client/main.c
++++ b/tools/console/client/main.c
+@@ -77,7 +77,7 @@ static void usage(const char *program) {
+ 	       "  -n, --num N      use console number N\n"
+ 	       "  --type TYPE      console type. must be 'pv', 'serial' or 'vuart'\n"
+ 	       "  --start-notify-fd N file descriptor used to notify parent\n"
+-	       "  -r, --no-replace-escape Do not replace ESC character with dot\n"
++	       "  -r, --replace-escape Replace ESC character with dot\n"
+ 	       "  --escape E       escape sequence to exit console\n"
+ 	       , program);
+ }
+@@ -354,7 +354,7 @@ int main(int argc, char **argv)
+ 	char *end;
+ 	console_type type = CONSOLE_INVAL;
+ 	bool interactive = 0;
+-	bool replace_escape = 1;
++	bool replace_escape = 0;
+ 	const char *console_names = "serial, pv, vuart";
+ 	char escape_character = DEFAULT_ESCAPE_CHARACTER;
+ 
+@@ -401,7 +401,7 @@ int main(int argc, char **argv)
+ 			}
+ 			break;
+ 		case 'r':
+-			replace_escape = 0;
++			replace_escape = 1;
+ 			break;
+ 		default:
+ 			fprintf(stderr, "Invalid argument\n");
+diff --git a/tools/xl/xl_cmdtable.c b/tools/xl/xl_cmdtable.c
+index 8ea8a9e8bb..7893ea6e00 100644
+--- a/tools/xl/xl_cmdtable.c
++++ b/tools/xl/xl_cmdtable.c
+@@ -142,7 +142,7 @@ const struct cmd_spec cmd_table[] = {
+       "[options] <Domain>\n"
+       "-t <type>       console type, pv , serial or vuart\n"
+       "-n <number>     console number\n"
+-      "-r              do not replace ESC character with dot\n"
++      "-r              replace ESC character with dot\n"
+       "-e <escape>     escape character"
+     },
+     { "vncviewer",
+diff --git a/tools/xl/xl_console.c b/tools/xl/xl_console.c
+index b827216552..3ee8dc83e0 100644
+--- a/tools/xl/xl_console.c
++++ b/tools/xl/xl_console.c
+@@ -27,7 +27,7 @@ int main_console(int argc, char **argv)
+     uint32_t domid;
+     int opt = 0, num = 0;
+     libxl_console_type type = 0;
+-    bool replace_escape = true;
++    bool replace_escape = false;
+     const char *console_names = "pv, serial, vuart";
+     char* escape_character = NULL;
+ 
+@@ -51,7 +51,7 @@ int main_console(int argc, char **argv)
+         escape_character = optarg;
+         break;
+     case 'r':
+-        replace_escape = false;
++        replace_escape = true;
+         break;
+     }
+ 
+-- 
+2.44.0
+
