@@ -133,6 +133,7 @@ _feature_patches=(
 	"0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch"
 	"0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch"
 	"1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch"
+	"1018-Fix-IGD-passthrough-with-linux-stubdomain.patch"
 	"1301-xenconsoled-install-xenstore-watch-for-all-supported.patch"
 	"1302-xenconsoled-add-support-for-consoles-using-state-xen.patch"
 	"1303-xenconsoled-make-console_type-use_gnttab-less-confus.patch"
@@ -204,6 +205,7 @@ _feature_patch_sums=(
 	"7ec27a84ef901d07700a846135f4f56cd7683989d19b6496cad5eda77705d529367cc915bb77dd10623d0315718d42f15efa701699906c184eaf75995f108a32" # 0651-x86-msi-passthrough-all-MSI-X-vector-ctrl-writes-to-.patch
 	"7af1939e38d42bc52eb03a5c12143e25bf04949821b30a2a6f098c9d4c2e5c04d621418abe275a0cc38bb92ebd3f6671641f271f4c7130fdb45aec09b732c566" # 0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch
 	"370d44cbc801d0e814dbd4413ea2e42424a880b5084f9876937b281eb73f6eb46a4807ea765d30d539b7ec41e3eda5fb18aa7f8ca506c32c18c359a91fd80fcf" # 1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch
+	"54448175b503ebbcbeb0dac3b13f4e5e1848caee29040fb449049fa0e1c4efe935a1b1fba976fd5026b2ea1e39f46c335064e601fa370f86441b6dc84f01e0f5" # 1018-Fix-IGD-passthrough-with-linux-stubdomain.patch
 	"62cb1c6f83ce2b0d602c6e3a8194e43f7f88c44a5666af25bdb1952bb28c974979e1da77cec86f4bf417282655880fdfb198a94d9aea6a165ce96b173f492bd4" # 1301-xenconsoled-install-xenstore-watch-for-all-supported.patch
 	"dac3d2f240cd03074c00c6e813132904b7778371b9128e827471e2714e240b5e8095ba3ed901566c467bf9871efb7c02dfa591c1ab45d54db4f81ec1eefa5ecc" # 1302-xenconsoled-add-support-for-consoles-using-state-xen.patch
 	"5c796c990192d3f37247edb4861a4b20569c4e3e084404af8f278a356365a3c7ae212896d186ae51aa2b7960c1bd8c45602df0594036eb73fa15577e3bf0832c" # 1303-xenconsoled-make-console_type-use_gnttab-less-confus.patch
