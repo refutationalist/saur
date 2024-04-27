@@ -134,6 +134,7 @@ _feature_patches=(
 	"0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch"
 	"1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch"
 	"1006-libxl-use-EHCI-for-providing-tablet-USB-device.patch"
+	"1007-libxl-allow-kernel-cmdline-without-kernel-if-stubdom.patch"
 	"1018-Fix-IGD-passthrough-with-linux-stubdomain.patch"
 	"1301-xenconsoled-install-xenstore-watch-for-all-supported.patch"
 	"1302-xenconsoled-add-support-for-consoles-using-state-xen.patch"
@@ -207,6 +208,7 @@ _feature_patch_sums=(
 	"7af1939e38d42bc52eb03a5c12143e25bf04949821b30a2a6f098c9d4c2e5c04d621418abe275a0cc38bb92ebd3f6671641f271f4c7130fdb45aec09b732c566" # 0652-x86-hvm-Allow-writes-to-registers-on-the-same-page-a.patch
 	"370d44cbc801d0e814dbd4413ea2e42424a880b5084f9876937b281eb73f6eb46a4807ea765d30d539b7ec41e3eda5fb18aa7f8ca506c32c18c359a91fd80fcf" # 1002-libxl-do-not-start-dom0-qemu-when-not-needed.patch
 	"bbed2c6f3bd333cf9f65cb52315740ce27a31eb45356c49485f44650b9d3f84d45ca1465e813ffe9b3ba5cbdb8e3598da7304a139fb2490db19d2f95e96fc000" # 1006-libxl-use-EHCI-for-providing-tablet-USB-device.patch
+	"02bc6a2feee14cdb40e91a7052f1c87f34b79c442ef483c44d04e5470127cfb47e0069e79aa1c0d063110fe2b568040d3fbc38ccb8fbfeacfe7b7ab7fa53a12a" # 1007-libxl-allow-kernel-cmdline-without-kernel-if-stubdom.patch
 	"54448175b503ebbcbeb0dac3b13f4e5e1848caee29040fb449049fa0e1c4efe935a1b1fba976fd5026b2ea1e39f46c335064e601fa370f86441b6dc84f01e0f5" # 1018-Fix-IGD-passthrough-with-linux-stubdomain.patch
 	"62cb1c6f83ce2b0d602c6e3a8194e43f7f88c44a5666af25bdb1952bb28c974979e1da77cec86f4bf417282655880fdfb198a94d9aea6a165ce96b173f492bd4" # 1301-xenconsoled-install-xenstore-watch-for-all-supported.patch
 	"dac3d2f240cd03074c00c6e813132904b7778371b9128e827471e2714e240b5e8095ba3ed901566c467bf9871efb7c02dfa591c1ab45d54db4f81ec1eefa5ecc" # 1302-xenconsoled-add-support-for-consoles-using-state-xen.patch
