@@ -1,0 +1,48 @@
+From aa124a07c210b214e2fcabb27145d39bc29fa87f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>
+Date: Tue, 7 Aug 2018 04:16:22 +0200
+Subject: [PATCH 6/6] libxl: use xenconsoled even for multiple stubdomain's
+ consoles
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Since multiple consoles support was added to xenconsoled, use it for
+stubdomain. This makes it possible to have HVM without qemu in dom0 at
+al. As long as no other feature requiring qemu in dom0 is used, like VNC
+or qdisk.
+
+Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+---
+ tools/libs/light/libxl_dm.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/tools/libs/light/libxl_dm.c b/tools/libs/light/libxl_dm.c
+index 5088371439..bd9d4f9945 100644
+--- a/tools/libs/light/libxl_dm.c
++++ b/tools/libs/light/libxl_dm.c
+@@ -2547,7 +2547,9 @@ static void spawn_stub_launch_dm(libxl__egc *egc,
+ 
+     for (i = 0; i < num_console; i++) {
+         console[i].devid = i;
+-        console[i].consback = LIBXL__CONSOLE_BACKEND_IOEMU;
++        /* will be changed back to LIBXL__CONSOLE_BACKEND_IOEMU if qemu
++         * will be in use */
++        console[i].consback = LIBXL__CONSOLE_BACKEND_XENCONSOLED;
+         /* STUBDOM_CONSOLE_LOGGING (console 0) is for minios logging
+          * STUBDOM_CONSOLE_SAVE (console 1) is for writing the save file
+          * STUBDOM_CONSOLE_RESTORE (console 2) is for reading the save file
+@@ -2562,9 +2564,6 @@ static void spawn_stub_launch_dm(libxl__egc *egc,
+                 if (ret) goto out;
+                 console[i].output = GCSPRINTF("file:%s", filename);
+                 free(filename);
+-                /* will be changed back to LIBXL__CONSOLE_BACKEND_IOEMU if qemu
+-                 * will be in use */
+-                console[i].consback = LIBXL__CONSOLE_BACKEND_XENCONSOLED;
+                 break;
+             case STUBDOM_CONSOLE_SAVE:
+                 console[i].output = GCSPRINTF("file:%s",
+-- 
+2.43.0
+

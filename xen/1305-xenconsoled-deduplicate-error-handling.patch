@@ -1,0 +1,59 @@
+From f57ad315fb4c606d375ca6cae2161a023da27728 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>
+Date: Tue, 7 Aug 2018 04:16:19 +0200
+Subject: [PATCH 5/6] xenconsoled: deduplicate error handling
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+---
+ tools/console/daemon/io.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/tools/console/daemon/io.c b/tools/console/daemon/io.c
+index 3afc44bb67..d194cc68d0 100644
+--- a/tools/console/daemon/io.c
++++ b/tools/console/daemon/io.c
+@@ -812,9 +812,7 @@ static int console_create_ring(struct console *con)
+ 
+ 	if (rc == -1) {
+ 		err = errno;
+-		xenevtchn_close(con->xce_handle);
+-		con->xce_handle = NULL;
+-		goto out;
++		goto err_xce;
+ 	}
+ 	con->local_port = rc;
+ 	con->remote_port = remote_port;
+@@ -822,11 +820,7 @@ static int console_create_ring(struct console *con)
+ 	if (con->master_fd == -1) {
+ 		if (!console_create_tty(con)) {
+ 			err = errno;
+-			xenevtchn_close(con->xce_handle);
+-			con->xce_handle = NULL;
+-			con->local_port = -1;
+-			con->remote_port = -1;
+-			goto out;
++			goto err_xce;
+ 		}
+ 	}
+ 
+@@ -836,6 +830,13 @@ static int console_create_ring(struct console *con)
+ 	/* if everything ok, signal backend readiness, in backend tree */
+ 	set_backend_state(con, XenbusStateConnected);
+ 
++ err_xce:
++	if (err) {
++		xenevtchn_close(con->xce_handle);
++		con->xce_handle = NULL;
++		con->local_port = -1;
++		con->remote_port = -1;
++	}
+  out:
+ 	return err;
+ }
+-- 
+2.43.0
+
