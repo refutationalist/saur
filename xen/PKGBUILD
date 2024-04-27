@@ -136,6 +136,8 @@ _feature_patches=(
 	"1006-libxl-use-EHCI-for-providing-tablet-USB-device.patch"
 	"1007-libxl-allow-kernel-cmdline-without-kernel-if-stubdom.patch"
 	"1008-libxl-Force-emulating-readonly-disks-as-SCSI.patch"
+	"1009-tools-xenconsole-replace-ESC-char-on-xenconsole-outp.patch"
+	"1010-tools-xenconsole-Don-t-replace-ESC-char-by-default.patch"
 	"1018-Fix-IGD-passthrough-with-linux-stubdomain.patch"
 	"1301-xenconsoled-install-xenstore-watch-for-all-supported.patch"
 	"1302-xenconsoled-add-support-for-consoles-using-state-xen.patch"
@@ -211,6 +213,8 @@ _feature_patch_sums=(
 	"bbed2c6f3bd333cf9f65cb52315740ce27a31eb45356c49485f44650b9d3f84d45ca1465e813ffe9b3ba5cbdb8e3598da7304a139fb2490db19d2f95e96fc000" # 1006-libxl-use-EHCI-for-providing-tablet-USB-device.patch
 	"02bc6a2feee14cdb40e91a7052f1c87f34b79c442ef483c44d04e5470127cfb47e0069e79aa1c0d063110fe2b568040d3fbc38ccb8fbfeacfe7b7ab7fa53a12a" # 1007-libxl-allow-kernel-cmdline-without-kernel-if-stubdom.patch
 	"819b8d3e756d09625261a5ff46c9b7d4003127b4403268a61d2e66238015e3eb33b8adcc67e7e4943933fdb54cecd21d7527900b398b61d5939e4daee4bd70bb" # 1008-libxl-Force-emulating-readonly-disks-as-SCSI.patch
+	"983658d2a11de892b84c7d2600fb4b5971d92f054fcef0043e01e5bdeb32c4b57667ddf5b3fa59a29e863b90b71d93f876e3e7a69ad089157b04bdebf09b9482" # 1009-tools-xenconsole-replace-ESC-char-on-xenconsole-outp.patch
+	"79e0d8690370f7d455d891694b86fc90078bf1ceecec11fa68563ac9ccaa68b44377139d8442ddccbf29e5eaa6bc241d8583dc190529b807d32c78987966b3b0" # 1010-tools-xenconsole-Don-t-replace-ESC-char-by-default.patch
 	"54448175b503ebbcbeb0dac3b13f4e5e1848caee29040fb449049fa0e1c4efe935a1b1fba976fd5026b2ea1e39f46c335064e601fa370f86441b6dc84f01e0f5" # 1018-Fix-IGD-passthrough-with-linux-stubdomain.patch
 	"62cb1c6f83ce2b0d602c6e3a8194e43f7f88c44a5666af25bdb1952bb28c974979e1da77cec86f4bf417282655880fdfb198a94d9aea6a165ce96b173f492bd4" # 1301-xenconsoled-install-xenstore-watch-for-all-supported.patch
 	"dac3d2f240cd03074c00c6e813132904b7778371b9128e827471e2714e240b5e8095ba3ed901566c467bf9871efb7c02dfa591c1ab45d54db4f81ec1eefa5ecc" # 1302-xenconsoled-add-support-for-consoles-using-state-xen.patch
