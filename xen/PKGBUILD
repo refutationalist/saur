@@ -151,6 +151,7 @@ _feature_patches=(
 
 	# Patches taken from XenServer's patchset.
 	"0001-x86-vpt-fix-injection-to-remote-vCPU.patch"
+	"0002-intel-Workaround-Nehalem-and-Westmere-C-states-bugs.patch"
 )
 
 
@@ -234,6 +235,7 @@ _feature_patch_sums=(
 
 	# Patches taken from XenServer's patchset.
 	"1558d337a8181810614c9d110e42c939e57a6860b594f6670e77fcbe1450a984be4cdbcb866ae850bdd57dee2686cd2ab5607315592f18c40f86eedc560ed681" # 0001-x86-vpt-fix-injection-to-remote-vCPU.patch
+	"0384b29938499d6c281c269ac1adc016a529cacea926dd81b8feb0db00abe80495eb7be86c9f200f2141a0f6a9f25bf7dc440d7e7789db8fd4357a89caaed83b" # 0002-intel-Workaround-Nehalem-and-Westmere-C-states-bugs.patch
 )
 
 

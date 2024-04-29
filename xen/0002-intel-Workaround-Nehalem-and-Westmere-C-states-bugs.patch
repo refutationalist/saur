@@ -1,0 +1,67 @@
+From 932bce4cecb7905649872b47a4a87d40ae9f7660 Mon Sep 17 00:00:00 2001
+From: Malcolm Crossley <malcolm.crossley@citrix.com>
+Date: Wed, 7 Feb 2024 04:53:50 +0100
+Subject: [PATCH 02/18] intel: Workaround Nehalem and Westmere C-states bugs
+
+CA-49885: Restrict Intel Nehalem and Westmere class processors to a maximum
+c-state level of 1 to workaround various Intel errata associated with these
+processors.
+---
+ xen/arch/x86/cpu/intel.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/xen/arch/x86/cpu/intel.c b/xen/arch/x86/cpu/intel.c
+index aef8e4506c..d981c44f92 100644
+--- a/xen/arch/x86/cpu/intel.c
++++ b/xen/arch/x86/cpu/intel.c
+@@ -370,6 +370,38 @@ static void probe_c3_errata(const struct cpuinfo_x86 *c)
+     }
+ }
+ 
++/*
++ * Detect Intel Nehalem CPU's with C-states enabled and restrict to C1 due to
++ * Intel Errata BA80, AAK120, AAM108, AAO67, BD59, AAY54
++ */
++static void nehalem_cpu_cstate_workaround(struct cpuinfo_x86 *c)
++{
++    static bool_t nehalem_cstate_errata_workaround_warning = 0;
++
++    if ( c->x86_vendor == X86_VENDOR_INTEL && c->x86 == 6 )
++    {
++        switch ( c->x86_model )
++        {
++        /* Nehalem */
++        case 0x1A:
++        case 0x1E:
++        case 0x1F:
++        case 0x2E:
++        /* Westmere */
++        case 0x25:
++        case 0x2C:
++            if ( !nehalem_cstate_errata_workaround_warning )
++            {
++                printk(XENLOG_WARNING "Disabling C-states C3 and C6 on Nehalem"
++                        " Processors due to errata\n");
++                nehalem_cstate_errata_workaround_warning = 1;
++            }
++            max_cstate = 1;
++            break;
++        }
++    }
++}
++
+ /*
+  * P4 Xeon errata 037 workaround.
+  * Hardware prefetcher may cause stale data to be loaded into the cache.
+@@ -396,6 +428,8 @@ static void Intel_errata_workarounds(struct cpuinfo_x86 *c)
+ 		__set_bit(X86_FEATURE_CLFLUSH_MONITOR, c->x86_capability);
+ 
+ 	probe_c3_errata(c);
++
++	nehalem_cpu_cstate_workaround(c);
+ }
+ 
+ 
+-- 
+2.43.0
+
