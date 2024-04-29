@@ -139,6 +139,8 @@ _feature_patches=(
 	"1009-tools-xenconsole-replace-ESC-char-on-xenconsole-outp.patch"
 	"1010-tools-xenconsole-Don-t-replace-ESC-char-by-default.patch"
 	"1014-Additional-support-in-ACPI-builder-to-support-SLIC-a.patch"
+	"1016-gnttab-disable-grant-tables-v2-by-default.patch"
+	"1017-Disable-TSX-by-default.patch"
 	"1018-Fix-IGD-passthrough-with-linux-stubdomain.patch"
 	"1301-xenconsoled-install-xenstore-watch-for-all-supported.patch"
 	"1302-xenconsoled-add-support-for-consoles-using-state-xen.patch"
@@ -217,6 +219,8 @@ _feature_patch_sums=(
 	"983658d2a11de892b84c7d2600fb4b5971d92f054fcef0043e01e5bdeb32c4b57667ddf5b3fa59a29e863b90b71d93f876e3e7a69ad089157b04bdebf09b9482" # 1009-tools-xenconsole-replace-ESC-char-on-xenconsole-outp.patch
 	"79e0d8690370f7d455d891694b86fc90078bf1ceecec11fa68563ac9ccaa68b44377139d8442ddccbf29e5eaa6bc241d8583dc190529b807d32c78987966b3b0" # 1010-tools-xenconsole-Don-t-replace-ESC-char-by-default.patch
 	"e0097e803f8a5fb249a86af38f888dd1860e8a15317b1bbab198af56efa1423735e9cd91a1931fbbcf07e73ffd3ddecd8f4286f05be150d439e5d7e9812a48bd" # 1014-Additional-support-in-ACPI-builder-to-support-SLIC-a.patch
+	"7f058161143baf5aa402f86d78b4199df3455c70b952b8691c05a920181e3bf35df3d614109b2916fb9a5e4e437507c7570f50c417bf3086727d405f323b5ced" # 1016-gnttab-disable-grant-tables-v2-by-default.patch
+	"67aa0996072233a5cd777ec3d366241e3250e96cc4c4773a469c854f2e854929b72a5fa0dd2dc065d1ea451882b8d496b206afffacd9fe029628655727b951d2" # 1017-Disable-TSX-by-default.patch
 	"54448175b503ebbcbeb0dac3b13f4e5e1848caee29040fb449049fa0e1c4efe935a1b1fba976fd5026b2ea1e39f46c335064e601fa370f86441b6dc84f01e0f5" # 1018-Fix-IGD-passthrough-with-linux-stubdomain.patch
 	"62cb1c6f83ce2b0d602c6e3a8194e43f7f88c44a5666af25bdb1952bb28c974979e1da77cec86f4bf417282655880fdfb198a94d9aea6a165ce96b173f492bd4" # 1301-xenconsoled-install-xenstore-watch-for-all-supported.patch
 	"dac3d2f240cd03074c00c6e813132904b7778371b9128e827471e2714e240b5e8095ba3ed901566c467bf9871efb7c02dfa591c1ab45d54db4f81ec1eefa5ecc" # 1302-xenconsoled-add-support-for-consoles-using-state-xen.patch
