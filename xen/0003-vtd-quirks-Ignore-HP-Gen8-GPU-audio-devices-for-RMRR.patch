@@ -1,0 +1,98 @@
+From 030eca5409044a1db7a7501e77cb7b615725d82d Mon Sep 17 00:00:00 2001
+From: Malcolm Crossley <malcolm.crossley@citrix.com>
+Date: Wed, 7 Feb 2024 04:56:53 +0100
+Subject: [PATCH 03/18] vtd/quirks: Ignore HP Gen8 GPU audio devices for RMRR
+
+HP Gen8 BIOS incorrectly add GPU audio devices to the RMRR device list.
+This causes domains with GPU devices passthrough to fail to start as the
+RMRR regions conflict with key memory locations in the guest memory map.
+---
+ xen/drivers/passthrough/vtd/dmar.c   |  9 ++++++++
+ xen/drivers/passthrough/vtd/dmar.h   |  1 +
+ xen/drivers/passthrough/vtd/quirks.c | 32 ++++++++++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
+
+diff --git a/xen/drivers/passthrough/vtd/dmar.c b/xen/drivers/passthrough/vtd/dmar.c
+index 07772f178f..13d38f2de5 100644
+--- a/xen/drivers/passthrough/vtd/dmar.c
++++ b/xen/drivers/passthrough/vtd/dmar.c
+@@ -385,6 +385,15 @@ static int __init acpi_parse_dev_scope(
+             break;
+ 
+         case ACPI_DMAR_SCOPE_TYPE_ENDPOINT:
++            if ( !drhd && rmrr_device_quirks(PCI_SBDF(seg, bus, path->dev, path->fn)) )
++            {
++                if ( iommu_verbose )
++                    printk(VTDPREFIX " QUIRK: ignoring %04x:%02x:%02x.%u\n",
++                           seg, bus, path->dev, path->fn);
++                start += acpi_scope->length;
++                continue;
++            }
++
+             if ( iommu_verbose )
+                 printk(VTDPREFIX " endpoint: %pp\n",
+                        &PCI_SBDF(seg, bus, path->dev, path->fn));
+diff --git a/xen/drivers/passthrough/vtd/dmar.h b/xen/drivers/passthrough/vtd/dmar.h
+index a1f2353a51..af0728e337 100644
+--- a/xen/drivers/passthrough/vtd/dmar.h
++++ b/xen/drivers/passthrough/vtd/dmar.h
+@@ -159,5 +159,6 @@ do {                                                               \
+ int vtd_hw_check(void);
+ void disable_pmr(struct vtd_iommu *iommu);
+ int is_igd_drhd(struct acpi_drhd_unit *drhd);
++int rmrr_device_quirks(pci_sbdf_t sbdf);
+ 
+ #endif /* _DMAR_H_ */
+diff --git a/xen/drivers/passthrough/vtd/quirks.c b/xen/drivers/passthrough/vtd/quirks.c
+index 5a56565ea8..ea7d3ee78b 100644
+--- a/xen/drivers/passthrough/vtd/quirks.c
++++ b/xen/drivers/passthrough/vtd/quirks.c
+@@ -29,6 +29,7 @@
+ #include <xen/pci_ids.h>
+ #include <xen/pci_regs.h>
+ #include <xen/keyhandler.h>
++#include <xen/dmi.h>
+ #include <asm/msi.h>
+ #include <asm/irq.h>
+ #include <asm/pci.h>
+@@ -612,6 +613,37 @@ void pci_vtd_quirk(const struct pci_dev *pdev)
+     }
+ }
+ 
++const static struct dmi_system_id __initconstrel rmrr_dmi_quirks[] =
++{
++    {
++        .ident    = "HP Gen 8",
++        .matches  = {
++            DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++            DMI_MATCH(DMI_PRODUCT_NAME,   "Gen8")
++        }
++    },
++    {}
++};
++
++#define PCI_CLASS_AUDIO_DEVICE    0x0403
++
++int __init rmrr_device_quirks(pci_sbdf_t sbdf)
++{
++    static __initdata int8_t match = -1;
++
++    if ( unlikely(match < 0) )
++        match = !!dmi_check_system(rmrr_dmi_quirks);
++    if ( !match )
++        return 0;
++
++    /* Match PCI audio class device not on function 0 */
++    if ( sbdf.fn != 0 &&
++         pci_conf_read16(sbdf, PCI_CLASS_DEVICE) == PCI_CLASS_AUDIO_DEVICE )
++        return 1;
++
++    return 0;
++}
++
+ void __init quirk_iommu_caps(struct vtd_iommu *iommu)
+ {
+     /*
+-- 
+2.43.0
+
