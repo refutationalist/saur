@@ -1,0 +1,91 @@
+From b865856fffe142f4d00a968d2df10259d7863cb2 Mon Sep 17 00:00:00 2001
+From: Malcolm Crossley <malcolm.crossley@citrix.com>
+Date: Wed, 7 Feb 2024 05:01:24 +0100
+Subject: [PATCH 04/18] pci: Add PCI phantom functions to Xen based on PCI
+ vendor + device ID.
+
+The list of devices to quirk has been taken from Linux kernel quirk list
+---
+ xen/drivers/passthrough/pci.c | 59 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+
+diff --git a/xen/drivers/passthrough/pci.c b/xen/drivers/passthrough/pci.c
+index e99837b6e1..91b347ca04 100644
+--- a/xen/drivers/passthrough/pci.c
++++ b/xen/drivers/passthrough/pci.c
+@@ -1023,6 +1023,63 @@ void pci_check_disable_device(u16 seg, u8 bus, u8 devfn)
+     pci_conf_write16(pdev->sbdf, PCI_COMMAND, cword & ~PCI_COMMAND_MASTER);
+ }
+ 
++static void quirk_dma_func_phantom(pci_sbdf_t sbdf)
++{
++    struct phantom_dev phantom = {
++        .seg = sbdf.seg,
++        .bus = sbdf.bus,
++        .slot = sbdf.devfn,
++        .stride = 1,
++    };
++
++    phantom_devs[nr_phantom_devs++] = phantom;
++}
++
++static void quirk_scan_pci_device(pci_sbdf_t sbdf)
++{
++    unsigned int device, vendor = pci_conf_read16(sbdf, PCI_VENDOR_ID);
++
++    switch ( vendor )
++    {
++    case 0x1b4b: /* Marvell */
++    case 0x197B: /* JMICRON */
++    case 0x1103: /* TTI */
++        break;
++    default:
++        return;
++    }
++
++    device = pci_conf_read16(sbdf, PCI_DEVICE_ID);
++
++    switch ( vendor )
++    {
++    case 0x1b4b: /* Marvell */
++        switch ( device )
++        {
++        case 0x9120: /* 88SE9123 based controllers */
++        case 0x9123:
++        case 0x9130:
++        case 0x9172:
++        case 0x917a:
++        case 0x91a0:
++        case 0x9230:
++            quirk_dma_func_phantom(sbdf);
++            break;
++        }
++        break;
++
++    case 0x197B: /* JMICRON */
++        if ( device == 0x2393 ) /* JMB388 ESD */
++            quirk_dma_func_phantom(sbdf);
++        break;
++
++    case 0x1103: /* TTI */
++        if ( device == 0x0642 )
++            quirk_dma_func_phantom(sbdf);
++        break;
++    }
++}
++
+ /*
+  * scan pci devices to add all existed PCI devices to alldevs_list,
+  * and setup pci hierarchy in array bus2bridge.
+@@ -1045,6 +1102,8 @@ static int __init cf_check _scan_pci_devices(struct pci_seg *pseg, void *arg)
+                     continue;
+                 }
+ 
++                quirk_scan_pci_device(PCI_SBDF(pseg->nr, bus, dev, func));
++
+                 pdev = alloc_pdev(pseg, bus, PCI_DEVFN(dev, func));
+                 if ( !pdev )
+                 {
+-- 
+2.43.0
+

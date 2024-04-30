@@ -153,6 +153,7 @@ _feature_patches=(
 	"0001-x86-vpt-fix-injection-to-remote-vCPU.patch"
 	"0002-intel-Workaround-Nehalem-and-Westmere-C-states-bugs.patch"
 	"0003-vtd-quirks-Ignore-HP-Gen8-GPU-audio-devices-for-RMRR.patch"
+	"0004-pci-Add-PCI-phantom-functions-to-Xen-based-on-PCI-ve.patch"
 )
 
 
@@ -238,6 +239,7 @@ _feature_patch_sums=(
 	"1558d337a8181810614c9d110e42c939e57a6860b594f6670e77fcbe1450a984be4cdbcb866ae850bdd57dee2686cd2ab5607315592f18c40f86eedc560ed681" # 0001-x86-vpt-fix-injection-to-remote-vCPU.patch
 	"0384b29938499d6c281c269ac1adc016a529cacea926dd81b8feb0db00abe80495eb7be86c9f200f2141a0f6a9f25bf7dc440d7e7789db8fd4357a89caaed83b" # 0002-intel-Workaround-Nehalem-and-Westmere-C-states-bugs.patch
 	"1b3b9bcef20fa3257020656cf3268fe216e7b02ec10d39170b2cf0a5b360ad3f23bad99abb769535fb0bdde86528fc2d7b9e109c93f8fe9fc9bdfc710cc4edb8" # 0003-vtd-quirks-Ignore-HP-Gen8-GPU-audio-devices-for-RMRR.patch
+	"dfe48466d6fe0166428902b1346b9aecab279f8282c9e87f367f4cf98b2fc21cd9533d3051f575c9a0c9edd6084f0c8491e2341996bfedcc6a4d3f7eb94e48c2" # 0004-pci-Add-PCI-phantom-functions-to-Xen-based-on-PCI-ve.patch
 )
 
 
