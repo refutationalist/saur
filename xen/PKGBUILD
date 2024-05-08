@@ -41,10 +41,8 @@ options=(!buildflags)
 
 makedepends=(
 	'acpica'
-	'bin86'
 	'bison'
 	'bridge-utils'
-	'dev86'
 	'fig2dev'
 	'flex'
 	'gettext'
