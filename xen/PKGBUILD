@@ -159,6 +159,7 @@ _feature_patches=(
 	"0011-x86-HVM-Avoid-cache-flush-operations-during-hvm_load.patch"
 	"0012-libxl-Don-t-insert-PCI-device-into-xenstore-for-HVM-.patch"
 	"0014-common-page_alloc-don-t-idle-scrub-before-microcode-.patch"
+	"0015-config-Adopt-some-of-the-XenServer-default-config-ch.patch"
 )
 
 
@@ -250,6 +251,7 @@ _feature_patch_sums=(
 	"1d016e8f8c0e6a76453e21fefb87949a12be24a48c84d1fdac67aea500e7a6b3721399fd8911f73ddfdfffad8831598a4afc8e207fde8a34a3b52e97c4e23478" # 0007-x86-hpet-Post-cleanup.patch
 	"fe2cb471c4647274dbb6603e9a2ef87882ed8c2d0cd1d1dfddab234f26b5f86bff23af20a4223d35ea5ffe1fff3ad4e5be091249c599b21f835e3c0039b3fb8c" # 0012-libxl-Don-t-insert-PCI-device-into-xenstore-for-HVM-.patch
 	"0e40eb04f0182b15630bab969b0da07c3e91d3b5f126e7b8eed630c9d5ef32de48b3219e0ab5d117347702673a95d5a1d0b9c85f673c3e041c506a22e633c926" # 0014-common-page_alloc-don-t-idle-scrub-before-microcode-.patch
+	"bd132a0dec991784bf3fa09725e5d5770afaca6d081c049e33f32c1854b50ddd5dc91cb621506ca26b41adabc5dbf61ca97fcd06fa11900a2e010f299bd7a07b" # 0015-config-Adopt-some-of-the-XenServer-default-config-ch.patch
 )
 
 _stub_sums=(
