@@ -1,0 +1,49 @@
+From fa255982ed03c774b6d71fd8c4d18726f44a261f Mon Sep 17 00:00:00 2001
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
+Date: Tue, 26 Apr 2016 13:59:38 +0100
+Subject: [PATCH 10/18] efi: Workaround page fault during runtime service
+
+Some hardware makes use of memory of type EfiACPIMemoryNVS during the
+ResetSystem runtime service but does not mark the memory as needing a
+runtime mapping causing a fatal page fault.
+
+To workaround this, map this type of memory for runtime services
+regardless of whether it marked with EFI_MEMORY_RUNTIME.
+
+The hardware on which this behavior was observed:
+Dell OptiPlex 9020
+Firmware version: A15
+Firmware release date: 11/08/2015
+
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+---
+ xen/common/efi/boot.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/xen/common/efi/boot.c b/xen/common/efi/boot.c
+index 1843b65c8f..aacdfac6ea 100644
+--- a/xen/common/efi/boot.c
++++ b/xen/common/efi/boot.c
+@@ -158,6 +158,7 @@ static SIMPLE_TEXT_OUTPUT_INTERFACE *__initdata StdErr;
+ static UINT32 __initdata mdesc_ver;
+ static bool __initdata map_bs;
+ static bool __initdata map_res = true;
++static bool __initdata map_nvs = true;
+ 
+ static struct file __initdata cfg;
+ static struct file __initdata kernel;
+@@ -1753,6 +1754,11 @@ void __init efi_init_memory(void)
+                 desc->Attribute |= EFI_MEMORY_RUNTIME;
+                 break;
+ 
++            case EfiACPIMemoryNVS:
++                if ( !map_nvs )
++                    continue;
++                break;
++
+             case EfiBootServicesCode:
+             case EfiBootServicesData:
+                 if ( !map_bs )
+-- 
+2.43.0
+
