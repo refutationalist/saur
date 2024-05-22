@@ -154,6 +154,13 @@ _feature_patches=(
 	"0005-x86-hpet-Pre-cleanup.patch"
 	"0006-x86-hpet-Use-singe-apic-vector-rather-than-irq_descs.patch"
 	"0007-x86-hpet-Post-cleanup.patch"
+	"0008-libxc-retry-shadow-ops-if-EBUSY-is-returned.patch"
+	"0010-efi-Workaround-page-fault-during-runtime-service.patch"
+	"0011-x86-HVM-Avoid-cache-flush-operations-during-hvm_load.patch"
+	"0012-libxl-Don-t-insert-PCI-device-into-xenstore-for-HVM-.patch"
+	"0014-common-page_alloc-don-t-idle-scrub-before-microcode-.patch"
+	"0015-config-Adopt-some-of-the-XenServer-default-config-ch.patch"
+	"0016-iommu-Disable-interrupt-remapping-rather-than-IOMMU-.patch"
 	"0017-xsm-hide-detailed-Xen-version-from-unprivileged-gues.patch"
 )
 
@@ -173,9 +180,14 @@ _stubdom_source=(
 )
 
 
-# from cheap hack known as break_out_sums.sh
+# To update your checksums, just use break_out_sums.sh
+# the {START,END} SUMS lines are used by the script to know where the sums go, don't delete them.
+
+# START SUMS
+
+
 _sha512sums=(
-	"SKIP"
+	"SKIP" # git+https://xenbits.xen.org/git-http/xen.git#branch=stable-4.18
 	"1bbcbcd9fb8344a207409ec9f0064a45b726416f043f902ca587f5e4fa58497a759be4ffd584fa32318e960aa478864cc05ec026c444e8d27ca8e3248bd67420" # efi-xen.cfg
 	"ccaa2ff82e4203b11e5dec9aeccac2e165721d8067e0094603ecaa7a70b78c9eb9e2287a32687883d26b6ceae6f8d2ad7636ddf949eb658637b3ceaa6999711b" # xen.conf
 	"53ba61587cc2e84044e935531ed161e22c36d9e90b43cab7b8e63bcc531deeefacca301b5dff39ce89210f06f1d1e4f4f5cf49d658ed5d9038c707e3c95c66ef" # tmpfiles.conf
@@ -185,10 +197,8 @@ _sha512sums=(
 	"8ab84146c75f436f488fa22d05925230215c258c11cad8ab10c1f0142d628ecd876fd9d6124c18e4a406166afe59bfdedb3829d557e0361d2475a26f434cd0fb" # config
 )
 
-
 _patch_sums=(
 )
-
 
 _feature_patch_sums=(
 	"11e37c6f2b2d8356d4a6fea2ae452b6674eca1ac793cfedf00ae350705f34b117fe72e76c519953c0190524332c406698eb85daa96408bebcd12a497d1f61d79" # 0201-EFI-early-Add-noexit-to-inhibit-calling-ExitBootServ.patch
@@ -234,8 +244,6 @@ _feature_patch_sums=(
 	"f0e6381f1204b7741074c5eda0a36a36ea853509d0c7b3824e0bf435e42fcfc299245eb6afb2e57b3408f28fb780e53a83d3033cecfa13a875275985e3480ad0" # 1304-xenconsoled-add-support-for-up-to-3-secondary-consol.patch
 	"aaf5c08a47005d914aa69ab7ca89773d25c125f6d3d89d0626c519feee0d0207bb19f6a19e869d0fc4353a403d9680aa01f5213ac6d27327ba749095b0a77590" # 1305-xenconsoled-deduplicate-error-handling.patch
 	"b3160b15e9afa712086db2479998d18d44fe540f11fb8d0f0e8c7d3a4e19a7aca3a56f8fcfca4c354d4e88fd4becf18a529e48006ad0792a6c23a49a63e14aa1" # 1306-libxl-use-xenconsoled-even-for-multiple-stubdomain-s.patch
-
-	# Patches taken from XenServer's patchset.
 	"1558d337a8181810614c9d110e42c939e57a6860b594f6670e77fcbe1450a984be4cdbcb866ae850bdd57dee2686cd2ab5607315592f18c40f86eedc560ed681" # 0001-x86-vpt-fix-injection-to-remote-vCPU.patch
 	"0384b29938499d6c281c269ac1adc016a529cacea926dd81b8feb0db00abe80495eb7be86c9f200f2141a0f6a9f25bf7dc440d7e7789db8fd4357a89caaed83b" # 0002-intel-Workaround-Nehalem-and-Westmere-C-states-bugs.patch
 	"1b3b9bcef20fa3257020656cf3268fe216e7b02ec10d39170b2cf0a5b360ad3f23bad99abb769535fb0bdde86528fc2d7b9e109c93f8fe9fc9bdfc710cc4edb8" # 0003-vtd-quirks-Ignore-HP-Gen8-GPU-audio-devices-for-RMRR.patch
@@ -243,9 +251,12 @@ _feature_patch_sums=(
 	"129fa7ec5930e98a99c15f1efdc0c23ea508492d95095bf1ed84e2a98b131fc0e8523acafe15e44c257ca6d1217a291e30057533daeb78826c368336d2fd0e61" # 0005-x86-hpet-Pre-cleanup.patch
 	"51e95193d3d2a27c9ad7e5fc24a73d88688b7183fee3c037b9f3e8e10ac97427ba869c5c1a5fc6004e5d3d41da66cc63a0c06fe3fd10d6ae4604a744a5d3d776" # 0006-x86-hpet-Use-singe-apic-vector-rather-than-irq_descs.patch
 	"1d016e8f8c0e6a76453e21fefb87949a12be24a48c84d1fdac67aea500e7a6b3721399fd8911f73ddfdfffad8831598a4afc8e207fde8a34a3b52e97c4e23478" # 0007-x86-hpet-Post-cleanup.patch
+	"fe2cb471c4647274dbb6603e9a2ef87882ed8c2d0cd1d1dfddab234f26b5f86bff23af20a4223d35ea5ffe1fff3ad4e5be091249c599b21f835e3c0039b3fb8c" # 0012-libxl-Don-t-insert-PCI-device-into-xenstore-for-HVM-.patch
+	"0e40eb04f0182b15630bab969b0da07c3e91d3b5f126e7b8eed630c9d5ef32de48b3219e0ab5d117347702673a95d5a1d0b9c85f673c3e041c506a22e633c926" # 0014-common-page_alloc-don-t-idle-scrub-before-microcode-.patch
+	"bd132a0dec991784bf3fa09725e5d5770afaca6d081c049e33f32c1854b50ddd5dc91cb621506ca26b41adabc5dbf61ca97fcd06fa11900a2e010f299bd7a07b" # 0015-config-Adopt-some-of-the-XenServer-default-config-ch.patch
+	"f86772c12ccb0cac3a294eaa04d9942d284b6bd896254fccb4ac59ab7fadfcfdefb213b304b098f3bfd1e96b27d43e59775ef341f4c4a739f26516f017d5246b" # 0016-iommu-Disable-interrupt-remapping-rather-than-IOMMU-.patch
 	"8bb05599893aa1b698279d7f15b56bbee64283e81bf769148da11f975ade93dd1fd7a9ab9c25df723d21974c64c70362d76e003ba415ad654cbc240e2dbe78c2" # 0017-xsm-hide-detailed-Xen-version-from-unprivileged-gues.patch
 )
-
 
 _stub_sums=(
 	"2397795a0a4999a6efee3d8291356673d1757bc1b34dd2015378ef6ea8800ee1317c7d9f902d82bd62ff8d451223ad51ced5e3a6d66e8e79930a7f513cc2b805" # vtpm-gcc12-fixes.patch
@@ -259,6 +270,7 @@ _stub_sums=(
 	"4928b5b82f57645be9408362706ff2c4d9baa635b21b0d41b1c82930e8c60a759b1ea4fa74d7e6c7cae1b7692d006aa5cb72df0c3b88bf049779aa2b566f9d35" # tpm_emulator-0.7.4.tar.gz
 	"021b958fcd0d346c4ba761bcf0cc40f3522de6186cf5a0a6ea34a70504ce9622b1c2626fce40675bc8282cf5f5ade18473656abc38050f72f5d6480507a2106e" # zlib-1.2.3.tar.gz
 )
+# END SUMS
 
 
 # Simplify things for makepkg
