@@ -1,0 +1,39 @@
+From 6ea72b56e23f05a7f2b421d2ffe1cae57b0d529c Mon Sep 17 00:00:00 2001
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
+Date: Wed, 27 May 2015 10:04:00 +0100
+Subject: [PATCH 12/18] libxl: Don't insert PCI device into xenstore for HVM
+ guests
+
+When doing passthrough of a PCI device for an HVM guest, don't insert
+the device into xenstore, otherwise pciback attempts to use it which
+conflicts with QEMU.
+
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+---
+ tools/libs/light/libxl_pci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/libs/light/libxl_pci.c b/tools/libs/light/libxl_pci.c
+index 5f5f504bd2..2da9b9ae46 100644
+--- a/tools/libs/light/libxl_pci.c
++++ b/tools/libs/light/libxl_pci.c
+@@ -1416,6 +1416,7 @@ static void pci_add_dm_done(libxl__egc *egc,
+     STATE_AO_GC(pas->aodev->ao);
+     libxl_ctx *ctx = libxl__gc_owner(gc);
+     libxl_domid domid = pas->pci_domid;
++    libxl_domain_type type = libxl__domain_type(gc, domid);
+     char *sysfs_path;
+     FILE *f;
+     unsigned long long start, end, flags, size;
+@@ -1542,7 +1543,7 @@ out_no_irq:
+         }
+     }
+ 
+-    if (!libxl_get_stubdom_id(CTX, domid))
++    if (!libxl_get_stubdom_id(CTX, domid) && type == LIBXL_DOMAIN_TYPE_PV)
+         rc = libxl__device_pci_add_xenstore(gc, domid, pci, starting);
+     else
+         rc = 0;
+-- 
+2.43.0
+
