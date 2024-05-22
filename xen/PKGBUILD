@@ -161,6 +161,7 @@ _feature_patches=(
 	"0014-common-page_alloc-don-t-idle-scrub-before-microcode-.patch"
 	"0015-config-Adopt-some-of-the-XenServer-default-config-ch.patch"
 	"0016-iommu-Disable-interrupt-remapping-rather-than-IOMMU-.patch"
+	"0017-xsm-hide-detailed-Xen-version-from-unprivileged-gues.patch"
 )
 
 
@@ -254,6 +255,7 @@ _feature_patch_sums=(
 	"0e40eb04f0182b15630bab969b0da07c3e91d3b5f126e7b8eed630c9d5ef32de48b3219e0ab5d117347702673a95d5a1d0b9c85f673c3e041c506a22e633c926" # 0014-common-page_alloc-don-t-idle-scrub-before-microcode-.patch
 	"bd132a0dec991784bf3fa09725e5d5770afaca6d081c049e33f32c1854b50ddd5dc91cb621506ca26b41adabc5dbf61ca97fcd06fa11900a2e010f299bd7a07b" # 0015-config-Adopt-some-of-the-XenServer-default-config-ch.patch
 	"f86772c12ccb0cac3a294eaa04d9942d284b6bd896254fccb4ac59ab7fadfcfdefb213b304b098f3bfd1e96b27d43e59775ef341f4c4a739f26516f017d5246b" # 0016-iommu-Disable-interrupt-remapping-rather-than-IOMMU-.patch
+	"8bb05599893aa1b698279d7f15b56bbee64283e81bf769148da11f975ade93dd1fd7a9ab9c25df723d21974c64c70362d76e003ba415ad654cbc240e2dbe78c2" # 0017-xsm-hide-detailed-Xen-version-from-unprivileged-gues.patch
 )
 
 _stub_sums=(

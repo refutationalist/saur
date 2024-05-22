@@ -1,0 +1,60 @@
+From 3dc20ddec5191ed4ce0ed4b295678dd1b73237b4 Mon Sep 17 00:00:00 2001
+From: Sergey Dyasli <sergey.dyasli@citrix.com>
+Date: Tue, 23 Jul 2019 16:49:29 +0100
+Subject: [PATCH 17/18] xsm: hide detailed Xen version from unprivileged guests
+
+These subops leak information into guests which they have no buisness
+knowning.  Return empty strings instead.
+
+Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
+---
+ xen/common/version.c    |  2 +-
+ xen/include/xsm/dummy.h | 15 +++++++++++----
+ 2 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/xen/common/version.c b/xen/common/version.c
+index d320135208..7937573a3f 100644
+--- a/xen/common/version.c
++++ b/xen/common/version.c
+@@ -67,7 +67,7 @@ const char *xen_banner(void)
+ 
+ const char *xen_deny(void)
+ {
+-    return "<denied>";
++    return "";
+ }
+ 
+ static const char build_info[] =
+diff --git a/xen/include/xsm/dummy.h b/xen/include/xsm/dummy.h
+index 8671af1ba4..f80d486531 100644
+--- a/xen/include/xsm/dummy.h
++++ b/xen/include/xsm/dummy.h
+@@ -827,14 +827,21 @@ static XSM_INLINE int cf_check xsm_xen_version(XSM_DEFAULT_ARG uint32_t op)
+         /* These sub-ops ignore the permission checks and return data. */
+         block_speculation();
+         return 0;
+-    case XENVER_extraversion:
+-    case XENVER_compile_info:
+-    case XENVER_capabilities:
+-    case XENVER_changeset:
++
+     case XENVER_pagesize:
+     case XENVER_guest_handle:
+         /* These MUST always be accessible to any guest by default. */
+         return xsm_default_action(XSM_HOOK, current->domain, NULL);
++
++    case XENVER_extraversion:
++    case XENVER_compile_info:
++    case XENVER_capabilities:
++    case XENVER_changeset:
++        if ( IS_ENABLED(CONFIG_DEBUG) )
++            /* Expose information to guests only in debug builds. */
++            return xsm_default_action(XSM_HOOK, current->domain, NULL);
++
++        /* fallthrough */
+     default:
+         return xsm_default_action(XSM_PRIV, current->domain, NULL);
+     }
+-- 
+2.43.0
+
