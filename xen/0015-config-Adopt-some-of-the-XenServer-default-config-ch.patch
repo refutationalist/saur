@@ -1,0 +1,233 @@
+From 23af7222083db2ad042ba9ca802f3b3480d4c535 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Rafa=C3=ABl=20Kooi?=
+ <48814281+RA-Kooi@users.noreply.github.com>
+Date: Thu, 8 Feb 2024 05:17:26 +0100
+Subject: [PATCH 15/18] config: Adopt some of the XenServer default config
+ changes
+
+Most of these config changes should improve hardware compatibility and
+some of them improve security.
+---
+ docs/misc/xen-command-line.pandoc | 23 ++++++++++++-----------
+ xen/arch/x86/mm.c                 |  2 +-
+ xen/arch/x86/nmi.c                |  2 +-
+ xen/arch/x86/setup.c              |  3 +++
+ xen/arch/x86/time.c               |  2 +-
+ xen/common/domain.c               |  2 +-
+ xen/common/efi/boot.c             |  2 +-
+ xen/common/page_alloc.c           |  2 +-
+ xen/drivers/char/console.c        |  6 +++---
+ 9 files changed, 24 insertions(+), 20 deletions(-)
+
+diff --git a/docs/misc/xen-command-line.pandoc b/docs/misc/xen-command-line.pandoc
+index 332cc7a3e3..2ea6306bd8 100644
+--- a/docs/misc/xen-command-line.pandoc
++++ b/docs/misc/xen-command-line.pandoc
+@@ -326,7 +326,7 @@ Interrupts.  Specifying zero disables CMCI handling.
+ ### cmos-rtc-probe (x86)
+ > `= <boolean>`
+ 
+-> Default: `false`
++> Default: `true`
+ 
+ Flag to indicate whether to probe for a CMOS Real Time Clock irrespective of
+ ACPI indicating none to be there.
+@@ -409,7 +409,7 @@ The following are examples of correct specifications:
+ ### conring_size
+ > `= <size>`
+ 
+-> Default: `conring_size=16k`
++> Default: `conring_size=64k`
+ 
+ Specify the size of the console ring buffer.
+ 
+@@ -443,7 +443,7 @@ makes sense on its own.
+ ### console_timestamps
+ > `= none | date | datems | boot | raw`
+ 
+-> Default: `none`
++> Default: `boot`
+ 
+ > Can be modified at runtime
+ 
+@@ -1104,9 +1104,9 @@ Controls for interacting with the system Extended Firmware Interface.
+     dom0.  Selecting `rs=0` prohibits all use of Runtime Services.
+ 
+ *   The `attr=` string exists to specify what to do with memory regions of
+-    unknown/unrecognised cacheability.  `attr=no` is the default and will
+-    leave the memory regions unmapped, while `attr=uc` will map them as fully
+-    uncacheable.
++    unknown/unrecognised cacheability.  `attr=no` will leave the memory
++    regions unmapped, while `attr=uc` is the default and will map them as
++    fully uncacheable.
+ 
+ ### ept
+ > `= List of [ ad=<bool>, pml=<bool>, exec-sp=<bool> ]`
+@@ -1168,7 +1168,7 @@ introduced with the Nehalem architecture.
+ ### extra_guest_irqs
+ > `= [<domU number>][,<dom0 number>]`
+ 
+-> Default: `32,<variable>`
++> Default: `64,<variable>`
+ 
+ Change the number of PIRQs available for guests.  The optional first number is
+ common for all domUs, while the optional second number (preceded by a comma)
+@@ -2049,7 +2049,8 @@ The following resources are available:
+ Controls for aspects of PV guest support.
+ 
+ *   The `32` boolean controls whether 32bit PV guests can be created.  It
+-    defaults to `true`, and is ignored when `CONFIG_PV32` is compiled out.
++    defaults to the value of `pv-shim`, and is ignored when `CONFIG_PV32`
++    is compiled out.
+ 
+     32bit PV guests are incompatible with CET Shadow Stacks.  If Xen is using
+     shadow stacks, this option will be overridden to `false`.  Backwards
+@@ -2058,7 +2059,7 @@ Controls for aspects of PV guest support.
+ ### pv-linear-pt (x86)
+ > `= <boolean>`
+ 
+-> Default: `true`
++> Default: `false`
+ 
+ Only available if Xen is compiled with `CONFIG_PV_LINEAR_PT` support
+ enabled.
+@@ -2267,7 +2268,7 @@ enabling more sockets and cores to go into deeper sleep states.
+ ### scrub-domheap
+ > `= <boolean>`
+ 
+-> Default: `false`
++> Default: `true`
+ 
+ Scrub domains' freed pages. This is a safety net against a (buggy) domain
+ accidentally leaking secrets by releasing pages without proper sanitization.
+@@ -2782,7 +2783,7 @@ oversubscribed (i.e., in total there are more vCPUs than pCPUs).
+ ### watchdog (x86)
+ > `= force | <boolean>`
+ 
+-> Default: `false`
++> Default: `force`
+ 
+ Run an NMI watchdog on each processor.  If a processor is stuck for
+ longer than the **watchdog_timeout**, a panic occurs.  When `force` is
+diff --git a/xen/arch/x86/mm.c b/xen/arch/x86/mm.c
+index 8540b6d3b4..23052b6b02 100644
+--- a/xen/arch/x86/mm.c
++++ b/xen/arch/x86/mm.c
+@@ -655,7 +655,7 @@ static void dec_linear_uses(struct page_info *pg)
+  *     frame if it is mapped by a different root table. This is sufficient and
+  *     also necessary to allow validation of a root table mapping itself.
+  */
+-static bool __read_mostly opt_pv_linear_pt = true;
++static bool __read_mostly opt_pv_linear_pt = false;
+ boolean_param("pv-linear-pt", opt_pv_linear_pt);
+ 
+ #define define_get_linear_pagetable(level)                                  \
+diff --git a/xen/arch/x86/nmi.c b/xen/arch/x86/nmi.c
+index dc79c25e3f..957cda02c0 100644
+--- a/xen/arch/x86/nmi.c
++++ b/xen/arch/x86/nmi.c
+@@ -46,7 +46,7 @@ static DEFINE_PER_CPU(unsigned int, nmi_timer_ticks);
+ bool __initdata opt_watchdog;
+ 
+ /* watchdog_force: If true, process unknown NMIs when running the watchdog. */
+-bool watchdog_force;
++bool watchdog_force = true;
+ 
+ static int __init cf_check parse_watchdog(const char *s)
+ {
+diff --git a/xen/arch/x86/setup.c b/xen/arch/x86/setup.c
+index 3ebbd0f2b1..bf4f931a70 100644
+--- a/xen/arch/x86/setup.c
++++ b/xen/arch/x86/setup.c
+@@ -1863,6 +1863,9 @@ void __init noreturn __start_xen(unsigned long mbi_p)
+ 
+     set_in_cr4(X86_CR4_OSFXSR | X86_CR4_OSXMMEXCPT);
+ 
++    if ( opt_pv32 == -1 )
++        opt_pv32 = pv_shim;
++
+     /* Do not enable SMEP/SMAP in PV shim on AMD and Hygon by default */
+     if ( opt_smep == -1 )
+         opt_smep = !pv_shim || !(boot_cpu_data.x86_vendor &
+diff --git a/xen/arch/x86/time.c b/xen/arch/x86/time.c
+index c8623b3d04..d07f2f38c7 100644
+--- a/xen/arch/x86/time.c
++++ b/xen/arch/x86/time.c
+@@ -1183,7 +1183,7 @@ static unsigned long get_cmos_time(void)
+     unsigned long flags;
+     struct rtc_time rtc;
+     unsigned int seconds = 60;
+-    static bool __read_mostly cmos_rtc_probe;
++    static bool __read_mostly cmos_rtc_probe = true;
+     boolean_param("cmos-rtc-probe", cmos_rtc_probe);
+ 
+ #ifdef USE_EFI_GET_TIME
+diff --git a/xen/common/domain.c b/xen/common/domain.c
+index 003f4ab125..4aff28759a 100644
+--- a/xen/common/domain.c
++++ b/xen/common/domain.c
+@@ -351,7 +351,7 @@ static int late_hwdom_init(struct domain *d)
+ }
+ 
+ static unsigned int __read_mostly extra_hwdom_irqs;
+-static unsigned int __read_mostly extra_domU_irqs = 32;
++static unsigned int __read_mostly extra_domU_irqs = 64;
+ 
+ static int __init cf_check parse_extra_guest_irqs(const char *s)
+ {
+diff --git a/xen/common/efi/boot.c b/xen/common/efi/boot.c
+index aacdfac6ea..6416af8cfa 100644
+--- a/xen/common/efi/boot.c
++++ b/xen/common/efi/boot.c
+@@ -1582,7 +1582,7 @@ void EFIAPI __init noreturn efi_start(EFI_HANDLE ImageHandle,
+ 
+ #include <asm/spec_ctrl.h>
+ 
+-static bool __initdata efi_map_uc;
++static bool __initdata efi_map_uc = true;
+ 
+ static int __init cf_check parse_efi_param(const char *s)
+ {
+diff --git a/xen/common/page_alloc.c b/xen/common/page_alloc.c
+index e78199cd89..65c10644b5 100644
+--- a/xen/common/page_alloc.c
++++ b/xen/common/page_alloc.c
+@@ -229,7 +229,7 @@ static unsigned long __initdata opt_bootscrub_chunk = MB(128);
+ size_param("bootscrub_chunk", opt_bootscrub_chunk);
+ 
+  /* scrub-domheap -> Domheap pages are scrubbed when freed */
+-static bool __read_mostly opt_scrub_domheap;
++static bool __read_mostly opt_scrub_domheap = true;
+ boolean_param("scrub-domheap", opt_scrub_domheap);
+ 
+ #ifdef CONFIG_SCRUB_DEBUG
+diff --git a/xen/drivers/char/console.c b/xen/drivers/char/console.c
+index 6b679c5eac..171f49e057 100644
+--- a/xen/drivers/char/console.c
++++ b/xen/drivers/char/console.c
+@@ -77,7 +77,7 @@ enum con_timestamp_mode
+     TSM_RAW,           /* [XXXXXXXXXXXXXXXX] */
+ };
+ 
+-static enum con_timestamp_mode __read_mostly opt_con_timestamp_mode = TSM_NONE;
++static enum con_timestamp_mode __read_mostly opt_con_timestamp_mode = TSM_BOOT;
+ 
+ #ifdef CONFIG_HYPFS
+ static const char con_timestamp_mode_2_string[][7] = {
+@@ -102,11 +102,11 @@ static int cf_check parse_console_timestamps(const char *s);
+ custom_runtime_param("console_timestamps", parse_console_timestamps,
+                      con_timestamp_mode_upd);
+ 
+-/* conring_size: allows a large console ring than default (16kB). */
++/* conring_size: allows a large console ring than default (64kB). */
+ static uint32_t __initdata opt_conring_size;
+ size_param("conring_size", opt_conring_size);
+ 
+-#define _CONRING_SIZE 16384
++#define _CONRING_SIZE 65536
+ #define CONRING_IDX_MASK(i) ((i)&(conring_size-1))
+ static char __initdata _conring[_CONRING_SIZE];
+ static char *__read_mostly conring = _conring;
+-- 
+2.43.0
+

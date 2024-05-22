@@ -1,0 +1,61 @@
+From ea10354e4152414573d52ce938bca353022fd6e0 Mon Sep 17 00:00:00 2001
+From: Sergey Dyasli <sergey.dyasli@citrix.com>
+Date: Mon, 26 Nov 2018 09:41:19 +0000
+Subject: [PATCH 14/18] common/page_alloc: don't idle scrub before microcode
+ update
+
+Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
+---
+ xen/arch/x86/setup.c     | 4 ++++
+ xen/common/page_alloc.c  | 7 +++++++
+ xen/include/xen/kernel.h | 1 +
+ 3 files changed, 12 insertions(+)
+
+diff --git a/xen/arch/x86/setup.c b/xen/arch/x86/setup.c
+index a3d3f797bb..3ebbd0f2b1 100644
+--- a/xen/arch/x86/setup.c
++++ b/xen/arch/x86/setup.c
+@@ -1979,6 +1979,10 @@ void __init noreturn __start_xen(unsigned long mbi_p)
+         }
+     }
+ 
++    system_state = SYS_STATE_smp_booted;
++    /* Wake up secondary CPUs to start idle memory scrubbing */
++    smp_send_event_check_mask(&cpu_online_map);
++
+     printk("Brought up %ld CPUs\n", (long)num_online_cpus());
+     if ( num_parked )
+         printk(XENLOG_INFO "Parked %u CPUs\n", num_parked);
+diff --git a/xen/common/page_alloc.c b/xen/common/page_alloc.c
+index 9b5df74fdd..e78199cd89 100644
+--- a/xen/common/page_alloc.c
++++ b/xen/common/page_alloc.c
+@@ -1283,6 +1283,13 @@ bool scrub_free_pages(void)
+     nodeid_t node;
+     unsigned int cnt = 0;
+ 
++    /*
++     * Don't start scrubbing until all secondary CPUs have booted and
++     * updated their microcode.
++     */
++    if ( system_state < SYS_STATE_smp_booted )
++        return false;
++
+     node = node_to_scrub(true);
+     if ( node == NUMA_NO_NODE )
+         return false;
+diff --git a/xen/include/xen/kernel.h b/xen/include/xen/kernel.h
+index 46b3c9c026..16d49d9e7e 100644
+--- a/xen/include/xen/kernel.h
++++ b/xen/include/xen/kernel.h
+@@ -97,6 +97,7 @@ extern enum system_state {
+     SYS_STATE_early_boot,
+     SYS_STATE_boot,
+     SYS_STATE_smp_boot,
++    SYS_STATE_smp_booted,
+     SYS_STATE_active,
+     SYS_STATE_suspend,
+     SYS_STATE_resume
+-- 
+2.43.0
+
