@@ -44,8 +44,9 @@ optdepends=('logrotate: for rotating log files'
             'libmaxminddb: for the GeoIP2 plugin'
             'net-snmp: for the SNMP plugin'
             'librdkafka: for the Kafka C plugin')
-conflicts=('eventlog')
+conflicts=('eventlog' 'syslog-ng')
 replaces=('eventlog')
+provides=('syslog-ng')
 # The default scl.conf moved in 4.3.0, but it is still supported here for overrides so we keep this entry. See https://github.com/syslog-ng/syslog-ng/pull/4534 for details.
 backup=('etc/syslog-ng/scl.conf'
         'etc/syslog-ng/syslog-ng.conf'
