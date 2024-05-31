@@ -8,7 +8,7 @@ arch=("x86_64")
 url="https://www.qemu.org"
 license=(GPL2 LGPL2.1)
 depends=(curl xen numactl)  # lot of deps are apparently covered by xen
-makedepends=(ninja meson)
+makedepends=(ninja meson python-packaging)
 provides=(qemu-xen xen-qemu xen-qemu-builtin)
 conflicts=(xen-qemu-builtin)
 replaces=(xen-qemu-builtin)
@@ -24,9 +24,6 @@ validpgpkeys=('CEACC9E15534EBABB82D3FA03353C9CEF108B584') # Michael Roth <fluksh
 
 
 build() {
-
-	CFLAGS+=" -g1 -march=x86-64"
-	CXXFLAGS+=" -g1 -march=x86-64"
 
 	cd $srcdir
 	mkdir build
