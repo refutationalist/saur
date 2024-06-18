@@ -1,0 +1,53 @@
+# Maintainer: Sam Mulvey <sam@ktqa.org>
+pkgbase="logger-git"
+pkgname=("logger-git" "loggerlink-git")
+pkgver=2024.0r29
+pkgrel=1
+pkgdesc="The N9MII Field Day Logger"
+arch=(any)
+url="https://github.com/refutationalist/fdlogger"
+license=(AGPL-3.0-only OFL)
+
+source=(
+	"git+https://github.com/refutationalist/fdlogger"
+)
+sha512sums=('SKIP')
+
+_repo="fdlogger"
+
+pkgver() {
+	cd "${srcdir}/${_repo}"
+	printf "%sr%s"  "$(git describe --tags --abbrev=0)" "$(git rev-list --count HEAD)"
+}
+
+build() {
+	cd "${srcdir}/${_repo}"
+	make
+	cd loggerlink
+	make
+}
+
+package_logger-git() {
+	pkgdesc="The N9MII Field Day Logger -- server"
+	depends=('php')
+	optdepends=(
+		'curl: build the callbook sql'
+		'lighttpd: includes a config for working with lighttpd'
+	)
+	backup=('etc/logger.ini')
+
+	cd "${srcdir}/${_repo}"
+	make DESTDIR="${pkgdir}" install
+}
+
+package_loggerlink-git() {
+	pkgdesc='connect radio or WSJT-X to N9MII logger'A
+	depends=('php')
+	optdepends=(
+		'php-sqlite: connect to WSJT-X'
+		'hamlib: connect to a radio'\
+	)
+
+	cd "${srcdir}/${_repo}/loggerlink"
+	make DESTDIR="${pkgdir}" install
+}
