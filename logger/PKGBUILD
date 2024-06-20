@@ -1,7 +1,7 @@
 # Maintainer: Sam Mulvey <sam@ktqa.org>
 pkgbase="logger-git"
-pkgname=("logger-git" "loggerlink-git")
-pkgver=2024.0r29
+pkgname=("logger-git" "loggerlink-git" "loggerscripts-git")
+pkgver=2024.1r34
 pkgrel=1
 pkgdesc="The N9MII Field Day Logger"
 arch=(any)
@@ -41,13 +41,30 @@ package_logger-git() {
 }
 
 package_loggerlink-git() {
-	pkgdesc='connect radio or WSJT-X to N9MII logger'A
+	pkgdesc='connect radio or WSJT-X to N9MII logger'
 	depends=('php')
+	provides=('loggerlink')
+	conflicts=('loggerlink')
+
+
 	optdepends=(
 		'php-sqlite: connect to WSJT-X'
-		'hamlib: connect to a radio'\
+		'hamlib: connect to a radio'
+		'wsjtx: for wsjtx follow mode'
 	)
 
 	cd "${srcdir}/${_repo}/loggerlink"
 	make DESTDIR="${pkgdir}" install
+}
+
+package_loggerscripts-git() {
+	pkgdesc="GUI scripts for N9MII field day logger"
+	depends=(bash loggerlink xfce4-terminal)
+	provides=('loggerscripts')
+	conflicts=('loggerscripts')
+
+
+	cd "${srcdir}/${_repo}/loggerscripts"
+	make DESTDIR="${pkgdir}" install
+
 }
