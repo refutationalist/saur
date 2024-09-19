@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 pkgname=systemjack-git
-pkgver=r33.2218d07
+pkgver=r34.622cf20
 pkgrel=1
 pkgdesc="running JACK audio apps via systemd"
 arch=('x86_64' 'armv7h' 'aarch64')
