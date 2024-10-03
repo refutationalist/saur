@@ -17,13 +17,13 @@ backup=(
 source=(
 	"https://github.com/novnc/noVNC/archive/refs/tags/v${pkgver}.tar.gz"
 	"settings.js"
-	"uijs.patch"
+	"localsettings.patch"
 	"lighttpd.conf-example"
 )
-noextract=("settings.js" "uijs.patch")
+noextract=("settings.js" "localsettings.patch")
 sha256sums=('6a73e41f98388a5348b7902f54b02d177cb73b7e5eb0a7a0dcf688cc2c79b42a'
             'eb01589d5b6adc32af30ab67902452a5cb6cb179ce897ec97305308c35573ae5'
-            '879c336fdd34d9bd9a245e765c5b9fa24ea1c54c880726cd3d9dd30c85dd2314'
+            'b8fe0db446eee9f32635e93c713559bead85ee609f3b29b5939c892e39af5c01'
             '8fe88d339af1e163db38cab5774bd3e07c91e8d698b885459e976a6fb276a299')
 
 
@@ -31,11 +31,10 @@ prepare() {
 	cd "${srcdir}/noVNC-${pkgver}"
 
 	# patch
-	cd app
-	patch -p1 ui.js "${srcdir}/uijs.patch"
+	#patch -p1 ui.js "${srcdir}/uijs.patch"
+	patch -p1 < "${srcdir}/localsettings.patch"
 
 	# remove cruft
-	cd ..
 	rm -Rf AUTHORS docs/ karma.conf.js tests \
 		package.json README.md snap/ utils/ vnc_lite.html
 	mv vnc.html index.html
@@ -46,12 +45,13 @@ prepare() {
 package() {
 
 	mkdir -p "${pkgdir}/etc/webapps/novnc-lighttpd" \
-		"${pkgdir}/usr/share/webapps" \
-		"${pkgdir}/usr/share/novnc-lighttpd"
+			 "${pkgdir}/usr/share/webapps/novnc-lighttpd" \
+			 "${pkgdir}/usr/share/novnc-lighttpd"
 
-	cp -R "${srcdir}/noVNC-${pkgver}" "${pkgdir}/usr/share/webapps/novnc-lighttpd"
-	mv "${pkgdir}/usr/share/webapps/novnc-lighttpd/LICENSE.txt" \
-		"${pkgdir}/usr/share/novnc-lighttpd"
+	cd "${srcdir}/noVNC-${pkgver}"
+	cp -R index.html app core po vendor "${pkgdir}/usr/share/webapps/novnc-lighttpd"
+	cp LICENSE.txt "${pkgdir}/usr/share/novnc-lighttpd"
+	
 	cp "${srcdir}/lighttpd.conf-example" "${pkgdir}/usr/share/novnc-lighttpd"
 
 	cp "${srcdir}/settings.js" "${pkgdir}/etc/webapps/novnc-lighttpd"
