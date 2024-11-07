@@ -1,6 +1,6 @@
 # Xen pvhgrub -- Arch Linux Implementation
 
-[PVH](https://wiki.xenproject.org/wiki/Xen_Project_Software_Overview#PVH_.28x86.29) is the newest and apparently most secure virtualization method available to Xen.  It is basically PV inside of an HVM container.   Many of the descriptions of the technology say that only direct kernel boot is currently supported, but this documentation for [Xen 4.12 RC](https://wiki.xenproject.org/wiki/Xen_4.12_RC_test_instructions#PVH_domU_boot_via_grub2) gives instructions for building GRUB2 to boot in PVH mode, allowing the usage of kernels in the PVH domU.
+[PVH](https://wiki.xenproject.org/wiki/Xen_Project_Software_Overview#PVH_.28x86.29) is the newest and apparently most secure virtualization method available to Xen. It is basically a PV-like mode based on HVM.   Many of the descriptions of the technology say that only direct kernel boot is currently supported, but this documentation for [Xen 4.12 RC](https://wiki.xenproject.org/wiki/Xen_4.12_RC_test_instructions#PVH_domU_boot_via_grub2) gives instructions for building GRUB2 to boot in PVH mode, allowing the usage of kernels in the PVH domU.
 
 ## How to boot Arch under Arch with pvhgrub
 
