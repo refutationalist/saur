@@ -9,7 +9,7 @@ _build_pv64=${build_pv64:-true}
 
 
 pkgbase=xen-grub
-pkgver=2.12.r10.g04d2a50
+pkgver=2.12.r97.g1763d83
 pkgrel=1
 pkgdesc="a version of GRUB2 for booting Xen PVH domUs"
 arch=(x86_64)
