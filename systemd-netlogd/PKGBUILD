@@ -1,0 +1,39 @@
+# Maintainer: hitsmaxft <mfthits at gmail.com>
+# Sorta-Redone-By: Sam Mulvey <archlinux@sammulvey.com>
+
+_pkgname="systemd-netlogd"
+pkgname="${_pkgname}-saur"
+pkgver=1.4.3
+pkgrel=1
+pkgdesc="Forwards syslog-like messages from the journal to other hosts over the network"
+arch=('x86_64')
+url="https://github.com/systemd/systemd-netlogd"
+license=('GPL-2.0-or-later')
+depends=('libsystemd')
+makedepends=('gperf' 'meson' 'python-sphinx')
+
+provides=($_pkgname)
+conflicts=($_pkgname)
+
+
+
+source=(
+	"${_pkgname}-${pkgver}.tar.gz::https://github.com/systemd/systemd-netlogd/archive/refs/tags/v${pkgver}.tar.gz"
+	"systemd-netlogd.sysusers"
+)
+
+sha256sums=('1881672af5767bf038860b6b4429decfc5ac1ded0dc2b71c74c0b644452956fa'
+            'c76a521f78c964dcc5d5f6ffaf3e22a45a0df4c34ba9f809c6473f6ba48ea270')
+
+build() {
+	cd "${srcdir}"
+	mkdir build
+	arch-meson ${_pkgname}-${pkgver} build --prefix=/usr/lib/systemd --sysconfdir=/etc/systemd
+	cd build
+	ninja
+}
+
+package() {
+	DESTDIR="${pkgdir}" ninja -C build install
+	install -Dm644 "$srcdir"/systemd-netlogd.sysusers "${pkgdir}/usr/lib/sysusers.d/systemd-netlogd.conf"
+}
