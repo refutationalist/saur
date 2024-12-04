@@ -43,7 +43,7 @@ makedepends=(
 	'zlib' 'python' 'ncurses' 'openssl' 'libx11' 'libuuid.so' 'yajl' 'libaio' 'glib2' 'pkgconf' 'git'
 	'bridge-utils' 'iproute2' 'inetutils' 'acpica' 'lib32-glibc' 'gnutls'
 	'vde2' 'lzo' 'pciutils' 'sdl2' 'systemd-libs'
-	'systemd' 'wget' 'pandoc' 'valgrind' 'git' 'bison' 'gettext' 'flex' 'pixman' 'fig2dev'
+	'systemd' 'wget' 'pandoc' 'valgrind' 'git' 'bison' 'gettext' 'flex' 'pixman' 'fig2dev' 'python-setuptools'
 ) # last line from namcap, these depends are the xen depends
 _stubdom_makedepends=('cmake')
 
