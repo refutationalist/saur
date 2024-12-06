@@ -28,11 +28,18 @@ There's also a game I'm kind of addicted to.
  
 ## Xen
 
+The ``xen`` package follows the stable git branch (currently ``stable-4.19``) rather than the release tarball.  This follows Xen security best-practices and also simplfies security patching.  The PKGBUILD is split and will create the main ``xen`` package and a ``xen-docs`` documentation package.  If stubdom is enabled, a ``xen-stubdom`` package will be built.
+
+As of 2024-12, Xen in AUR is undergoing a bit of a re-engineering with help from the community.  That work is happening in ``xen-next``, while the original package as it is in AUR exists in ``xen-aur``.   The following instructions work for both versions.
+
  * [xen](https://aur.archlinux.org/packages/xen/) -- the Xen virtualization platform 
  * [xen-qemu](https://qemu.org) -- QEMU compiled for Xen
  * [xen-pvhgrub](https://www.gnu.org/software/grub/) -- GRUB2 compiled for Xen PVH support
 
 ### Building Xen
+
+> [!WARNING]
+> As of 2024-05, build_stubdom does not function.
 
 It is recommended to build Xen packages in a clean VM or chroot.   Xen is a split package, and there are several options to building Xen:
 
@@ -46,9 +53,7 @@ Pass these arguments to makepkg as variables:
 $ build_stubdom=true efi_dir="/boot/EFI" makepkg
 ```
 
-If you build stubdom, note that it brings in a number of other components.   Also note that as of 4.16.2, this package uses the stable git branch rather than the release tarball.
-
-This PKGBUILD is split and will create the main ``xen`` package, a ``xen-docs`` documentation package, and optionally a ``xen-stubdom`` package holding the stubdom components.
+If you build stubdom, note that it brings in a number of other components.   
 
 
 ### QEMU for Xen
