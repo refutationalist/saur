@@ -2,7 +2,7 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 # With help from the official bind PKGBUILD
 pkgname=bind-tooling
-pkgver=9.18.11
+pkgver=9.20.3
 pkgrel=1
 pkgdesc="The Arch Way for me, but not for thee.  (dig, host, nslookup)"
 arch=("x86_64" "aarch64")
@@ -15,8 +15,9 @@ validpgpkeys=('D99CCEAF879747014F038D63182E23579462EFAA' #Michal Nowak
               '706B6C28620E76F91D11F7DF510A642A06C52CEC') #Michał Kępień
 
 source=("https://ftp.isc.org/isc/bind9/${pkgver}/bind-${pkgver}.tar.xz"{,.asc})
-sha256sums=('8ff3352812230cbcbda42df87cad961f94163d3da457c5e4bef8057fd5df2158'
+sha256sums=('f90c2da1621299f56a2e6585a6fe459ec3efd6f2fdf84a8fbf31b40be7698a73'
             'SKIP')
+
 
 build() {
 	cd "bind-$pkgver"
