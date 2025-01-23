@@ -3,7 +3,7 @@
 
 _pkgname="systemd-netlogd"
 pkgname="${_pkgname}-saur"
-pkgver=1.4.3
+pkgver=1.4.4
 pkgrel=1
 pkgdesc="Forwards syslog-like messages from the journal to other hosts over the network"
 arch=('x86_64')
@@ -22,7 +22,7 @@ source=(
 	"systemd-netlogd.sysusers"
 )
 
-sha256sums=('1881672af5767bf038860b6b4429decfc5ac1ded0dc2b71c74c0b644452956fa'
+sha256sums=('041144dbc3196d657fba494a288dee7afcef8719a0c5c2573086f77cabff986a'
             'c76a521f78c964dcc5d5f6ffaf3e22a45a0df4c34ba9f809c6473f6ba48ea270')
 
 build() {
