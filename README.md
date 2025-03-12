@@ -2,7 +2,7 @@
 
 This is a personal repo of packages for [Arch Linux](http://archlinux.org).  Some of these are forks wanting a merge, modifications of modified software, or in a couple of cases, packages I'm maintaining in AUR.
 
-Most of these packages are for use in my radio studio for shows including [Ask an Atheist with Sam Mulvey](https://atheist.radio), [Radio Tacoma KTAH-LP 101.9](http://radiotacoma.org), and [KTQA-LP](http://ktqa.org).
+Most of these packages are for my work at [KTQA-LP](http://ktqa.org), [KQWZ-LP](https://kqwzradio.org/), and the [Radio Club of Tacoma](https://w7dk.org).
 
 There's also a game I'm kind of addicted to.
 
