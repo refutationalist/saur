@@ -30,8 +30,8 @@ _common_make_flags=(
 
 pkgbase=xen
 pkgname=("xen" "xen-docs")
-pkgver=4.19.1
-_branch="stable-4.19"
+pkgver=4.20.0
+_branch="stable-4.20"
 pkgrel=1
 pkgdesc='Open-source type-1 or baremetal hypervisor - stable branch'
 arch=('x86_64')
@@ -259,13 +259,10 @@ package_xen() {
 	find "${pkgdir}/${_efi_dir}" -type l -delete
 	find "${pkgdir}/${_boot_dir}" -type l -delete
 
-	# Remove syms.
-	find "${pkgdir}/usr/lib/debug" -type f \( -name '*-syms*' -or -name '*\.map' \) -delete
-	rmdir "${pkgdir}/usr/lib/debug/usr/lib/xen/boot"
-	rmdir "${pkgdir}/usr/lib/debug/usr/lib/xen"
-	rmdir "${pkgdir}/usr/lib/debug/usr/lib"
-	rmdir "${pkgdir}/usr/lib/debug/usr"
-	rmdir "${pkgdir}/usr/lib/debug"
+	# Remove syms and debug symbols unless it's a debug build.
+	if ! check_option "debug" "y"; then
+		rm -Rf "${pkgdir}/usr/lib/debug"
+	fi
 
 	# Remove SysVinit files.
 	rm -r "${pkgdir}/etc/init.d"
@@ -286,10 +283,10 @@ package_xen() {
 	rm -r "${pkgdir}/usr/share/man"
 
 	# remove stubdom files
-        rm -f "${pkgdir}/usr/lib/xen/boot/vtpmmgr-stubdom.gz" \
-                "${pkgdir}/usr/lib/xen/boot/vtpm-stubdom.gz" \
-                "${pkgdir}/usr/lib/xen/boot/xenstorepvh-stubdom.gz" \
-                "${pkgdir}/usr/lib/xen/boot/xenstore-stubdom.gz"
+	rm -f "${pkgdir}/usr/lib/xen/boot/vtpmmgr-stubdom.gz" \
+			"${pkgdir}/usr/lib/xen/boot/vtpm-stubdom.gz" \
+			"${pkgdir}/usr/lib/xen/boot/xenstorepvh-stubdom.gz" \
+			"${pkgdir}/usr/lib/xen/boot/xenstore-stubdom.gz"
 
 
 }
