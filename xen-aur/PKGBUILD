@@ -182,7 +182,8 @@ build() {
 		--with-sysconfig-leaf-dir=conf.d \
 		--with-system-ovmf=/usr/share/ovmf/x64/OVMF.4m.fd \
 		--with-system-seabios=/usr/share/qemu/bios-256k.bin \
-		--disable-ocamltools
+		--disable-ocamltools \
+		--disable-pygrub
 
 	make "${_common_make_flags[@]}"
 }
