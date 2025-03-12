@@ -1,8 +1,8 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
-pkgname=xen-ovmf
-pkgver=202403
+pkgname=xen-edk2
+pkgver=202503
 pkgrel=1
-pkgdesc="a version of edk2-ovmf maintained by the Xen Project for use with that hypervisor"
+pkgdesc="UEFI firmware for xen hypervisor from edk2"
 arch=("x86_64")
 url="https://github.com/tianocore/edk2"
 license=(
@@ -10,11 +10,13 @@ license=(
   BSD-2-Clause-Patent
   MIT
 )
-
+#'git+https://xenbits.xen.org/git-http/ovmf.git'
 makedepends=('git' 'nasm')
+
+# The makefile is pulled from the Xen source in tools/firmware/ovmf-makefile
 source=(
 	Makefile
-	'git+https://xenbits.xen.org/git-http/ovmf.git'
+	'git+https://github.com/tianocore/edk2'
 	'git+https://github.com/openssl/openssl'
 	'git+https://github.com/ucb-bar/berkeley-softfloat-3.git'
 	'git+https://github.com/tianocore/edk2-cmocka.git'
@@ -22,7 +24,7 @@ source=(
 	'git+https://github.com/google/brotli'
 	'git+https://github.com/akheron/jansson'
 	'git+https://github.com/google/googletest.git'
-	'git+https://github.com/Zeex/subhook.git'
+	'git+https://github.com/tianocore/edk2-subhook.git'
 	'git+https://github.com/devicetree-org/pylibfdt.git'
 	'git+https://github.com/MIPI-Alliance/public-mipi-sys-t.git'
 )
@@ -42,7 +44,7 @@ sha256sums=('53f8b4499acbfd7fe14fdab67df321faabcb97c2964ee5ac90d01e1434942224'
 
 
 prepare() {
-	cd "${srcdir}/ovmf"
+	cd "${srcdir}/edk2"
 	cp "${srcdir}/Makefile" .
 	git config submodule.CryptoPkg/Library/OpensslLib/openssl.url                  "${srcdir}/openssl"
 	git config submodule.SoftFloat.url                                             "${srcdir}/berkeley-softfloat-3"
@@ -52,7 +54,7 @@ prepare() {
 	git config submodule.BaseTools/Source/C/BrotliCompress/brotli.url              "${srcdir}/brotli"
 	git config submodule.RedfishPkg/Library/JsonLib/jansson.url                    "${srcdir}/jansson"
 	git config submodule.UnitTestFrameworkPkg/Library/GoogleTestLib/googletest.url "${srcdir}/googletest"
-	git config submodule.UnitTestFrameworkPkg/Library/SubhookLib/subhook.url       "${srcdir}/subhook"
+	git config submodule.UnitTestFrameworkPkg/Library/SubhookLib/subhook.url       "${srcdir}/edk2-subhook"
 	git config submodule.MdePkg/Library/BaseFdtLib/libfdt.url                      "${srcdir}/pylibfdt"
 	git config submodule.MdePkg/Library/MipiSysTLib/mipisyst.url                   "${srcdir}/public-mipi-sys-t"
 	git -c protocol.file.allow=always submodule update --init --recursive
@@ -60,11 +62,11 @@ prepare() {
 }
 
 build() {
-	cd "${srcdir}/ovmf"
+	cd "${srcdir}/edk2"
 	make
 }
 
 package() {
-	mkdir -p "${pkgdir}/usr/share/xen-ovmf"
-	install -m644 "${srcdir}/ovmf/ovmf.bin" "${pkgdir}/usr/share/xen-ovmf"
+	mkdir -p "${pkgdir}/usr/lib/xen/boot"
+	install -m644 "${srcdir}/edk2/ovmf.bin" "${pkgdir}/usr/lib/xen/boot"
 }
