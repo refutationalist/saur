@@ -199,13 +199,15 @@ package_xen() {
 	)
 
 	optdepends=(
+		'xen-docs: HTML documentation and man pages'
+		'xen-stubdom: Xen stubdom support'
 		'xen-qemu: HVM and PV support, nearly required for Xen'
 		'edk2-ovmf: UEFI support'
 		'seabios: SeaBIOS payload support'
-		'xen-docs: HTML documentation and man pages'
-		'xen-stubdom: Xen stubdom support'
-		'grub-xen-git: GRUB and pvgrub2 bootloader support'
-		'linux-headers: extract bootable kernel for pvgrub using "extract_vmlinux"'
+		'xen-grub-pvh: PVH booting support'
+		'xen-grub-pv32: 32bit PV booting support'
+		'xen-grub-pv64: 64bit PV booting support'
+		'linux-headers: extract bootable kernel for PV grub using "extract_vmlinux"'
 	)
 
 	install="xen.install"
