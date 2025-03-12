@@ -28,18 +28,15 @@ There's also a game I'm kind of addicted to.
  
 ## Xen
 
-The ``xen`` package follows the stable git branch (currently ``stable-4.19``) rather than the release tarball.  This follows Xen security best-practices and also simplfies security patching.  The PKGBUILD is split and will create the main ``xen`` package and a ``xen-docs`` documentation package.  If stubdom is enabled, a ``xen-stubdom`` package will be built.
+The ``xen`` package follows the stable git branch (currently ``stable-4.20``) rather than the release tarball.  This follows Xen security best-practices and also simplifies security patching.  The PKGBUILD is split and will create the main ``xen`` package and a ``xen-docs`` documentation package.  If stubdom is enabled, a ``xen-stubdom`` package will be built.
 
-As of 2024-12, Xen in AUR is undergoing a bit of a re-engineering with help from the community.  That work is happening in ``xen-next``, while the original package as it is in AUR exists in ``xen-aur``.   The following instructions work for both versions.
+The major packages are:
 
  * [xen](https://aur.archlinux.org/packages/xen/) -- the Xen virtualization platform 
  * [xen-qemu](https://qemu.org) -- QEMU compiled for Xen
- * [xen-pvhgrub](https://www.gnu.org/software/grub/) -- GRUB2 compiled for Xen PVH support
+ * [xen-grub](https://www.gnu.org/software/grub/) -- GRUB2 compiled for Xen paravirtualization support
 
 ### Building Xen
-
-> [!WARNING]
-> As of 2024-05, build_stubdom does not function.
 
 It is recommended to build Xen packages in a clean VM or chroot.   Xen is a split package, and there are several options to building Xen:
 
@@ -65,13 +62,24 @@ If you want to run PV or HVM domU's, PCI passthrough, or even VNC consoles on yo
 Xen support in QEMU has been upstreamed for quite some time but QEMU in ``[extra]`` does not support it, as building it requires Xen libraries.  We have previously depended on a builtin version of QEMU that Xen builds, but it lags behind QEMU official and is difficult to patch.  As of 4.16.2, we now build QEMU for Xen separately.  The build options are pulled directly from Xen's built-in build and are designed to not interfere with QEMU from ``[extra]``.
 
 
-### xen-pvhgrub
+### xen-grub
 
-PVH is the new virtualization method and has a number of advantages.  This package is a version of GRUB2 that will allow a PVH domU to boot kernels installed inside the domU.   Instructions are available in the package directory.
+Xen has multiple modes of virtualization: hardware virtualization-- called HVM-- and two modes of paravirtualization.  PV is the old style of virtualization.  It is the original style of virtualization in Xen and traditionally does not require virtualization extensions in the CPU architecture.  PVH runs paravirtualization inside of the hardware virtualization layer, and does require arch extensions.
+
+All modes can be handed a ``kernel`` line in the config file for the domU to directly boot a kernel.  To boot kernels inside the virtual machine an external version of GRUB is required.   ``xen-grub`` provides these bootloaders.
+
+Building the three versions of GRUB are controlled by the following options.   By default, all are built:
+
+  1) ``build_pvh`` - build ``/usr/lib/xen/boot/pvhgrub`` needed to build for PVH domUs
+  2) ``build_pv64`` - build ``/usr/lib/xen/boot/pvgrub64`` for 64bit PV domUs
+  3) ``build_pv32`` - build ``/usr/lib/xen/boot/pvgrub32`` for 32bit PV domUs
+
+Use these for the ``kernel`` line in the domU config, and they will look for an appropriate GRUB config file within the domu.
+
+For more information, see the [Xen wiki page](https://wiki.archlinux.org/title/Xen) on the Arch Wiki.
 
 ### Future Plans for Xen in Arch
 
-The Xen package has been in AUR for some time and I am only the most recent maintainer for the package.  As of 2022-08, I'd have to jump through a lot of hoops to get Xen into the repos so it's not a target.  That said, I'm trying to set things up so that bringing the packages into the repositories would not be too onerous.  Splitting QEMU off is a step forward, but moving to the stable branch in git might be a step back as the builds are less reproducable.  Pinning the build to a specific commit may help.  Also, signed commits from upstream would be good as we lost the ability to test the tarball against a GPG cert.
+The Xen package has been in AUR for some time and I am only the most recent maintainer for the package.  As of 2025-03, the package is a lot easier to manage but is still unlikely to make it into the repos.  While the build flags could be easily removed, the move to the stable git repo prevents reproduceable builds.
 
-The support for stubdoms from upstream is questionable, and several maintainers have attempted to phase out the support.  My comporomise has been to split stubdom off into a separate package.  As PVH gets support for things like PCI or GPU passthrough, the need for stubdom will become much smaller.
-
+Xen in AUR is undergoing a bit of a re-engineering with help from the community.  That work is happening in ``xen-next``, while the current AUR package exists in ``xen-aur``.   These instructions work for both versions.
