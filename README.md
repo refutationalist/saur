@@ -97,7 +97,7 @@ By default, all three packages are built.
 Put the resulting file in the ```kernel``` line of your domU config, and GRUB will look for the standard grub.cfg line and try to boot appropriately.
 
 > [!WARNING]
-> PV GRUB does not understand Zstd kernel compression, which means it can't boot stock Arch Linux kernels.  An uncompressed kernel can be created using the ```extract_vmlinux``` script found in the ```linux-headers``` package.   A potential pacman hook is in the works, but should be easy to figure out.
+> PV GRUB does not understand Zstd kernel compression, which means it can't boot stock Arch Linux kernels.  An uncompressed kernel can be created using the ```extract_vmlinux``` script found in the ```linux-headers``` package.   A potential pacman hook is in the works, but should be easy to figure out.  PVH GRUB does not have this issue.
 
 
 ### Future Plans for Xen in Arch
