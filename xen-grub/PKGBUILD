@@ -1,20 +1,19 @@
 # Maintainer: Sam Mulvey (Refutationalist) <archlinux@sammulvey.com>
 
-
 # Build Options
 # I'm not going to lie, this is three packages in a coat.
 _build_pvh=${build_pvh:-true}
 _build_pv32=${build_pv32:-true}
 _build_pv64=${build_pv64:-true}
 
-
 pkgbase=xen-grub
-pkgver=2.12.r248.gff7f553
+pkgver=2.12.r0.g5ca9db2
+_pkgver=2.12
 pkgrel=1
-pkgdesc="a version of GRUB2 for booting Xen PVH domUs"
+pkgdesc="a version of GRUB2 for booting Xen PV and PVH domUs"
 arch=(x86_64)
 url="https://www.gnu.org/software/grub/"
-license=(GPL3)
+license=('GPL-3.0-or-later')
 makedepends=(git xz python texinfo gettext device-mapper)
 depends=(xen)
 options=(!buildflags !strip)
@@ -28,9 +27,12 @@ pkgname=()
 
 
 source=(
-	"git+https://git.savannah.gnu.org/git/grub.git"
+	"git+https://git.savannah.gnu.org/git/grub.git#tag=grub-${_pkgver}"
 	"git+https://git.savannah.gnu.org/git/gnulib.git"
 	"grub.cfg")
+
+# Add signed commit checking?
+
 sha512sums=('SKIP'
             'SKIP'
             '02976adbf68af0ec13ef8910fc6c409591e9528418e3157adb7d8a4a9ae1a43fed4a2fe372d9df8b0520a9edd7e26cfb22ca101f1c4c9be7e5ace61508fa56c8')
@@ -39,12 +41,39 @@ sha512sums=('SKIP'
 pkgver() {
 	cd "${srcdir}/grub"
 	git describe --long --abbrev=7 | sed 's/^grub-//;s/\([^-]*-g\)/r\1/;s/-/./g'
-	
 }
+
+# Shamelessly stolen from the Arch Linux grub package
+_backports=(
+	# current git master for loads of security fixes
+	# https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html
+	"grub-${_pkgver}..56ccc5ed569869fd735074ccebeaa7aab058342d"
+)
+_reverts=(
+)
 
 
 prepare() {
 	cd "$srcdir/grub"
+
+
+	# Continuing the be shameless stolen from the GRUB in the repos.
+	local _c _l 
+
+	echo "--> Apply backports..." 
+	for _c in "${_backports[@]}"; do 
+		if [[ "${_c}" == *..* ]]; then _l='--reverse'; else _l='--max-count=1'; fi 
+		git log --oneline "${_l}" "${_c}" 
+		git cherry-pick --mainline 1 --no-commit "${_c}" 
+	done 
+
+	echo "--> Apply reverts..." 
+	for _c in "${_reverts[@]}"; do 
+		if [[ "${_c}" == *..* ]]; then _l='--reverse'; else _l='--max-count=1'; fi
+		git log --oneline "${_l}" "${_c}"
+		git revert --mainline 1 --no-commit "${_c}"
+	done
+	
 	./bootstrap  \
 		--gnulib-srcdir="${srcdir}/gnulib/" \
 		--no-git
@@ -109,7 +138,7 @@ build() {
 	fi
 
 	if [ "${_build_pv64}" == "true" ]; then
-		
+
 		echo "--> Building PV64"
 
 		cd "${srcdir}/grub-pv64"
@@ -128,7 +157,7 @@ build() {
 			-d ./grub-core/ "/boot/grub/grub.cfg=./grub.cfg" \
 			--locale-directory=/usr/share/locale
 
-		cd ..
+			cd ..
 
 
 	fi
@@ -144,11 +173,10 @@ package_xen-grub-pvh() {
 	cd "$srcdir/${_srcname}"
 	mkdir -p "${pkgdir}/usr/lib/xen/boot"
 	install -m644 "${srcdir}/grub-pvh/pvhgrub" "${pkgdir}/usr/lib/xen/boot"
-
 }
 
 package_xen-grub-pv32() {
-	pkgdesc="GRUB bootloader for Xen 32bit domUs"
+	pkgdesc="GRUB bootloader for Xen 32bit PV domUs"
 
 	cd "$srcdir/${_srcname}"
 	mkdir -p "${pkgdir}/usr/lib/xen/boot"
@@ -157,7 +185,7 @@ package_xen-grub-pv32() {
 }
 
 package_xen-grub-pv64() {
-	pkgdesc="GRUB bootloader for Xen 64bit domUs"
+	pkgdesc="GRUB bootloader for Xen 64bit PV domUs"
 
 	cd "$srcdir/${_srcname}"
 	mkdir -p "${pkgdir}/usr/lib/xen/boot"
