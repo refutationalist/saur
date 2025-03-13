@@ -70,7 +70,7 @@ Xen support in QEMU has been upstreamed but the support isn't compiled into the 
 
 ### Booting domUs
 
-In Xen parlance the hypervisor is called the **dom0**, and any virtual machines is a **domU**.
+In Xen parlance the hypervisor is called the **dom0**, and any virtual machine is a **domU**.
 
 There are several methods of virtualization for Xen domUs:
 
@@ -80,7 +80,7 @@ There are several methods of virtualization for Xen domUs:
 
 The boot HVM machines, you can boot BIOS or UEFI systems.   For BIOS, install [seabios](https://archlinux.org/packages/extra/any/seabios/).  To boot UEFI, ```xen-edk2``` is needed.
 
-For PV and PVH machines, you'll need GRUB compiled specifically for that mode.   Alternatively, you can also pass your domU a specific kernel to boot on the ```kernel`` config line, but that means the kernel has to exist outside of the domU.
+For PV and PVH machines, you'll need GRUB compiled specifically for that mode.   Alternatively, you can also pass a specific kernel to boot on the ```kernel``` config line, but that means the kernel has to exist outside of the domU.
 
 #### xen-grub
 
