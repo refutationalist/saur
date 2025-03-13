@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
 pkgname=xen-edk2
-pkgver=202411
+pkgver=202502
 pkgrel=1
 pkgdesc="UEFI firmware for xen hypervisor from edk2"
 arch=("x86_64")
@@ -38,10 +38,22 @@ source=(
 	mbedtls::git+https://github.com/Mbed-TLS/mbedtls.git  # also submodule for libspdm
 	libspdm::git+https://github.com/DMTF/libspdm.git
 	cmocka::git+https://gitlab.com/cmocka/cmocka.git  # submodule for libspdm
+	quiche::git+https://github.com/cloudflare/quiche # submodule for openssl
+	corpora::git+https://github.com/openssl/fuzz-corpora # submodule or openssl
+	oqs-provider::git+https://github.com/open-quantum-safe/oqs-provider.git # submodule for openssl
+	python-ecdsa::git+https://github.com/tlsfuzzer/python-ecdsa # submodule for openssl
+	tlsfuzzer::git+https://github.com/tlsfuzzer/tlsfuzzer # submodule for openssl
+	tlslite-ng::git+https://github.com/tlsfuzzer/tlslite-ng # submodule for openssl
 )
 
 sha256sums=('53f8b4499acbfd7fe14fdab67df321faabcb97c2964ee5ac90d01e1434942224'
-            'd10c6a49165980e2b17671a059fe78dfbccfdee76e75a3c0a8fe7843e9187288'
+            '7b0bee1dc671daebc1657cb49314235c779915ac4e1bb49f931b30aebb57dcfe'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -61,6 +73,8 @@ sha256sums=('53f8b4499acbfd7fe14fdab67df321faabcb97c2964ee5ac90d01e1434942224'
             'SKIP'
             'SKIP'
             'SKIP')
+
+
 
 prepare() {
 	local submodule
@@ -91,6 +105,12 @@ prepare() {
 	git -C $submodule config submodule.krb5.url "$srcdir/krb5"
 	git -C $submodule config submodule.gost-engine.url "$srcdir/gost-engine"
 	git -C $submodule config submodule.wycheproof.url "$srcdir/wycheproof"
+	git -C $submodule config submodule.tlsfuzzer.url "$srcdir/tlsfuzzer"
+	git -C $submodule config submodule.cloudflare-quiche.url "$srcdir/quiche"
+	git -C $submodule config submodule.fuzz/corpora.url "$srcdir/corpora"
+	git -C $submodule config submodule.oqs-provider.url "$srcdir/oqs-provider"
+	git -C $submodule config submodule.python-ecdsa.url "$srcdir/python-ecdsa"
+	git -C $submodule config submodule.tlslite-ng.url "$srcdir/tlslite-ng"
 	git -C $submodule -c protocol.file.allow=always submodule update
 
 	# submodule setup for CryptoPkg/Library/OpensslLib/openssl/gost-engine

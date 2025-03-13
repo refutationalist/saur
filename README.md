@@ -26,19 +26,28 @@ There's also a game I'm kind of addicted to.
   * [ttf-vcr-eas](https://www.fontzip.com/vcr-eas) -- The font endemic to digital television systems in the 80s and 90s.  Used for weird things.
 
  
-## Xen
+## The Xen Suite
 
-The ``xen`` package follows the stable git branch (currently ``stable-4.20``) rather than the release tarball.  This follows Xen security best-practices and also simplifies security patching.  The PKGBUILD is split and will create the main ``xen`` package and a ``xen-docs`` documentation package.  If stubdom is enabled, a ``xen-stubdom`` package will be built.
+> [!TIP]
+> It is recommended to build Xen in a chroot or clean VM.  The build process can pick up unintended dependencies.
 
-The major packages are:
+The major components are:
 
- * [xen](https://aur.archlinux.org/packages/xen/) -- the Xen virtualization platform 
+ * [xen](https://aur.archlinux.org/packages/xen/) -- the Xen virtualization platform packages
  * [xen-qemu](https://qemu.org) -- QEMU compiled for Xen
- * [xen-grub](https://www.gnu.org/software/grub/) -- GRUB2 compiled for Xen paravirtualization support
+ * [xen-grub](https://www.gnu.org/software/grub/) -- GRUB packages compiled for Xen paravirtualization support
+ * [xen-edk2](https://github.com/tianocore/edk2) -- A Xen compatible UEFI from the EDK II project 
+
+All packages are required for full functionality.  There are optional build-time flags for some packages but are not recommended unless you know what you're doing. 
+
+For operational information about Xen on Arch Linux, see [the Xen wiki page](https://wiki.archlinux.org/title/Xen) on the Arch Wiki.
+
 
 ### Building Xen
 
-It is recommended to build Xen packages in a clean VM or chroot.   Xen is a split package, and there are several options to building Xen:
+The ``xen`` package follows the stable git branch (``stable-4.20`` as of March 2025) rather than the release tarball, following Xen security team best-practices.  The PKGBUILD is split and will create the main ``xen`` package and a ``xen-docs`` documentation package.  If stubdom is enabled, a ``xen-stubdom`` package will be built.
+
+Xen is a split package, and there are several options to building Xen:
 
   1) ``build_stubdom`` -- Build the components to run Xen stubdoms, mainly for [dom0 disaggregation](https://wiki.xenproject.org/wiki/Dom0_Disaggregation).  Components for stubdom are broken off into ``xen-stubdom`` if built.  Defaults to false.
   2) ``boot_dir``-- Your boot directory.  Defaults to ``/boot``.
@@ -55,28 +64,41 @@ If you build stubdom, note that it brings in a number of other components.
 
 ### QEMU for Xen
 
-*Attention Conservation Notice:* Build and install this package if you're running Xen on Arch.
+By itself, the ``xen`` package can run PVH domUs without graphical consoles and with only Xen paravirtualized interfaces.   For anything else, a special version of QEMU is required.
 
-If you want to run PV or HVM domU's, PCI passthrough, or even VNC consoles on your PVH domU's, you need QEMU.  ``xen-qemu`` provides a QEMU compatible with Xen.   On the other hand, if you're running basic domUs in a PVH environment, QEMU is not needed.  But you'll probably want it anyway.
+Xen support in QEMU has been upstreamed but the support isn't compiled into the QEMU in the Arch repositories.   This package adds that support, and is designed not to interfere with the QEMU in ```[extra]```.
 
-Xen support in QEMU has been upstreamed for quite some time but QEMU in ``[extra]`` does not support it, as building it requires Xen libraries.  We have previously depended on a builtin version of QEMU that Xen builds, but it lags behind QEMU official and is difficult to patch.  As of 4.16.2, we now build QEMU for Xen separately.  The build options are pulled directly from Xen's built-in build and are designed to not interfere with QEMU from ``[extra]``.
+### Booting domUs
 
+In Xen parlance the hypervisor is called the **dom0**, and any virtual machines is a **domU**.
 
-### xen-grub
+There are several methods of virtualization for Xen domUs:
 
-Xen has multiple modes of virtualization: hardware virtualization-- called HVM-- and two modes of paravirtualization.  PV is the old style of virtualization.  It is the original style of virtualization in Xen and traditionally does not require virtualization extensions in the CPU architecture.  PVH runs paravirtualization inside of the hardware virtualization layer, and does require arch extensions.
+  * PV (paravirtualization) is the original mode in Xen.
+  * HVM virtualizes a complete computer with BIOS or UEFI and uses hardware virtualization extensions.
+  * PVH is a paravirtualized machine inside of hardware virtualization.   Technically PVHv2, this method of virtualization provides a smaller attack surface and is under much development.   It does not yet support all features.
 
-All modes can be handed a ``kernel`` line in the config file for the domU to directly boot a kernel.  To boot kernels inside the virtual machine an external version of GRUB is required.   ``xen-grub`` provides these bootloaders.
+The boot HVM machines, you can boot BIOS or UEFI systems.   For BIOS, install [seabios](https://archlinux.org/packages/extra/any/seabios/).  To boot UEFI, ```xen-edk2``` is needed.
 
-Building the three versions of GRUB are controlled by the following options.   By default, all are built:
+For PV and PVH machines, you'll need GRUB compiled specifically for that mode.   Alternatively, you can also pass your domU a specific kernel to boot on the ```kernel`` config line, but that means the kernel has to exist outside of the domU.
 
-  1) ``build_pvh`` - build ``/usr/lib/xen/boot/pvhgrub`` needed to build for PVH domUs
-  2) ``build_pv64`` - build ``/usr/lib/xen/boot/pvgrub64`` for 64bit PV domUs
-  3) ``build_pv32`` - build ``/usr/lib/xen/boot/pvgrub32`` for 32bit PV domUs
+#### xen-grub
 
-Use these for the ``kernel`` line in the domU config, and they will look for an appropriate GRUB config file within the domu.
+This is a split package which has each version of GRUB in an individual package.
 
-For more information, see the [Xen wiki page](https://wiki.archlinux.org/title/Xen) on the Arch Wiki.
+| Package | Mode | Build Flag | ```kernel``` Entry |
+|---------|------|------------|--------------------|
+| ```xen-grub-pvh``` | PVH | ```build_pvh``` | ``/usr/lib/xen/boot/pvhgrub`` |
+| ```xen-grub-pv32``` | 32bit PV | ```build_pv32``` | ``/usr/lib/xen/boot/pvgrub32`` |
+| ```xen-grub-pv64``` | 64bit PV | ```build_pv64``` | ``/usr/lib/xen/boot/pvgrub64`` |
+
+By default, all three packages are built.
+
+Put the resulting file in the ```kernel``` line of your domU config, and GRUB will look for the standard grub.cfg line and try to boot appropriately.
+
+> [!WARNING}
+> PV GRUB does not understand Zstd kernel compression, which means it can't boot stock Arch Linux kernels.  An uncompressed kernel can be created using the ```extract_vmlinux``` script found in the ```linux-headers``` package.   A potential pacman hook is in the works, but should be easy to figure out.
+
 
 ### Future Plans for Xen in Arch
 
