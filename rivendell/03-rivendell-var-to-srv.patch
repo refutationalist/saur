@@ -1,0 +1,92 @@
+diff -Naur old/lib/rd.h new/lib/rd.h
+--- old/lib/rd.h	2025-03-19 03:06:17.717424463 -0700
++++ new/lib/rd.h	2025-03-19 03:23:31.260104869 -0700
+@@ -52,7 +52,7 @@
+ /*
+  * Where audio gets stored
+  */
+-#define RD_AUDIO_ROOT "/var/snd"
++#define RD_AUDIO_ROOT "/srv/rivendell/snd"
+ 
+ /*
+  * Audio File Extension
+diff -Naur old/scripts/rd_audio_sync new/scripts/rd_audio_sync
+--- old/scripts/rd_audio_sync	2025-03-19 03:06:17.702801141 -0700
++++ new/scripts/rd_audio_sync	2025-03-19 03:25:00.427920240 -0700
+@@ -28,7 +28,7 @@
+ #
+ MODULE_NAME=rivendell
+ CHECK_FILE=repl.chk
+-BACKUP_DIR=/var/snd.standby
++BACKUP_DIR=/srv/rivendell/snd.standby
+ NICE_ADJ=15
+ RSYNC=/usr/bin/rsync
+ NICE=/usr/bin/nice
+diff -Naur old/scripts/rd_backup_system.sh new/scripts/rd_backup_system.sh
+--- old/scripts/rd_backup_system.sh	2025-03-19 03:06:17.702801141 -0700
++++ new/scripts/rd_backup_system.sh	2025-03-19 03:25:40.022272684 -0700
+@@ -88,7 +88,7 @@
+ # Backup Audio
+ #
+ echo -n "Backup up audio..."
+-rsync -av --delete /var/snd/ $BACKUP_MOUNT_POINT/snd
++rsync -av --delete /srv/rivendell/snd/ $BACKUP_MOUNT_POINT/snd
+ echo "done."
+ 
+ #
+diff -Naur old/scripts/rd_config new/scripts/rd_config
+--- old/scripts/rd_config	2025-03-19 03:06:17.702801141 -0700
++++ new/scripts/rd_config	2025-03-19 03:26:38.447783196 -0700
+@@ -27,11 +27,11 @@
+ # Configuration and Paths
+ #
+ MAIN_CONF=/etc/rd.conf
+-MAIN_SND=/var/snd
++MAIN_SND=/srv/rivendell/snd
+ MASTER_CONF=/etc/rd.conf.master
+ STANDBY_CONF=/etc/rd.conf.standby
+-MASTER_SND=/var/snd.master
+-STANDBY_SND=/var/snd.standby
++MASTER_SND=/srv/rivendell/snd.master
++STANDBY_SND=/srv/rivendell/snd.standby
+ INIT_SCRIPT=/etc/init.d/rivendell
+ RM=/bin/rm
+ LN=/bin/ln
+diff -Naur old/scripts/rd_create_db new/scripts/rd_create_db
+--- old/scripts/rd_create_db	2025-03-19 03:06:17.702801141 -0700
++++ new/scripts/rd_create_db	2025-03-19 03:27:06.120021329 -0700
+@@ -53,7 +53,7 @@
+ #
+ # Rivendell Audio Repository
+ #
+-RD_AUDIO_ROOT=/var/snd
++RD_AUDIO_ROOT=/srv/rivendell/snd
+ 
+ # Nothing should need to be changed below here!
+ # ############################################################################
+diff -Naur old/scripts/rd_restore_system.sh new/scripts/rd_restore_system.sh
+--- old/scripts/rd_restore_system.sh	2025-03-19 03:06:17.702801141 -0700
++++ new/scripts/rd_restore_system.sh	2025-03-19 03:27:29.864223911 -0700
+@@ -82,7 +82,7 @@
+ # Restore Audio
+ #
+ echo -n "Restoring audio..."
+-rsync -av --delete $BACKUP_MOUNT_POINT/snd/ /var/snd
++rsync -av --delete $BACKUP_MOUNT_POINT/snd/ /srv/rivendell/snd
+ echo "done."
+ 
+ #
+diff -Naur old/web/rdxport/tests.cpp new/web/rdxport/tests.cpp
+--- old/web/rdxport/tests.cpp	2025-03-19 03:06:17.688122745 -0700
++++ new/web/rdxport/tests.cpp	2025-03-19 03:27:48.069329814 -0700
+@@ -72,8 +72,8 @@
+     XmlExit("Missing file data",400,"tests.cpp",LINE_NUMBER);
+   }
+ 
+-  if(RDCopy(filename,"/var/snd/"+RDGetBasePart(filename))) {
+-    msg=QString("Saved file to \"/var/snd/")+RDGetBasePart(filename)+"\"";
++  if(RDCopy(filename,"/srv/rivendell/snd/"+RDGetBasePart(filename))) {
++    msg=QString("Saved file to \"/srv/rivendell/snd/")+RDGetBasePart(filename)+"\"";
+   }
+   else {
+     msg="File copy failed!";

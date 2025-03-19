@@ -1,0 +1,44 @@
+diff -Naur old/lib/rd.h new/lib/rd.h
+--- old/lib/rd.h	2025-03-19 03:06:17.717424463 -0700
++++ new/lib/rd.h	2025-03-19 03:30:55.191775513 -0700
+@@ -47,7 +47,7 @@
+ /*
+  * PID File Locations
+  */
+-#define RD_PID_DIR "/var/run"
++#define RD_PID_DIR "/run/rivendell"
+ 
+ /*
+  * Where audio gets stored
+diff -Naur old/scripts/kill_rd new/scripts/kill_rd
+--- old/scripts/kill_rd	2025-03-19 03:06:17.702801141 -0700
++++ new/scripts/kill_rd	2025-03-19 03:33:05.519951972 -0700
+@@ -21,9 +21,9 @@
+ #
+ # Site Configuration
+ #
+-RD_CAED_PID=/var/snd/caed.pid
+-RD_RIPCD_PID=/var/snd/ripcd.pid
+-RD_RDCATCHD_PID=/var/snd/rdcatchd.pid
++RD_CAED_PID=/run/rivendell/caed.pid
++RD_RIPCD_PID=/run/rivendell/ripcd.pid
++RD_RDCATCHD_PID=/run/rivendell/rdcatchd.pid
+ 
+ 
+ # End of site configuration
+diff -Naur old/scripts/rd_memmon.sh new/scripts/rd_memmon.sh
+--- old/scripts/rd_memmon.sh	2025-03-19 03:06:17.702801141 -0700
++++ new/scripts/rd_memmon.sh	2025-03-19 03:33:33.647462970 -0700
+@@ -20,9 +20,9 @@
+ #   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ #
+ 
+-RIPCD_PID=`cat /var/run/rivendell/ripcd.pid`
+-CAED_PID=`cat /var/run/rivendell/caed.pid`
+-RDCATCHD_PID=`cat /var/run/rivendell/rdcatchd.pid`
++RIPCD_PID=`cat /run/rivendell/ripcd.pid`
++CAED_PID=`cat /run/rivendell/caed.pid`
++RDCATCHD_PID=`cat /run/rivendell/rdcatchd.pid`
+ 
+ if [ -z $1 ] ; then
+   top -p $RIPCD_PID,$CAED_PID,$RDCATCHD_PID

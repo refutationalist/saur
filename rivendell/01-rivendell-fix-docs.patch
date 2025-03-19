@@ -1,0 +1,72 @@
+diff -Naur old/docs/apis/Makefile.am new/docs/apis/Makefile.am
+--- old/docs/apis/Makefile.am	2025-03-19 03:06:17.712439096 -0700
++++ new/docs/apis/Makefile.am	2025-03-19 03:06:42.426662309 -0700
+@@ -32,14 +32,14 @@
+ 	xsltproc $(DOCBOOK_STYLESHEETS)/manpages/docbook.xsl $<
+ 
+ install-exec-local:	
+-	mkdir -p $(DESTDIR)$(prefix)/share/rivendell/apis
+-	cp *.pdf $(DESTDIR)$(prefix)/share/rivendell/apis/
+-	mkdir -p $(DESTDIR)$(prefix)/share/rivendell/apis/html
+-	cp *.html $(DESTDIR)$(prefix)/share/rivendell/apis/html/
+-	cp *.png $(DESTDIR)$(prefix)/share/rivendell/apis/html/
++	mkdir -p $(DESTDIR)$(DOC_PATH)/apis
++	cp *.pdf $(DESTDIR)$(DOC_PATH)/apis/
++	mkdir -p $(DESTDIR)$(DOC_PATH)/apis/html
++	cp *.html $(DESTDIR)$(DOC_PATH)/apis/html/
++	cp *.png $(DESTDIR)$(DOC_PATH)/apis/html/
+ 
+ uninstall-local:	
+-	rm -rf $(DESTDIR)$(prefix)/share/rivendell/apis
++	rm -rf $(DESTDIR)$(DOC_PATH)/share/rivendell/apis
+ 
+ all-local:	cae.html\
+                 cae.pdf\
+diff -Naur old/docs/manpages/Makefile.am new/docs/manpages/Makefile.am
+--- old/docs/manpages/Makefile.am	2025-03-19 03:06:17.709509108 -0700
++++ new/docs/manpages/Makefile.am	2025-03-19 03:06:56.582823677 -0700
+@@ -36,13 +36,13 @@
+ 	xsltproc $(DOCBOOK_STYLESHEETS)/manpages/docbook.xsl $<
+ 
+ install-exec-local:	
+-	mkdir -p $(DESTDIR)$(prefix)/share/rivendell/manpages
+-	cp *.pdf $(DESTDIR)$(prefix)/share/rivendell/manpages/
+-	mkdir -p $(DESTDIR)$(prefix)/share/rivendell/manpages/html
+-	cp *.html $(DESTDIR)$(prefix)/share/rivendell/manpages/html/
++	mkdir -p $(DESTDIR)$(DOC_PATH)/manpages
++	cp *.pdf $(DESTDIR)$(DOC_PATH)/manpages/
++	mkdir -p $(DESTDIR)$(DOC_PATH)/manpages/html
++	cp *.html $(DESTDIR)$(DOC_PATH)/manpages/html/
+ 
+ uninstall-local:	
+-	rm -rf $(DESTDIR)$(prefix)/share/rivendell/manpages
++	rm -rf $(DESTDIR)$(DOC_PATH)/manpages
+ 
+ 
+ all-local:	rdadmin.1\
+diff -Naur old/docs/opsguide/Makefile.am new/docs/opsguide/Makefile.am
+--- old/docs/opsguide/Makefile.am	2025-03-19 03:06:17.706375967 -0700
++++ new/docs/opsguide/Makefile.am	2025-03-19 03:07:29.282189499 -0700
+@@ -372,15 +372,15 @@
+ 	xsltproc ../stylesheets/book-fo.xml opsguide.xml | fop - -pdf opsguide.pdf
+ 
+ install-exec-local:	
+-	mkdir -p $(DESTDIR)$(prefix)/share/rivendell/html
+-	cp opsguide.pdf $(DESTDIR)$(prefix)/share/rivendell/
+-	cp $(OPSGUIDE_HTML) $(DESTDIR)$(prefix)/share/rivendell/html/
+-	cp $(OPSGUIDE_IMAGES) $(DESTDIR)$(prefix)/share/rivendell/html/
+-	cp $(OPSGUIDE_ICONS) $(DESTDIR)$(prefix)/share/rivendell/html/
++	mkdir -p $(DESTDIR)$(DOC_PATH)/html
++	cp opsguide.pdf $(DESTDIR)$(DOC_PATH)/
++	cp $(OPSGUIDE_HTML) $(DESTDIR)$(DOC_PATH)/html/
++	cp $(OPSGUIDE_IMAGES) $(DESTDIR)$(DOC_PATH)/html/
++	cp $(OPSGUIDE_ICONS) $(DESTDIR)$(DOC_PATH)/html/
+ 
+ uninstall-local:
+-	rm -rf $(DESTDIR)$(prefix)/share/rivendell/html
+-	rm -rf $(DESTDIR)$(prefix)/share/rivendell/opsguide.pdf
++	rm -rf $(DESTDIR)$(DOC_PATH)/html
++	rm -rf $(DESTDIR)$(DOC_PATH)/opsguide.pdf
+ 
+ all-local:	$(OPSGUIDE_HTML) \
+                 $(OPSGUIDE_IMAGES) \

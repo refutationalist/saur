@@ -1,0 +1,32 @@
+diff -Naur old/scripts/Makefile.am new/scripts/Makefile.am
+--- old/scripts/Makefile.am	2024-06-26 12:30:58.000000000 -0700
++++ new/scripts/Makefile.am	2025-03-19 04:24:33.136670494 -0700
+@@ -20,13 +20,6 @@
+ ##
+ ## Use automake to process this into a Makefile.in
+ 
+-install-exec-local:	
+-	mkdir -p $(DESTDIR)/etc/X11/xinit/xinitrc.d
+-	cp start-rdmonitor.sh $(DESTDIR)/etc/X11/xinit/xinitrc.d/
+-	mkdir -p $(DESTDIR)/usr/share/rivendell
+-
+-uninstall-local:	
+-	rm -f $(DESTDIR)/etc/X11/xinit/xinitrc.d/start-rdmonitor.sh
+ 
+ bin_SCRIPTS = crc-unity4k.sh\
+               rd_audio_sync\
+@@ -53,6 +46,14 @@
+              start_traverso.sh\
+              start-rdmonitor.sh
+ 
++install-exec-local:
++	mkdir -p $(DESTDIR)/usr/share/rivendell/scripts
++	cp -p $(EXTRA_DIST) $(DESTDIR)/usr/share/rivendell/scripts
++
++uninstall-local:
++	rm -rf $(DESTDIR)/usr/share/rivendell/scripts
++
++
+ CLEANFILES = *~
+ 
+ MAINTAINERCLEANFILES = *~\

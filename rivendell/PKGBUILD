@@ -1,0 +1,115 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+# Warning: Not Yet Successfully Tested!
+
+pkgname=rivendell
+pkgver=4.3.0
+pkgrel=1
+pkgdesc="open source radio automation"
+arch=(x86_64 aarch64)
+url="http://www.rivendellaudio.org/"
+license=('GPL2')
+
+depends=(
+	'cdparanoia' 'cdrtools' 'curl' 'faad2' 'flac' 'id3lib' 'imagemagick'
+	'libcoverart' 'libdiscid' 'libmad' 'libmp4v2' 'libmusicbrainz5'
+	'libsamplerate' 'libvorbis' 'mariadb-libs' 'python-pycurl' 'python-pymysql'
+	'python-pyserial' 'python-requests' 'python-urllib3' 'qt5-base'
+	'soundtouch' 'taglib' 'twolame'
+	# Packages in AUR
+	'qt5-webkit'
+)
+
+makedepends=(
+	'hpklinux' # in AUR
+	'docbook-xsl'
+	'fop'
+	'jack2'
+)
+
+optdepends=(
+	'hpklinux: AudioScience HPI libraries'
+	'jack2: JACK support'
+)
+#backup=()
+#options=()
+#install=
+_source=(
+	"${pkgname}-${pkgver}.tar.gz::https://github.com/ElvishArtisan/rivendell/archive/refs/tags/v${pkgver}.tar.gz"
+	"sysusers.conf"
+	"tmpfiles.conf"
+)
+_patches=(
+	"01-rivendell-fix-docs.patch"
+	"02-rivendell-imagick7.patch"
+	"03-rivendell-var-to-srv.patch"
+	"04-rivendell-pidfile-reloc.patch"
+	"05-rivendell-keep-scripts.patch"
+	"90-rivendell-add-arch.patch"
+)
+
+source=( "${_source[@]}" "${_patches[@]}" )
+
+for file in "${_patches[@]}"; do
+	noextract+=( $(basename ${file}) )
+done
+
+	
+sha256sums=('632859c67de85ef6da2aed2d3b83606fd527e5d5475bc8c1ce2908210f74e38a'
+            '591aa4157fdda6b6ec453437e517951a3b983887e085e7d7a6b0ab2dd8909a25'
+            '3385f0c70fc62d0526a6fb508ffe7a3a8cad1efd3ececb02ebfa8a516003449a'
+            '915e26d097ddb1281c6a8dae6bce84487f92f82aaae6f88e637631a4ca253ab6'
+            '81552c3e58b2f15ccf64cfa8714bd807382ee80cb2966bb038c7bdd312aa2f36'
+            '6cc4781b1a1ab5aaee2cc8477db70690171505cc072d8242f97e23bb4f172b47'
+            '9eaa3f9ddab40650b91638df0f0b4542c89b21a4904e77fc56d6b94b6e29c69e'
+            '64ecfc327fcd8e13553a7122e36e85bd2755469d18affcd3bd83d2958b0e12da'
+            'eda5cba7c3201dfad2f31009b9c4a3e1074371f0abea9f0c786c1a11c162ac40')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	export DOCBOOK_XSL_VER=$(pacman -Q docbook-xsl | sed 's/docbook-xsl \([0-9\.]\+\)-[0-9]\+/\1/')
+	echo "==> docbook version found: ${DOCKBOOK_XSL_VER}"
+
+	for patchfull in "${_patches[@]}"; do
+		patch=$(basename $patchfull)
+		echo "==> Applying patch '${patch}'..."
+		patch -p1 < "../${patch}"
+	done
+
+	./autogen.sh
+
+}
+
+build() {
+
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	
+	DOCBOOK_STYLESHEETS="/usr/share/xml/docbook/xsl-stylesheets-${DOCBOOK_XSL_VER}" \
+	./configure \
+		--prefix=/usr \
+		--libdir=/usr/lib \
+		--libexecdir=/usr/share/rivendell/htdocs \
+		--sysconfdir=/usr/share/rivendell \
+		--bindir=/usr/bin \
+		--sbindir=/usr/bin \
+		--runstatedir=/run/rivendell
+
+	make
+		
+}
+
+
+
+package() {
+
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+
+	mkdir -p \
+		"${pkgdir}/usr/lib/sysusers.d" \
+		"${pkgdir}/usr/lib/tmpfiles.d"
+
+	install -m644 "${srcdir}/sysusers.conf" "${pkgdir}/usr/lib/sysusers.d/rivendell.conf"
+	install -m644 "${srcdir}/tmpfiles.conf" "${pkgdir}/usr/lib/tmpfiles.d/rivendell.conf"
+
+}

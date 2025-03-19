@@ -1,0 +1,12 @@
+diff -Naur orig/configure.ac fixed/configure.ac
+--- orig/configure.ac	2025-03-19 00:04:59.810907325 -0700
++++ fixed/configure.ac	2025-03-19 01:33:49.215322176 -0700
+@@ -350,7 +366,7 @@
+ #
+ # Check for ImageMagick
+ #
+-PKG_CHECK_MODULES(IMAGEMAGICK,Magick++-6.Q16,[],[AC_MSG_ERROR([*** ImageMagick 6 Magick++ binding not found ***])])
++PKG_CHECK_MODULES(IMAGEMAGICK,Magick++-7.Q16HDRI,[],[AC_MSG_ERROR([*** ImageMagick 6 Magick++ binding not found ***])])
+ 
+ #
+ # Check for Python
