@@ -13,8 +13,12 @@ _documents=50
 # To save time and considerable resources, we're using the precompiled
 # LibreOffice shipped by Collabora. 
 _locore_ver="25.04"
-_locore_location="/usr/lib/collabora"
 
+# if you change this, change install as well
+_locore_location="/usr/lib/code"
+
+# The version number of the debian file which is literally the only place I couild
+# find the branding files.
 _code_brand_ver="24.04-35"
 
 
@@ -31,7 +35,9 @@ backup=(
 )
 
 depends=(
-	'libcap' 'libpng' 'poco'
+	'libcap' 'libpng' 'poco' 'cpio' 'fontconfig'
+	# fonts
+	'ttf-liberation' 'ttf-dejavu' 'ttf-carlito'
 )
 makedepends=(
 	'cppunit' 'nodejs' 'npm' 'chromium' 'python-lxml' 'python-polib'
@@ -92,6 +98,10 @@ package() {
 	mkdir -p "${pkgdir}${_locore_location}"
 	cp -R "${srcdir}/instdir/." "${pkgdir}${_locore_location}"
 
+	echo "==> removing built-in fonts in favor of system fonts"
+	rm -Rf "${pkgdir}${_locore_location}/share/fonts"
+	ln -sf /usr/share/fonts "${pkgdir}${_locore_location}/share/fonts"
+
 	echo "==> running make install"
 	cd "${srcdir}/online"
 	make DESTDIR="${pkgdir}" install
@@ -110,7 +120,7 @@ package() {
 
 	echo "==> moving branding stuff around"
 	# make install uses rsync, so why don't we?
-	rsync -av "${srcdir}/branding/opt/collaboraoffice/share/theme_definitions/." "${pkgdir}/usr/lib/collabora/share/theme_definitions/."
+	rsync -av "${srcdir}/branding/opt/collaboraoffice/share/theme_definitions/." "${pkgdir}${_locore_location}/share/theme_definitions/."
 	rsync -av "${srcdir}/branding/usr/share/coolwsd/browser/dist/." "${pkgdir}/usr/share/coolwsd/browser/dist/."
 
 

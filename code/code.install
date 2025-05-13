@@ -12,13 +12,13 @@ post_upgrade() {
 	## From Debian packages ##
 	systemd-sysusers code.conf
 
-	fc-cache usr/lib/collabora/share/fonts/truetype
+	#fc-cache usr/lib/collabora/share/fonts/truetype
 	
 	rm -rf srv/cool
 	mkdir -p srv/cool/child-roots srv/cool/cache
 	chown -R cool:cool srv/cool
 
-	coolwsd-systemplate-setup srv/cool/systemplate usr/lib/collabora >/dev/null 2>&1
+	coolwsd-systemplate-setup srv/cool/systemplate usr/lib/code >/dev/null 2>&1
 
 	systemctl daemon-reload
 	if systemctl list-unit-files coolwsd.service | grep -q 'enabled$'; then
@@ -35,6 +35,10 @@ post_install() {
 ==>     See the Collabora Online documentation regarding built-in SSL.
 ==> 
 ==>  2) Set the admin console password with 'coolconfig set-admin-password'
+==>
+==>  3) Minimal fonts are installed by this package.  To add more, use
+==>     pacman as normal, but then re-run: 
+==>        coolwsd-systemplate-setup /srv/cool/systemplate /usr/lib/code
 ==> 
 THEEND
 
