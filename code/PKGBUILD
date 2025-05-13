@@ -40,7 +40,7 @@ depends=(
 	'ttf-liberation' 'ttf-dejavu' 'ttf-carlito'
 )
 makedepends=(
-	'cppunit' 'nodejs' 'npm' 'chromium' 'python-lxml' 'python-polib'
+	'cppunit' 'nodejs' 'npm' 'chromium' 'python-lxml' 'python-polib' 'git' 'rsync'
 )
 
 install="code.install"
