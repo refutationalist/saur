@@ -1,0 +1,112 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+
+# for build changes, check:
+#  https://collaboraonline.github.io/post/build-code/#build-code-on-arch
+
+## Compile time limitations for open connections and documents
+_connections=100
+_documents=50
+
+# To save time and considerable resources, we're using the precompiled
+# LibreOffice shipped by Collabora. 
+_locore_ver="25.04"
+_locore_location="/usr/lib/collabora"
+
+
+pkgname=collabora-online-git
+pkgver=20250513.bce713a30f
+pkgrel=1
+pkgdesc="Collabora Office online office suite based on LibreOffice"
+arch=("x86_64")
+url="https://collaboraonline.github.io/"
+license=("MPL-2.0")
+
+depends=(
+	'libcap' 'libcap-ng' 'libpng' 'poco'
+)
+makedepends=(
+	'cppunit' 'nodejs' 'npm' 'chromium' 'python-lxml' 'python-polib'
+	'locore-headers'
+)
+
+install=collabora-online.install
+source=(
+	"git+https://github.com/CollaboraOnline/online.git"
+	"https://github.com/CollaboraOnline/online/releases/download/for-code-assets/core-co-${_locore_ver}-assets.tar.gz"
+	"collabora-online.sysusers"
+	"collabora-online.tmpfiles"
+)
+
+sha256sums=('SKIP'
+            '3888d3a8d303ac86fbb0cfb1c29e8b37d0b6cc13e345dc0b60fd6fb10b139f93'
+            '1be901b3c452d72b595a5596df802a01f9936e9f12d8e623eacb4b5372bf3f85'
+            'c2651d22eded3ba14dbec0438d902fdf3af7fb22bb6bcf35b0038d1125d75445')
+
+pkgver() {
+	cd "${srcdir}/online"
+	git log -1 --format='%cd.%h' --date=short | tr -d -
+}
+
+
+
+prepare() {
+	
+	echo "==> NOTE: Building with limits of ${_connections} max connections and ${_documents} max documents"
+	echo "==> Running autogen.sh"
+	cd "${srcdir}/online"
+	./autogen.sh
+	echo "==> running configure"
+
+	# setcap is for packaging
+	# SSL is disabled since this needs to be behind a reverse proxy
+	./configure \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--runstatedir=/run \
+		--with-lokit-path=../include \
+		--with-lo-path=${_locore_location} \
+		--with-max-connections=${_connections} \
+		--with-max-documents=${_documents} \
+		--disable-ssl
+}
+
+build() {
+	cd "${srcdir}/online"
+	make 
+}
+
+package() {
+
+	# Put LibreOffice in the right place
+	mkdir -p "${pkgdir}${_locore_location}"
+	cp -R "${srcdir}/instdir/." "${pkgdir}${_locore_location}"
+
+	# make install for the online bit
+	cd "${srcdir}/online"
+	make DESTDIR="${pkgdir}" install
+
+	# move web config stuff to examples
+	mkdir -p "${pkgdir}/usr/share/doc/coolwsd/example"
+	mv "${pkgdir}/etc/apache2" "${pkgdir}/etc/nginx" "${pkgdir}/usr/share/doc/coolwsd/example"
+
+	# systemd stuff and making things more arch-like
+	install -Dm0644 "${srcdir}/collabora-online.sysusers" "${pkgdir}/usr/lib/sysusers.d/coolwsd.conf"
+	install -Dm0644 "${srcdir}/collabora-online.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/coolwsd.conf"
+
+	sed -i '/^\[Unit\]/ a \
+After=systemd-tmpfiles-setup.service' coolwsd.service
+	sed -i 's,/opt/cool,/srv/cool,g' coolwsd.service
+	install -Dm0644 coolwsd.service "${pkgdir}/usr/lib/systemd/system"
+
+	mkdir -p "${pkgdir}/srv/cool/cache"
+	chown -R cool:cool "${pkgdir}/srv/cool"
+
+
+
+
+
+}
+
+
+
+

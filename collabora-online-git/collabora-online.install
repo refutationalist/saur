@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# I mostly stole this from collabora-online-server-nodocker
+
+pre_upgrade() {
+	systemctl stop coolwsd.service 2>/dev/null || true
+}
+
+
+post_upgrade() {
+
+	## From Debian packages ##
+
+	systemd-sysusers collabora-online.conf
+	systemd-tmpfiles --create --clean collabora-online.conf
+
+	setcap cap_fowner,cap_chown,cap_mknod,cap_sys_chroot=ep usr/bin/coolforkit || true
+	setcap cap_sys_admin=ep /usr/bin/coolmount || true
+
+	fc-cache usr/lib/collabora/share/fonts/truetype
+
+
+	
+	rm -rf srv/cool
+	mkdir -p srv/cool/child-roots
+	chown cool: srv/cool
+	chown cool: srv/cool/child-roots
+
+
+	coolwsd-systemplate-setup srv/cool/systemplate usr/lib/collabora >/dev/null 2>&1
+	coolwsd-generate-proof-key >/dev/null 2>&1
+
+	## From Docker script ##
+	cp /etc/resolv.conf /etc/hosts opt/cool/systemplate/etc/
+	chown cool:cool srv/cool/systemplate/etc/hosts srv/cool/systemplate/etc/resolv.conf
+	
+	systemctl daemon-reload
+	if systemctl list-unit-files coolwsd.service | grep -q 'enabled$'; then
+		systemctl start coolwsd.service
+	fi
+
+}
+
+post_install() {
+	post_upgrade
+
+  cat <<-THEEND
+THIS IS PROBABLY A LIE
+==> 
+==>  1) It is expected that this service will be run behind a reverse proxy.
+==>     See the Collabora Online documentation regarding built-in SSL.
+==> 
+==>  2) The username and password must be set in /etc/coolwsd/coolwsd.xml
+==>     for the admin console.
+==> 
+==>  3) In /etc/coolwsd/coolwsd.xml, the host should be set to a value
+==>     different than “localhost”.  You may also want to force the
+==>     server_name in /etc/coolwsd/coolwsd.xml.
+==>
+==> 
+THEEND
+
+  post_upgrade
+}
+
+
+pre_remove() {
+  pre_upgrade
+}
+
+post_remove() {
+  systemctl disable coolwsd.service 2>/dev/null || true
+}
