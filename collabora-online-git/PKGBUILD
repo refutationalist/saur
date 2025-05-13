@@ -14,7 +14,7 @@ _locore_location="/usr/lib/collabora"
 
 
 pkgname=collabora-online-git
-pkgver=20250513.bce713a30f
+pkgver=20250513.d5a0fb33d1
 pkgrel=1
 pkgdesc="Collabora Office online office suite based on LibreOffice"
 arch=("x86_64")
@@ -90,16 +90,17 @@ package() {
 	mv "${pkgdir}/etc/apache2" "${pkgdir}/etc/nginx" "${pkgdir}/usr/share/doc/coolwsd/example"
 
 	# systemd stuff and making things more arch-like
-	install -Dm0644 "${srcdir}/collabora-online.sysusers" "${pkgdir}/usr/lib/sysusers.d/coolwsd.conf"
-	install -Dm0644 "${srcdir}/collabora-online.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/coolwsd.conf"
+	install -Dm0644 "${srcdir}/collabora-online.sysusers" "${pkgdir}/usr/lib/sysusers.d/collabora-online.conf"
+	install -Dm0644 "${srcdir}/collabora-online.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/collabora-online.conf"
 
+	mkdir -p "${pkgdir}/usr/lib/systemd/system"
 	sed -i '/^\[Unit\]/ a \
 After=systemd-tmpfiles-setup.service' coolwsd.service
 	sed -i 's,/opt/cool,/srv/cool,g' coolwsd.service
 	install -Dm0644 coolwsd.service "${pkgdir}/usr/lib/systemd/system"
 
-	mkdir -p "${pkgdir}/srv/cool/cache"
-	chown -R cool:cool "${pkgdir}/srv/cool"
+	#mkdir -p "${pkgdir}/srv/cool/cache"
+	#chown -R cool:cool "${pkgdir}/srv/cool"
 
 
 

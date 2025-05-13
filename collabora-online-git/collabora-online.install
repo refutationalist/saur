@@ -14,24 +14,22 @@ post_upgrade() {
 	systemd-sysusers collabora-online.conf
 	systemd-tmpfiles --create --clean collabora-online.conf
 
-	setcap cap_fowner,cap_chown,cap_mknod,cap_sys_chroot=ep usr/bin/coolforkit || true
+	setcap cap_fowner,cap_chown,cap_mknod,cap_sys_chroot=ep usr/bin/coolforkit-cap || true
 	setcap cap_sys_admin=ep /usr/bin/coolmount || true
 
 	fc-cache usr/lib/collabora/share/fonts/truetype
-
-
 	
 	rm -rf srv/cool
-	mkdir -p srv/cool/child-roots
-	chown cool: srv/cool
-	chown cool: srv/cool/child-roots
+	mkdir -p srv/cool/child-roots srv/cool/cache
+	chown -R cool:cool srv/cool
 
 
 	coolwsd-systemplate-setup srv/cool/systemplate usr/lib/collabora >/dev/null 2>&1
-	coolwsd-generate-proof-key >/dev/null 2>&1
+	#coolwsd-generate-proof-key >/dev/null 2>&1
+	coolconfig generate-proof-key
 
 	## From Docker script ##
-	cp /etc/resolv.conf /etc/hosts opt/cool/systemplate/etc/
+	cp /etc/resolv.conf /etc/hosts srv/cool/systemplate/etc/
 	chown cool:cool srv/cool/systemplate/etc/hosts srv/cool/systemplate/etc/resolv.conf
 	
 	systemctl daemon-reload
