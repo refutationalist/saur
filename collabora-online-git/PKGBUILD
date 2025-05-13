@@ -3,6 +3,9 @@
 # for build changes, check:
 #  https://collaboraonline.github.io/post/build-code/#build-code-on-arch
 
+# tag for this version
+_code_tag="cp-25.04.1-1"
+
 ## Compile time limitations for open connections and documents
 _connections=100
 _documents=50
@@ -12,40 +15,40 @@ _documents=50
 _locore_ver="25.04"
 _locore_location="/usr/lib/collabora"
 
+_code_brand_ver="24.04-35"
 
-pkgname=collabora-online-git
-pkgver=20250513.d5a0fb33d1
+
+pkgname=code
+pkgver=25.04.1.1
 pkgrel=1
-pkgdesc="Collabora Office online office suite based on LibreOffice"
+pkgdesc="Collabora Online Development Environment - for NextCloud Office"
 arch=("x86_64")
 url="https://collaboraonline.github.io/"
 license=("MPL-2.0")
+backup=(
+  etc/coolwsd/coolkitconfig.xcu
+  etc/coolwsd/coolwsd.xml
+)
 
 depends=(
-	'libcap' 'libcap-ng' 'libpng' 'poco'
+	'libcap' 'libpng' 'poco'
 )
 makedepends=(
 	'cppunit' 'nodejs' 'npm' 'chromium' 'python-lxml' 'python-polib'
-	'locore-headers'
 )
 
-install=collabora-online.install
+install="code.install"
 source=(
-	"git+https://github.com/CollaboraOnline/online.git"
+	"git+https://github.com/CollaboraOnline/online.git#tag=${_code_tag}"
 	"https://github.com/CollaboraOnline/online/releases/download/for-code-assets/core-co-${_locore_ver}-assets.tar.gz"
-	"collabora-online.sysusers"
-	"collabora-online.tmpfiles"
+	"https://www.collaboraoffice.com/repos/CollaboraOnline/CODE/code-brand_${_code_brand_ver}_all.deb"
+	"code.sysusers"
 )
 
-sha256sums=('SKIP'
+sha256sums=('c92430b16af6b28e9c5b55a19f29f0ccf670cb69279aceef8b72a933715496ff'
             '3888d3a8d303ac86fbb0cfb1c29e8b37d0b6cc13e345dc0b60fd6fb10b139f93'
-            '1be901b3c452d72b595a5596df802a01f9936e9f12d8e623eacb4b5372bf3f85'
-            'c2651d22eded3ba14dbec0438d902fdf3af7fb22bb6bcf35b0038d1125d75445')
-
-pkgver() {
-	cd "${srcdir}/online"
-	git log -1 --format='%cd.%h' --date=short | tr -d -
-}
+            '14557257c710d8785e96f78a70d46a11c7adfdf4196716e78efc905242f9599a'
+            '1be901b3c452d72b595a5596df802a01f9936e9f12d8e623eacb4b5372bf3f85')
 
 
 
@@ -68,6 +71,14 @@ prepare() {
 		--with-max-connections=${_connections} \
 		--with-max-documents=${_documents} \
 		--disable-ssl
+
+	echo "==> Unpacking CODE branding files"
+	cd "${srcdir}"
+	mkdir branding
+	cd branding
+	ar x ../code-brand_${_code_brand_ver}_all.deb
+	tar axf data.tar.xz
+
 }
 
 build() {
@@ -77,37 +88,33 @@ build() {
 
 package() {
 
-	# Put LibreOffice in the right place
+	echo "==> putting LibreOffice in the right place"
 	mkdir -p "${pkgdir}${_locore_location}"
 	cp -R "${srcdir}/instdir/." "${pkgdir}${_locore_location}"
 
-	# make install for the online bit
+	echo "==> running make install"
 	cd "${srcdir}/online"
 	make DESTDIR="${pkgdir}" install
 
-	# move web config stuff to examples
+
+	echo "==> moving web configuration to the documentation"
 	mkdir -p "${pkgdir}/usr/share/doc/coolwsd/example"
 	mv "${pkgdir}/etc/apache2" "${pkgdir}/etc/nginx" "${pkgdir}/usr/share/doc/coolwsd/example"
 
-	# systemd stuff and making things more arch-like
-	install -Dm0644 "${srcdir}/collabora-online.sysusers" "${pkgdir}/usr/lib/sysusers.d/collabora-online.conf"
-	install -Dm0644 "${srcdir}/collabora-online.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/collabora-online.conf"
+	echo "==> setting up system administration stuff"
+	install -Dm0644 "${srcdir}/code.sysusers" "${pkgdir}/usr/lib/sysusers.d/code.conf"
 
 	mkdir -p "${pkgdir}/usr/lib/systemd/system"
-	sed -i '/^\[Unit\]/ a \
-After=systemd-tmpfiles-setup.service' coolwsd.service
 	sed -i 's,/opt/cool,/srv/cool,g' coolwsd.service
 	install -Dm0644 coolwsd.service "${pkgdir}/usr/lib/systemd/system"
 
-	#mkdir -p "${pkgdir}/srv/cool/cache"
-	#chown -R cool:cool "${pkgdir}/srv/cool"
-
+	echo "==> moving branding stuff around"
+	# make install uses rsync, so why don't we?
+	rsync -av "${srcdir}/branding/opt/collaboraoffice/share/theme_definitions/." "${pkgdir}/usr/lib/collabora/share/theme_definitions/."
+	rsync -av "${srcdir}/branding/usr/share/coolwsd/browser/dist/." "${pkgdir}/usr/share/coolwsd/browser/dist/."
 
 
 
 
 }
-
-
-
 

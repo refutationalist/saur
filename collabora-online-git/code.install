@@ -10,12 +10,7 @@ pre_upgrade() {
 post_upgrade() {
 
 	## From Debian packages ##
-
-	systemd-sysusers collabora-online.conf
-	systemd-tmpfiles --create --clean collabora-online.conf
-
-	setcap cap_fowner,cap_chown,cap_mknod,cap_sys_chroot=ep usr/bin/coolforkit-cap || true
-	setcap cap_sys_admin=ep /usr/bin/coolmount || true
+	systemd-sysusers code.conf
 
 	fc-cache usr/lib/collabora/share/fonts/truetype
 	
@@ -23,15 +18,8 @@ post_upgrade() {
 	mkdir -p srv/cool/child-roots srv/cool/cache
 	chown -R cool:cool srv/cool
 
-
 	coolwsd-systemplate-setup srv/cool/systemplate usr/lib/collabora >/dev/null 2>&1
-	#coolwsd-generate-proof-key >/dev/null 2>&1
-	coolconfig generate-proof-key
 
-	## From Docker script ##
-	cp /etc/resolv.conf /etc/hosts srv/cool/systemplate/etc/
-	chown cool:cool srv/cool/systemplate/etc/hosts srv/cool/systemplate/etc/resolv.conf
-	
 	systemctl daemon-reload
 	if systemctl list-unit-files coolwsd.service | grep -q 'enabled$'; then
 		systemctl start coolwsd.service
@@ -40,27 +28,20 @@ post_upgrade() {
 }
 
 post_install() {
-	post_upgrade
 
   cat <<-THEEND
-THIS IS PROBABLY A LIE
 ==> 
 ==>  1) It is expected that this service will be run behind a reverse proxy.
 ==>     See the Collabora Online documentation regarding built-in SSL.
 ==> 
-==>  2) The username and password must be set in /etc/coolwsd/coolwsd.xml
-==>     for the admin console.
-==> 
-==>  3) In /etc/coolwsd/coolwsd.xml, the host should be set to a value
-==>     different than “localhost”.  You may also want to force the
-==>     server_name in /etc/coolwsd/coolwsd.xml.
-==>
+==>  2) Set the admin console password with 'coolconfig set-admin-password'
 ==> 
 THEEND
 
   post_upgrade
+  coolconfig generate-proof-key
+  
 }
-
 
 pre_remove() {
   pre_upgrade
