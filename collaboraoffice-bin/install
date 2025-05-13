@@ -1,9 +1,0 @@
-#!/bin/sh
-
-post_install() {
-	post_upgrade
-}
-
-post_upgrade() {
-	fc-cache opt/collaboraoffice/share/fonts/truetype
-}

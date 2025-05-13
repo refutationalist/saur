@@ -11,7 +11,7 @@ license=(
   MIT
 )
 #'git+https://xenbits.xen.org/git-http/ovmf.git'
-makedepends=('git' 'nasm')
+makedepends=('git' 'nasm' 'python' 'acpica')
 _projname=edk2
 
 # The makefile is pulled from the Xen source in tools/firmware/ovmf-makefile
