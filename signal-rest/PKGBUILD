@@ -1,0 +1,73 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+
+# Setting to a specific commit to help with reproducability
+_commit="59207541c1f94e572f0e7b36de401f18ce723a3c"
+
+pkgname=signal-rest
+pkgver=0.92
+pkgrel=1
+pkgdesc="A de-containerized version of the Signal messenger REST API"
+arch=("x86_64")
+url="https://github.com/bbernhard/signal-cli-rest-api/"
+license=('MIT')
+depends=('signal-cli-native')
+makedepends=('go')
+backup=('etc/conf.d/signal-rest.env.sh' 'var/lib/signal-api/jsonrpc2.yml')
+install="signal-rest.install"
+source=(
+	"signal-cli-rest-api::git+https://github.com/bbernhard/signal-cli-rest-api#commit=${_commit}"
+	"dedockerize.patch"
+	"signal-cli-rpc.service"
+	"signal-rest.service"
+	"signal-rest.env.sh"
+	"jsonrpc2.yml"
+	"README"
+)
+
+sha256sums=(
+	'a2e00b8aff3ffa852d6495c70dcce944a7fa61ebeb916082ce07074fab2b0555'
+	'1def68b3f74fdb6f9c74a148a2469b28c44a92fb88717a8188b86eb7050a1a12'
+	'40244f493f05230e92a6cca01d7237463b928634aa3dcdd4f69e0f6768a0671a'
+	'cfd385cf245679a3a782632cf2be46cbdd7b8523390ec1ab157e2c2c3d56bdfc'
+	'cbad3acc2999c5243e01b8060d58a3e0ce7d8b9b034dae52aedfcc2751135d35'
+	'60e4e85f920ec299ac1b2dda11c3ebaa5eb8bb3312ac12a15d8c520c9a489a78'
+	'ba700f23e50c5b4126616c62ab2fee8db4d2665fb1b4b61d1c6609497fc6e090'
+)
+
+
+prepare() {
+	cd "${srcdir}"
+	mkdir go
+	cd "signal-cli-rest-api"
+	patch -p1 -i "$srcdir/dedockerize.patch"
+}
+
+build() {
+	cd "${srcdir}/signal-cli-rest-api/src"
+	CGO_CPPFLAGS="${CPPFLAGS}" \
+	CGO_CFLAGS="${CFLAGS}" \
+	CGO_CXXFLAGS="${CXXFLAGS}" \
+	CGO_LDFLAGS="${LDFLAGS}" \
+	GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw" \
+	GOPATH="${srcdir}/go" \
+	go build -o signal-rest
+}
+
+package() {
+	#cd "$pkgname-$pkgver"
+	#make DESTDIR="$pkgdir/" install
+
+	cd "$pkgdir"
+	mkdir -p etc/conf.d usr/bin \
+		usr/lib/systemd/system var/lib/signal-cli \
+		usr/share/signal-rest
+
+	cd "$srcdir"
+	install -m775 signal-cli-rest-api/src/signal-rest "${pkgdir}/usr/bin"
+	install -m644 signal-rest.env.sh "${pkgdir}/etc/conf.d"
+	install -m644 {signal-cli-rpc.service,signal-rest.service} "${pkgdir}/usr/lib/systemd/system"
+	install -m644 jsonrpc2.yml "${pkgdir}/var/lib/signal-cli"
+	install -m644 jsonrpc2.yml "${pkgdir}/usr/share/signal-rest"
+	install -m644 signal-cli-rest-api/LICENSE "${pkgdir}/usr/share/signal-rest"
+	install -m644 README "${pkgdir}/usr/share/signal-rest"
+}

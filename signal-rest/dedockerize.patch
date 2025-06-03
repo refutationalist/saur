@@ -1,0 +1,77 @@
+diff --git a/src/client/client.go b/src/client/client.go
+index d577dae..1c1145a 100644
+--- a/src/client/client.go
++++ b/src/client/client.go
+@@ -288,16 +288,7 @@ func parseWhitespaceDelimitedKeyValueStringList(in string, keys []string) []map[
+ }
+ 
+ func getContainerId() (string, error) {
+-	data, err := ioutil.ReadFile("/proc/1/cpuset")
+-	if err != nil {
+-		return "", err
+-	}
+-	lines := strings.Split(string(data), "\n")
+-	if len(lines) == 0 {
+-		return "", errors.New("Couldn't get docker container id (empty)")
+-	}
+-	containerId := strings.Replace(lines[0], "/docker/", "", -1)
+-	return containerId, nil
++	return "NOCONTAINER", nil
+ }
+ 
+ func ConvertGroupIdToInternalGroupId(id string) (string, error) {
+diff --git a/src/main.go b/src/main.go
+index 2c327b2..6585346 100644
+--- a/src/main.go
++++ b/src/main.go
+@@ -64,9 +64,13 @@ import (
+ // @BasePath /
+ 
+ func main() {
+-	signalCliConfig := flag.String("signal-cli-config", "/home/.local/share/signal-cli/", "Config directory where signal-cli config is stored")
+-	attachmentTmpDir := flag.String("attachment-tmp-dir", "/tmp/", "Attachment tmp directory")
+-	avatarTmpDir := flag.String("avatar-tmp-dir", "/tmp/", "Avatar tmp directory")
++	configdir := utils.GetEnv("CONFIG_DIR", "/var/lib/signal-cli/");
++	attachdir := utils.GetEnv("ATTACHMENT_DIR", "/tmp/");
++	avatardir := utils.GetEnv("AVATAR_DIR", "/tmp/");
++
++	signalCliConfig := flag.String("signal-cli-config", configdir, "Config directory where signal-cli config is stored")
++	attachmentTmpDir := flag.String("attachment-tmp-dir", attachdir, "Attachment tmp directory")
++	avatarTmpDir := flag.String("avatar-tmp-dir", avatardir, "Avatar tmp directory")
+ 	flag.Parse()
+ 
+ 
+@@ -79,6 +83,10 @@ func main() {
+ 		}
+ 	}
+ 
++	log.Debug("signal rest api config dir: ", configdir);
++	log.Debug("signal attachment dir: ", attachdir);
++	log.Debug("signal avatar dir: ", avatardir);
++
+ 	if utils.GetEnv("SWAGGER_USE_HTTPS_AS_PREFERRED_SCHEME", "false") == "false" {
+ 		docs.SwaggerInfo.Schemes = []string{"http", "https"}
+ 	} else {
+@@ -97,11 +105,13 @@ func main() {
+ 		log.Fatal("Invalid PORT ", port, " set. PORT needs to be a number")
+ 	}
+ 
+-	defaultSwaggerIp := utils.GetEnv("HOST_IP", "127.0.0.1")
+-	swaggerIp := utils.GetEnv("SWAGGER_IP", defaultSwaggerIp)
++	hostIp := utils.GetEnv("HOST_IP", "127.0.0.1")
++	swaggerIp := utils.GetEnv("SWAGGER_IP", hostIp)
+ 	swaggerHost := utils.GetEnv("SWAGGER_HOST", swaggerIp+":"+port)
+ 	docs.SwaggerInfo.Host = swaggerHost
+ 
++	bind := hostIp + ":" + port
++
+ 	log.Info("Started Signal Messenger REST API")
+ 
+ 	supportsSignalCliNative := "0"
+@@ -437,5 +447,5 @@ func main() {
+ 		c.Start()
+ 	}
+ 
+-	router.Run()
++	router.Run(bind)
+ }

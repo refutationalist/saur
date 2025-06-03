@@ -1,0 +1,42 @@
+[Unit]
+Description=Send secure messages to Signal clients via local JSONRPC
+Wants=network.target
+After=network.target
+
+[Service]
+CapabilityBoundingSet=
+EnvironmentFile=/etc/conf.d/signal-rest.env.sh
+# Update 'ReadWritePaths' if you change the config path here
+ExecStart=/usr/bin/signal-rest
+LockPersonality=true
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateIPC=true
+PrivateTmp=true
+PrivateUsers=true
+ProcSubset=pid
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectSystem=strict
+# Profile pictures and attachments to upload must be located here for the service to access them
+ReadWritePaths=/var/lib/signal-cli
+RemoveIPC=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+StandardOutput=journal
+StandardError=journal
+SystemCallArchitectures=native
+SystemCallFilter=~@debug @mount @obsolete @privileged @resources
+UMask=0077
+# Create the user and home directory with 'useradd -r -U -s /usr/sbin/nologin -m -b /var/lib signal-cli'
+User=signal-cli
+
+[Install]
+WantedBy=default.target

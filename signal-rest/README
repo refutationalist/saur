@@ -1,0 +1,10 @@
+
+A YML file (jsonrpc2.yml) is required in /var/lib/signal-cli for the
+JSON-RPC mode of the REST API to function.  If you change things, you'll
+need to change that.   There's a copy of it in /usr/share/signal-rest.
+
+I was never able to get account linking working properly through the REST
+API.  Best to sudo into the signal-cli user and use the command line to
+link the account.
+
+This is not well tested.

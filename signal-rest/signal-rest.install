@@ -1,0 +1,16 @@
+install_msg() {
+	FILE=/usr/share/signal-rest/README
+	echo "Contents of $FILE:"
+	cat $FILE
+}
+
+
+post_install() {
+	install_msg
+}
+
+
+pre_remove() {
+	systemctl disable --now signal-rest.service
+}
+
