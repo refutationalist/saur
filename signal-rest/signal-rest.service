@@ -1,7 +1,8 @@
 [Unit]
 Description=Send secure messages to Signal clients via local JSONRPC
 Wants=network.target
-After=network.target
+After=signal-cli-rpc.service
+Requires=signal-cli-rpc.service
 
 [Service]
 CapabilityBoundingSet=
@@ -37,6 +38,8 @@ SystemCallFilter=~@debug @mount @obsolete @privileged @resources
 UMask=0077
 # Create the user and home directory with 'useradd -r -U -s /usr/sbin/nologin -m -b /var/lib signal-cli'
 User=signal-cli
+Restart=always
+RestartSec=10
 
 [Install]
 WantedBy=default.target

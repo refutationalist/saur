@@ -37,6 +37,8 @@ SystemCallFilter=~@debug @mount @obsolete @privileged @resources
 UMask=0077
 # Create the user and home directory with 'useradd -r -U -s /usr/sbin/nologin -m -b /var/lib signal-cli'
 User=signal-cli
+Restart=always
+RestartSec=10
 
 [Install]
 WantedBy=default.target
