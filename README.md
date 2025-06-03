@@ -6,39 +6,70 @@ Most of these packages are for my work at [KTQA-LP](http://ktqa.org), [KQWZ-LP](
 
 There's also a game I'm kind of addicted to.
 
+## The Packages
 
+### My Stuff, Radio Station Related
 
-## My Stuff
+This is stuff of my own, or stuff that I've forked or patched specifically for radio station work.
+
   * [jack-webpeak](https://github.com/refutationalist/jack-webpeak) -- my fork of `jack-peak` which can output to a web socket.
+  * [jackwsmix](https://github.com/refutationalist/jackwsmix) -- a websocket mixer for JACK, based on ```jack-minimix```.
   * [systemjack-git](https://github.com/refutationalist/systemjack) -- a scaffold for building audio systems in Arch Linux using JACK and systemd
-  * [dumpload](https://github.com/refutationalist/dumpload) -- a basic web file dump
+  * [dumpload-git](https://github.com/refutationalist/dumpload) -- a basic web file dump, used to download raw studio recordings.
+  * [jack_capture](https://github.com/refutationalist/jack_capture) -- This is my personal fork of jack_capture.  My changes are in git, but there hasn't been a release since 2017.  Use [jack_capture-git](https://aur.archlinux.org/packages/jack_capture-git) in AUR.
+  * [logger](https://github.com/refutationalist/fdlogger) -- My simple Field Day logger, written in modern PHP with a significant javascript component.
+  * [novnc-lighttpd](https://novnc.com/info.html) -- A simple way to add NoVNC as a webapp with minimal client-side decoration.
 
-## Standalone Packages
+### Modified Packages
 
-  * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) -- A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.  **In AUR.**
+Packages in ```[extra]`` that I needed to work differently.
+
+  * [lighttpd-dbi](https://www.lighttpd.net/) -- lighttpd compiled with a useful dbi plugin.
+
+
+### Standalone Packages
+
+Packages not in official repo's, and for one reason or another not in AUR.
+
+  * [CODE](https://collaboraonline.github.io/) -- Collabora Online Development Environment, the online LibreOffice server used by NextCloud Office.
+  * [rivendell](https://www.rivendellaudio.org/) -- Rivendell Radio Automation system.  Currently under testing at my station.
   * [silentjack](https://aur.archlinux.org/packages/silentjack) -- recently adodpted, not often updated, fairly stable software. **In AUR.**
-  * [wsServer](https://github.com/Theldus/wsServer) -- A rather simple websocket library.   Currently points to my fork that allows binding to localhost and basic IPv6 support.
-  * [rimworld](https://rimworldgame.com/) -- the non-steam Rimworld package from AUR, with the ability to add Ideology and a simpler method of adding future DLCs
-  * [jack_capture](https://github.com/refutationalist/jack_capture) -- This is my personal fork of jack_capture.  My changes have been merged but there hasn't been a release for them yet.  Use [jack_capture-git](https://aur.archlinux.org/packages/jack_capture-git) in AUR.
-  
-## Fonts
+  * [signal-rest](https://github.com/bbernhard/signal-cli-rest-api/) -- The [Signal](https://signal.org/) API required by many other services, dedockerized and made sane.
+  * [wsServer](https://github.com/Theldus/wsServer) -- A rather simple websocket library.
+
+
+### Fonts
+
+Fonts I use.
+
   * [perfect-vga](http://laemeur.sdf.org/fonts/) -- VGA fonts that I use in terminals that are useable, which as of 2020-08 does not include gnome-terminal or any modern VTE derived terminals.  I have feelings about this.
   * [ttf-vcr-eas](https://www.fontzip.com/vcr-eas) -- The font endemic to digital television systems in the 80s and 90s.  Used for weird things.
 
+
  
+### Stuff Being Phased Out
+ * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) -- A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.
+   * While this is in AUR, Waydroid exists and is much better.
+ * [rimworld](https://rimworldgame.com/) -- the non-steam Rimworld package from AUR, with the ability to add Ideology and a simpler method of adding future DLCs
+   * I'd like to keep working on this, but the number of quality of life mods needed basically demand a modmanager, and therefore Steam.
+
+### Xen Packages
+
+Packages used by the Xen virtualization suite.   Most of these packages are already in AUR.
+
+ * [xen-aur](https://aur.archlinux.org/packages/xen/) -- the Xen kernel and support structure as it appears in AUR.
+ * [xen-qemu](https://qemu.org) -- QEMU compiled for Xen
+ * [xen-grub](https://www.gnu.org/software/grub/) -- GRUB packages compiled for Xen paravirtualization support
+ * [xen-edk2](https://github.com/tianocore/edk2) -- A Xen compatible UEFI from the EDK II project
+ * xen-next -- A significantly upgraded version of Xen, taking patches from other projects.   As of 05-2025, this effort is currently frozen.
+
+
 ## The Xen Suite
 
 > [!TIP]
 > It is recommended to build Xen in a chroot or clean VM.  The build process can pick up unintended dependencies.
 
-The major components are:
-
- * [xen](https://aur.archlinux.org/packages/xen/) -- the Xen virtualization platform packages
- * [xen-qemu](https://qemu.org) -- QEMU compiled for Xen
- * [xen-grub](https://www.gnu.org/software/grub/) -- GRUB packages compiled for Xen paravirtualization support
- * [xen-edk2](https://github.com/tianocore/edk2) -- A Xen compatible UEFI from the EDK II project 
-
-All packages are required for full functionality.  There are optional build-time flags for some packages but are not recommended unless you know what you're doing. 
+All packages (save xen-next) are required for full functionality.  There are optional build-time flags for some packages but are not recommended unless you know what you're doing. 
 
 For operational information about Xen on Arch Linux, see [the Xen wiki page](https://wiki.archlinux.org/title/Xen) on the Arch Wiki.
 
