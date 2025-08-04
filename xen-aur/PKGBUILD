@@ -3,7 +3,7 @@
 # Contributor: Chris Chapman (cman) <chris.chapman@aggiemail.usu.edu>
 
 # Build Options
-_build_stubdom=${build_stubdom:-false}
+_build_stubdom=${build_stubdom:-true}
 _boot_dir=${boot_dir:-/boot}
 _efi_dir=${efi_dir:-/boot}
 _efi_mountpoint=${efi_mountpoint:-/boot}
@@ -27,7 +27,7 @@ _common_make_flags=(
 
 pkgbase=xen
 pkgname=("xen" "xen-docs")
-pkgver=4.20.1pre
+pkgver=4.20.2pre
 _branch="stable-4.20"
 pkgrel=1
 pkgdesc='Open-source type-1 or baremetal hypervisor - stable branch'
