@@ -1,7 +1,7 @@
 # Maintainer: Sam Mulvey <sam@ktqa.org>
 pkgbase="logger-git"
 pkgname=("logger-git" "loggerlink-git" "loggerscripts-git")
-pkgver=2024.1r35
+pkgver=2024.1r37
 pkgrel=1
 pkgdesc="The N9MII Field Day Logger"
 arch=(any)
