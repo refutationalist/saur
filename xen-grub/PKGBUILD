@@ -9,12 +9,12 @@ _build_pv64=${build_pv64:-true}
 pkgbase=xen-grub
 pkgver=2.12.r0.g5ca9db2
 _pkgver=2.12
-pkgrel=1
+pkgrel=2
 pkgdesc="a version of GRUB2 for booting Xen PV and PVH domUs"
 arch=(x86_64)
 url="https://www.gnu.org/software/grub/"
 license=('GPL-3.0-or-later')
-makedepends=(git xz python texinfo gettext device-mapper)
+makedepends=(git xz python texinfo gettext device-mapper less)
 depends=(xen)
 options=(!buildflags !strip)
 
@@ -29,13 +29,19 @@ pkgname=()
 source=(
 	"git+https://git.savannah.gnu.org/git/grub.git#tag=grub-${_pkgver}"
 	"git+https://git.savannah.gnu.org/git/gnulib.git"
-	"grub.cfg")
+	"grub.cfg"
+	"post-bootstrap-unterminated-string.patch")
+
+# Unterminated string patch: https://savannah.gnu.org/bugs/?66470#comment3
+# to be fixed in GRUB 2.14
 
 # Add signed commit checking?
 
-sha512sums=('SKIP'
+sha512sums=('ca9d91f85111b6e6270ddeceea232a08c7f498ba38d6cb54aff08755dcde6d0f0882d926bb9bd074b078e798522b76961cf265fc8112677b3a29507288fe039d'
             'SKIP'
-            '02976adbf68af0ec13ef8910fc6c409591e9528418e3157adb7d8a4a9ae1a43fed4a2fe372d9df8b0520a9edd7e26cfb22ca101f1c4c9be7e5ace61508fa56c8')
+            '02976adbf68af0ec13ef8910fc6c409591e9528418e3157adb7d8a4a9ae1a43fed4a2fe372d9df8b0520a9edd7e26cfb22ca101f1c4c9be7e5ace61508fa56c8'
+            '3cd9ba6be9c586e05e9be5e3b9c61a706a7cd394240f79fc43b39977e98c08189189f632d24e0b904584141cfb0af20c756d29bd742c387d413606742ac868e7')
+
 
 
 pkgver() {
@@ -47,18 +53,19 @@ pkgver() {
 _backports=(
 	# current git master for loads of security fixes
 	# https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html
-	"grub-${_pkgver}..56ccc5ed569869fd735074ccebeaa7aab058342d"
+	"grub-${_pkgver}..73d1c959ea3417e9309ba8c6102d7d6dc7c94259"
 )
 _reverts=(
 )
 
 
 prepare() {
-	cd "$srcdir/grub"
 
 
 	# Continuing the be shameless stolen from the GRUB in the repos.
 	local _c _l 
+
+	cd "$srcdir/grub"
 
 	echo "--> Apply backports..." 
 	for _c in "${_backports[@]}"; do 
@@ -79,11 +86,14 @@ prepare() {
 		--no-git
 	cp "${srcdir}/grub.cfg" .
 
+	patch -p1 < ../post-bootstrap-unterminated-string.patch
+
 	cd ..
-	echo "dividing source trees"
+	echo "--> Dividing source trees"
 	[ "${_build_pvh}"  == "true" ] && cp -R grub grub-pvh
 	[ "${_build_pv32}" == "true" ] && cp -R grub grub-pv32
 	[ "${_build_pv64}" == "true" ] && cp -R grub grub-pv64
+
 }
 
 build() {

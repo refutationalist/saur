@@ -1,0 +1,12 @@
+diff -Naur a/grub-core/lib/gnulib/base64.c b/grub-core/lib/gnulib/base64.c
+--- a/grub-core/lib/gnulib/base64.c	2025-08-27 19:05:00.755991845 -0700
++++ b/grub-core/lib/gnulib/base64.c	2025-08-27 19:05:51.089527626 -0700
+@@ -61,7 +61,7 @@
+   return ch;
+ }
+ 
+-static const char b64c[64] =
++static const char b64c[64] _GL_ATTRIBUTE_NONSTRING =
+   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+ 
+ /* Base64 encode IN array of size INLEN into OUT array. OUT needs

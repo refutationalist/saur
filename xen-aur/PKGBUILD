@@ -3,7 +3,7 @@
 # Contributor: Chris Chapman (cman) <chris.chapman@aggiemail.usu.edu>
 
 # Build Options
-_build_stubdom=${build_stubdom:-true}
+_build_stubdom=${build_stubdom:-false}
 _boot_dir=${boot_dir:-/boot}
 _efi_dir=${efi_dir:-/boot}
 _efi_mountpoint=${efi_mountpoint:-/boot}
