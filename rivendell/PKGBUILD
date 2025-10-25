@@ -2,7 +2,7 @@
 # Warning: Not Yet Successfully Tested!
 
 pkgname=rivendell
-pkgver=4.3.0
+pkgver=4.4.0
 pkgrel=1
 pkgdesc="open source radio automation"
 arch=(x86_64 aarch64)
@@ -53,8 +53,7 @@ for file in "${_patches[@]}"; do
 	noextract+=( $(basename ${file}) )
 done
 
-	
-sha256sums=('632859c67de85ef6da2aed2d3b83606fd527e5d5475bc8c1ce2908210f74e38a'
+sha256sums=('0e53bda9f4162265f03f7b2bd59d4bd31bd317d1cd6d290f563b54669030eb9a'
             '591aa4157fdda6b6ec453437e517951a3b983887e085e7d7a6b0ab2dd8909a25'
             '3385f0c70fc62d0526a6fb508ffe7a3a8cad1efd3ececb02ebfa8a516003449a'
             '915e26d097ddb1281c6a8dae6bce84487f92f82aaae6f88e637631a4ca253ab6'
