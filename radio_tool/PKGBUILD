@@ -1,0 +1,30 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=radio_tool
+pkgver=0.3.0
+pkgrel=1
+pkgdesc="radio firmware tool for OpenRDX"
+arch=('x86_64')
+url="https://github.com/v0l/radio_tool"
+license=('GPL-3.0-only')
+depends=('libusb')
+makedepends=('cmake' 'pkgconf')
+source=("radio_tool-${pkgver}.tar.gz::https://github.com/v0l/radio_tool/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('28c0158f5b95a518e54e78dc2089d7a828d6d8819e0bd1b873905d2ca0e83669')
+
+
+prepare() {
+	mkdir -p "${srcdir}/build"
+}
+
+build() {
+
+	cd "${srcdir}/build"
+	cmake -DCMAKE_INSTALL_PREFIX=/usr "../radio_tool-${pkgver}"
+	make
+}
+
+
+package() {
+	cd "${srcdir}/build"
+	make DESTDIR="$pkgdir/" install
+}
