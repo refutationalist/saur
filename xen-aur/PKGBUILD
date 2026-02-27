@@ -53,7 +53,6 @@ optdepends=(
 		'xen-grub-pv32: 32bit PV booting support'
 		'xen-grub-pv64: 64bit PV booting support'
 		'linux-headers: extract bootable kernel for PV grub using "extract_vmlinux"'
-		'bridge-utils: builtin bridge management'
 )
 
 _source=(
