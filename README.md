@@ -43,10 +43,11 @@ Fonts I use.
 
  
 ### Stuff Being Phased Out
- * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) -- A method for simply running [Android-x86](http://android-x86.org) in QEMU with virgl and whatnot.
-   * While this is in AUR, Waydroid exists and is much better.
  * [rimworld](https://rimworldgame.com/) -- the non-steam Rimworld package from AUR, with the ability to add Ideology and a simpler method of adding future DLCs
    * I'd like to keep working on this, but the number of quality of life mods needed basically demand a modmanager, and therefore Steam.
+
+### Stuff That's Gone
+ * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) -- A method for running [Android-x86](http://android-x86.org) like an app.   I've orphaned this project and have moved to Waydroid.
 
 ### Xen Packages
 
@@ -202,3 +203,4 @@ That's not good for my anxiety.
 To fix it, I started playing with signal-cli by hand, got that to work, and then started building and running the REST broker by hand to see where it broke.  Once I did that, I realized it was simpler just to build and run it outside of the container, and save RAM in the bargain.
 
 So that's what I did.   So I guess I'm against containers?   At least how they're used out in the world.
+
