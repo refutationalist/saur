@@ -18,6 +18,7 @@ This is stuff of my own, or stuff that I've forked or patched mostly for radio s
   * [jack_capture](https://github.com/refutationalist/jack_capture) -- This is my personal fork of jack_capture.  My changes are in git, but there hasn't been a release since 2017.  Use [jack_capture-git](https://aur.archlinux.org/packages/jack_capture-git) in AUR.
   * [logger](https://github.com/refutationalist/fdlogger) -- My simple Field Day logger, written in modern PHP with a significant javascript component.
   * [novnc-lighttpd](https://novnc.com/info.html) -- A simple way to add NoVNC as a webapp with minimal client-side decoration.
+  * [lxqt-vnc] -- a naive way to launch [labwc](https://github.com/labwc/labwc), [lxqt](https://lxqt-project.org/), and [wayvnc](https://github.com/any1/wayvnc) in a systemd user session, for the above.
 
 
 
