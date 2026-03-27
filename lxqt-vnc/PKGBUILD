@@ -1,0 +1,31 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=lxqt-vnc
+pkgver=1
+pkgrel=1
+pkgdesc="a temporary way to launch LXQt and wayvnc in a headless way"
+arch=(any)
+url="https://lpfm.io/"
+license=('CC0-1.0')
+depends=(
+	'lxqt-wayland-session'
+	'lxqt-panel'
+	'labwc'
+	'wayvnc'
+)
+optdepends=(
+	'lxqt: full LXQt support'
+	'swaybg: change background'
+	'labwc-tweaks-git: change labwc sessions simply'
+)
+source=(
+	'lxqt-vnc-launcher'
+	'lxqt-vnc.service'
+)
+sha256sums=('SKIP' 'SKIP')
+
+package() {
+	cd "${pkgdir}"
+	mkdir -p usr/lib/systemd/user usr/bin
+	cp "${srcdir}/lxqt-vnc.service" usr/lib/systemd/user
+	install -m755 "${srcdir}/lxqt-vnc-launcher" usr/bin
+}

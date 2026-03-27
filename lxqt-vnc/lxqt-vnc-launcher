@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Stuff for wlroots.
+
+export WLR_BACKENDS=headless      # don't look for a display
+export WLR_LIBINPUT_NO_DEVICES=1  # don't look for input devices
+export WLR_RENDERER=pixman        # software renderer, I think.
+
+export WAYLAND_DISPLAY=wayland-0  # for wayvnc, apparently no way to check this in labwc
+                                  # wlmaker will do this, once it's a bit more stable
+/usr/bin/startlxqtwayland &
+sleep 4  # picked at random, basically.
+exec /usr/bin/wayvnc
