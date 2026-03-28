@@ -1,16 +1,15 @@
-diff -Naur orig.noVNC-1.5.0/app/ui.js new.noVNC-1.5.0/app/ui.js
---- orig.noVNC-1.5.0/app/ui.js	2024-10-01 12:39:37.551687633 -0700
-+++ new.noVNC-1.5.0/app/ui.js	2024-10-01 12:46:20.490818300 -0700
-@@ -17,6 +17,8 @@
+diff -Naur orig/app/ui.js noVNC-1.7.0-beta/app/ui.js
+--- orig/app/ui.js	2026-03-26 21:33:45.160735157 -0700
++++ noVNC-1.7.0-beta/app/ui.js	2026-03-26 21:42:51.230844607 -0700
+@@ -17,6 +17,7 @@
  import Keyboard from "../core/input/keyboard.js";
  import RFB from "../core/rfb.js";
  import * as WebUtil from "./webutil.js";
 +import { local_settings } from "../settings.js";
-+
  
  const PAGE_TITLE = "noVNC";
  
-@@ -62,12 +64,9 @@
+@@ -77,12 +78,8 @@
          // Translate the DOM
          l10n.translateDOM();
  
@@ -20,51 +19,36 @@ diff -Naur orig.noVNC-1.5.0/app/ui.js new.noVNC-1.5.0/app/ui.js
 -            // FIXME: This gets hidden when connecting
 -            UI.showStatus(_("Running without HTTPS is not recommended, crashes or other issues are likely."), 'error');
 -        }
-+		// In our installation this is usually sitting behind a proxy or VPN
-+		// secure check removed
-+
++        // In our installation this is usually sitting behind a proxy or VPN
++        // secure check removed by packager
  
          // Try to fetch version number
-         fetch('./package.json')
-@@ -120,7 +119,8 @@
+         try {
+@@ -133,7 +130,8 @@
  
          document.documentElement.classList.remove("noVNC_loading");
  
--        let autoconnect = WebUtil.getConfigVar('autoconnect', false);
+-        let autoconnect = UI.getSetting('autoconnect');
 +        let autoconnect = local_settings.autoconnect;
 +
          if (autoconnect === 'true' || autoconnect == '1') {
              autoconnect = true;
              UI.connect();
-@@ -154,36 +154,26 @@
-             UI.addOption(document.getElementById('noVNC_setting_logging'), llevels[i], llevels[i]);
-         }
+@@ -172,23 +170,24 @@
+         UI.setupSettingLabels();
  
-+
-         // Settings with immediate effects
-         UI.initSetting('logging', 'warn');
-         UI.updateLogging();
- 
--        // if port == 80 (or 443) then it won't be present and should be
--        // set manually
--        let port = window.location.port;
--        if (!port) {
--            if (window.location.protocol.substring(0, 5) == 'https') {
--                port = 443;
--            } else if (window.location.protocol.substring(0, 4) == 'http') {
--                port = 80;
--            }
--        }
--
          /* Populate the controls if defaults are provided in the URL */
--        UI.initSetting('host', window.location.hostname);
--        UI.initSetting('port', port);
+-        UI.initSetting('host', '');
+-        UI.initSetting('port', 0);
 -        UI.initSetting('encrypt', (window.location.protocol === "https:"));
+-        UI.initSetting('password');
+-        UI.initSetting('autoconnect', false);
 -        UI.initSetting('view_clip', false);
 -        UI.initSetting('resize', 'off');
 -        UI.initSetting('quality', 6);
 -        UI.initSetting('compression', 2);
 -        UI.initSetting('shared', true);
+-        UI.initSetting('bell', 'on');
 -        UI.initSetting('view_only', false);
 -        UI.initSetting('show_dot', false);
 -        UI.initSetting('path', 'websockify');
@@ -85,12 +69,16 @@ diff -Naur orig.noVNC-1.5.0/app/ui.js new.noVNC-1.5.0/app/ui.js
 +        UI.initSetting('repeaterID',      local_settings.repeaterID);
 +        UI.initSetting('reconnect',       local_settings.reconnect);
 +        UI.initSetting('reconnect_delay', local_settings.reconnect_delay);
- 
-         UI.setupSettingLabels();
++        UI.initSetting('password',        local_settings.password);
++        UI.initSetting('autoconnect',     local_settings.autoconnect);
++        UI.initSetting('bell',            local_settings.bell);
++
      },
-@@ -748,10 +738,7 @@
-     // Initial page load read/initialization of settings
-     initSetting(name, defVal) {
+     // Adds a link to the label elements on the corresponding input elements
+     setupSettingLabels() {
+@@ -755,10 +754,7 @@
+             defVal = UI.customSettings.defaults[name];
+         }
          // Check Query string followed by cookie
 -        let val = WebUtil.getConfigVar(name);
 -        if (val === null) {
@@ -99,4 +87,4 @@ diff -Naur orig.noVNC-1.5.0/app/ui.js new.noVNC-1.5.0/app/ui.js
 +        let val = WebUtil.readSetting(name, defVal);
          WebUtil.setSetting(name, val);
          UI.updateSetting(name);
-         return val;
+         // Has the user forced a value?

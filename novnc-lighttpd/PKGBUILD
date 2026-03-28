@@ -1,6 +1,7 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 pkgname=novnc-lighttpd
-pkgver=1.5.0
+pkgver=1.7.0b
+_pkgver="1.7.0-beta"
 pkgrel=1
 epoch=
 pkgdesc="noVNC simplified for lighttpd and defined connection"
@@ -15,20 +16,21 @@ backup=(
 	etc/webapps/novnc-lighttpd/settings.js
 )
 source=(
-	"https://github.com/novnc/noVNC/archive/refs/tags/v${pkgver}.tar.gz"
+	"https://github.com/novnc/noVNC/archive/refs/tags/v${_pkgver}.tar.gz"
 	"settings.js"
 	"localsettings.patch"
 	"lighttpd.conf-example"
 )
 noextract=("settings.js" "localsettings.patch")
-sha256sums=('6a73e41f98388a5348b7902f54b02d177cb73b7e5eb0a7a0dcf688cc2c79b42a'
-            'eb01589d5b6adc32af30ab67902452a5cb6cb179ce897ec97305308c35573ae5'
-            'b8fe0db446eee9f32635e93c713559bead85ee609f3b29b5939c892e39af5c01'
+sha256sums=('25568d7203ade087387695bf80790ff2c53644fa8bbf5e3b7c917e16d828e475'
+            'd031434e2e9d3d877c8f2f62e2a2c0b546d97bb2d7912e54c3f282d04cd376bc'
+            '797f475782026966f1c6ca031ef11df9723ea661a3dbe23b6dcdd07fb597e9a0'
             '8fe88d339af1e163db38cab5774bd3e07c91e8d698b885459e976a6fb276a299')
 
 
+
 prepare() {
-	cd "${srcdir}/noVNC-${pkgver}"
+	cd "${srcdir}/noVNC-${_pkgver}"
 
 	# patch
 	#patch -p1 ui.js "${srcdir}/uijs.patch"
@@ -48,7 +50,7 @@ package() {
 			 "${pkgdir}/usr/share/webapps/novnc-lighttpd" \
 			 "${pkgdir}/usr/share/novnc-lighttpd"
 
-	cd "${srcdir}/noVNC-${pkgver}"
+	cd "${srcdir}/noVNC-${_pkgver}"
 	cp -R index.html app core po vendor "${pkgdir}/usr/share/webapps/novnc-lighttpd"
 	cp LICENSE.txt "${pkgdir}/usr/share/novnc-lighttpd"
 	

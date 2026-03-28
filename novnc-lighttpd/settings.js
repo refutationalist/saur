@@ -15,6 +15,8 @@ var settings = {
 	repeaterID: '',
 	reconnect: true,
 	reconnect_delay: 5000,
+	password: null,
+	bell: 'on',
 
 	autoconnect: true
 }
