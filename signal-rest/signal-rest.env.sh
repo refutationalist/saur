@@ -1,11 +1,13 @@
-
-HOST_IP="localhost"
+# Required for Service
+HOST_IP="127.0.0.1"
 PORT=7942
 MODE="json-rpc"
 GIN_MODE="release"
-#CONFIG_DIR="/var/lib/signal-cli/"
-#ATTACHMENT_DIR="/tmp/"
-#AVATAR_DIR="/tmp/"
+CONFIG_DIR="/var/lib/signal-cli/"
+ATTACHMENT_DIR="/tmp/"
+AVATAR_DIR="/tmp/"
+
+# Others
 #LOG_LEVEL="info"
 #SWAGGER_USE_HTTPS_AS_PREFERRED_SCHEME="false"
 #SWAGGER_IP=$HOST_IP

@@ -8,7 +8,7 @@ Requires=signal-cli-rpc.service
 CapabilityBoundingSet=
 EnvironmentFile=/etc/conf.d/signal-rest.env.sh
 # Update 'ReadWritePaths' if you change the config path here
-ExecStart=/usr/bin/signal-rest
+ExecStart=/usr/bin/signal-rest --signal-cli-config=${CONFIG_DIR} --attachment-tmp-dir=${ATTACHMENT_DIR} --avatar-tmp-dir=${AVATAR_DIR}
 LockPersonality=true
 NoNewPrivileges=true
 PrivateDevices=true

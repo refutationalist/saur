@@ -154,7 +154,7 @@ $ signal-cli --config=/var/lib/signal-cli link --name=$(hostname)
 
 ```
 
-You can obviously change the hostname part to something more useful to you.   It will then spit out a URL that looks like: "```sgnl://linkdevice...```"  Copy that text and in a window on your own workstation, something like so:
+You can obviously change the hostname part to something more useful to you.  In recent signal-cli version, it will print the QR code right to the desktop.   If for some reason it does not do that, you can do the following with the "```sgnl://linkdevice...```" URL it gives you:
 
 ```shell
 
