@@ -1,20 +1,15 @@
 diff -Naur signal-cli-rest-api/src/main.go new/src/main.go
 --- signal-cli-rest-api/src/main.go	2026-04-15 16:41:58.840250415 -0700
-+++ new/src/main.go	2026-04-15 17:48:12.931589187 -0700
-@@ -79,6 +79,12 @@
- 		}
- 	}
++++ new/src/main.go	2026-05-06 18:31:32.072264707 -0700
+@@ -101,6 +101,7 @@
+ 	swaggerIp := utils.GetEnv("SWAGGER_IP", defaultSwaggerIp)
+ 	swaggerHost := utils.GetEnv("SWAGGER_HOST", swaggerIp+":"+port)
+ 	docs.SwaggerInfo.Host = swaggerHost
++	log.Debug("host to bind to: ", swaggerHost)
  
-+	log.Debug("signal rest api config dir: ", configdir);
-+	log.Debug("signal attachment dir: ", attachdir);
-+	log.Debug("signal avatar dir: ", avatardir);
-+
-+	
-+
- 	if utils.GetEnv("SWAGGER_USE_HTTPS_AS_PREFERRED_SCHEME", "false") == "false" {
- 		docs.SwaggerInfo.Schemes = []string{"http", "https"}
- 	} else {
-@@ -464,5 +470,5 @@
+ 	log.Info("Started Signal Messenger REST API")
+ 
+@@ -464,5 +465,5 @@
  		c.Start()
  	}
  

@@ -1,6 +1,5 @@
 # Required for Service
-HOST_IP="127.0.0.1"
-PORT=7942
+SWAGGER_HOST="127.0.0.1:7942"
 MODE="json-rpc"
 GIN_MODE="release"
 CONFIG_DIR="/var/lib/signal-cli/"
@@ -13,6 +12,8 @@ AVATAR_DIR="/tmp/"
 #SWAGGER_IP=$HOST_IP
 #SWAGGER_HOST="${HOST_IP}:${PORT}"
 #ENABLE_PLUGINS="false"
+#HOST_IP="127.0.0.1"
+#PORT=7942
 
 ## The following are not used for JSON-RPC
 #AUTO_RECEIVE_SCHEDULE=""

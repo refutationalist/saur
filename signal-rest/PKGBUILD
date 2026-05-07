@@ -8,7 +8,7 @@ _commit="d11faf371431acfe5643eeeff02243f4b0ea6b60"
 pkgname=signal-rest
 _reponame=signal-cli-rest-api
 pkgver=0.98
-pkgrel=1
+pkgrel=2
 pkgdesc="A de-containerized version of the Signal messenger REST API"
 arch=("x86_64")
 url="https://github.com/bbernhard/signal-cli-rest-api/"
@@ -19,7 +19,7 @@ backup=('etc/conf.d/signal-rest.env.sh' 'var/lib/signal-api/jsonrpc2.yml')
 install="signal-rest.install"
 source=(
 	"signal-cli-rest-api::git+https://github.com/bbernhard/signal-cli-rest-api#commit=${_commit}"
-	#"dedockerize.patch"
+	"dedockerize.patch"
 	"signal-cli-rpc.service"
 	"signal-rest.service"
 	"signal-rest.env.sh"
@@ -28,21 +28,21 @@ source=(
 )
 
 sha256sums=('7059d406072d81cd9825aaf67572f71dba6d696d9bce145b9b5cd16e901bcccf'
+            '74e039422a1ef9f4c3aa7c8cc158d7db366e5fbf3c8610021c9401468675b29a'
             '02ee042c9e5f003702472b3e468fd74b5f0da11fe2c7b936f9f376d16893c85b'
-            'ea8dfa6c8cd1b145bec3082264a5a38a52a0b8fe7e02597db1abf6f206fd31dc'
-            '838f4d4cd4d2950ee2566e4bede738f4c924a5de2f252fb41e77df6083771dfd'
+            '02004b73ed2db6d1c023bbd636e6152222f849dee54b4036ec9d9f0e6af11543'
+            '32f0786e464472cdff551ff82d6a0e0a4087a57528aa0421805ed9a74c337a40'
             '60e4e85f920ec299ac1b2dda11c3ebaa5eb8bb3312ac12a15d8c520c9a489a78'
             'ba700f23e50c5b4126616c62ab2fee8db4d2665fb1b4b61d1c6609497fc6e090')
 
-
-
 prepare() {
-	cd "${srcdir}/${_reponame}/src"
+	cd "${srcdir}"
 	mkdir go
+	cd $_reponame
+	patch -p1 -i "$srcdir/dedockerize.patch"
+	cd src
 	export GOPATH="${srcdir}/go"
 	go mod download -modcacherw
-	#cd "signal-cli-rest-api"
-	#patch -p1 -i "$srcdir/dedockerize.patch"
 }
 
 build() {

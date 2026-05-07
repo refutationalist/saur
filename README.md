@@ -154,7 +154,7 @@ $ signal-cli --config=/var/lib/signal-cli link --name=$(hostname)
 
 ```
 
-You can obviously change the hostname part to something more useful to you.  In recent signal-cli version, it will print the QR code right to the desktop.   If for some reason it does not do that, you can do the following with the "```sgnl://linkdevice...```" URL it gives you:
+You can obviously change the hostname part to something more useful to you.  In recent signal-cli versions it will print a QR code right in the console.   If that doesn't work you can do the following with the "```sgnl://linkdevice...```" URL it gives you:
 
 ```shell
 
@@ -163,7 +163,7 @@ qrencode -o link.png "<SGNL URL HERE>" && eog link.png
 
 ```
 
-Assuming you have ```qrencode``` and ```eog``` installed, you'll get a QR image that you can use to link to a Signal device.  It's also possible to register completely new numbers, but I didn't do that so not in the docs.  I don't reccommend it, either.  Once linked, the original ```signal-cli``` call will do some random stuff and then exit.   Congrats, your accounts are linked.  Next, back on the server running ```signal-rest```:
+Assuming you have ```qrencode``` and ```eog``` installed, you'll get a QR image that you can use to link to a Signal device.  It's also possible to register completely new numbers, but I didn't do that so not in the docs.  I don't recommend it, either.  Once linked, the original ```signal-cli``` call will do some random stuff and then exit.   Congrats, your accounts are linked.  Next, back on the server running ```signal-rest```:
 
 ```shell
 
