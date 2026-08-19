@@ -1,6 +1,6 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
 pkgname=xen-edk2
-pkgver=202602
+pkgver=202605
 pkgrel=1
 pkgdesc="UEFI firmware for xen hypervisor from edk2"
 arch=("x86_64")
@@ -47,7 +47,7 @@ source=(
 )
 
 sha256sums=('53f8b4499acbfd7fe14fdab67df321faabcb97c2964ee5ac90d01e1434942224'
-            '0d35069345f7d63e833d6a5133d8a066d001730c194ce8ad7fc74918881486cc'
+            '2199d1a6f3d2afaf8658e69d2e68da3a5e047f9db24bc498b13eecb89eb5956e'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -73,7 +73,6 @@ sha256sums=('53f8b4499acbfd7fe14fdab67df321faabcb97c2964ee5ac90d01e1434942224'
             'SKIP'
             'SKIP'
             'SKIP')
-
 
 
 prepare() {
