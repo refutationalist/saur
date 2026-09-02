@@ -1,0 +1,37 @@
+# This is an example PKGBUILD file. Use this as a start to creating your own,
+# and remove these comments. For more information, see 'man PKGBUILD'.
+# NOTE: Please fill out the license field for your package! If it is unknown,
+# then please put 'unknown'.
+
+# Guidelines specific to Bazaar, Git, Mercurial and Subversion packages.
+# Other VCS sources are not natively supported by makepkg yet.
+
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname="aioc-util-git"
+_pkgname=${pkgname%-git}
+pkgver=r47.e9f50d8
+pkgrel=1
+pkgdesc="AIOC configuration utility"
+arch=("any")
+url="https://github.com/hrafnkelle/aioc-util"
+license=('MIT')
+depends=(python python-hid)
+source=('git+https://github.com/hrafnkelle/aioc-util')
+sha256sums=('SKIP')
+
+
+pkgver() {
+	cd "$srcdir/${_pkgname}"
+	# Git, no tags available
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+
+package() {
+	cd "${pkgdir}"
+	mkdir -p etc/udev/rules.d usr/bin usr/share/aioc-util
+	install -m0755 "${srcdir}/${_pkgname}/aioc-util.py" usr/bin/aioc-util
+	install -m0644 "${srcdir}/${_pkgname}/udev/rules.d/91-aioc.rules" etc/udev/rules.d
+	cp -R "${srcdir}/${_pkgname}/webui" usr/share/aioc-util
+
+}
