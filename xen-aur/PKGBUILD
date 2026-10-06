@@ -2,7 +2,7 @@
 # Contributor: Filipe Laíns (FFY00) <lains@archlinux.org>
 # Contributor: Chris Chapman (cman) <chris.chapman@aggiemail.usu.edu>
 
-# Build Options
+# Build Option
 _build_stubdom=${build_stubdom:-false}
 _boot_dir=${boot_dir:-/boot}
 _efi_dir=${efi_dir:-/boot}
@@ -28,8 +28,8 @@ _common_make_flags=(
 
 pkgbase=xen
 pkgname=("xen" "xen-docs")
-pkgver=4.21.2
-_branch="stable-4.21"
+pkgver=4.22.1pre
+_branch="stable-4.22"
 pkgrel=1
 pkgdesc='Open-source type-1 or baremetal hypervisor - stable branch'
 arch=('x86_64')

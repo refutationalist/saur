@@ -1,7 +1,7 @@
 # Maintainer: Sam Mulvey <code@ktqa.org>
 pkgname=novnc-lighttpd
-pkgver=1.7.0b
-_pkgver="1.7.0-beta"
+pkgver=1.7.0
+_pkgver="1.7.0"
 pkgrel=1
 epoch=
 pkgdesc="noVNC simplified for lighttpd and defined connection"
@@ -22,10 +22,11 @@ source=(
 	"lighttpd.conf-example"
 )
 noextract=("settings.js" "localsettings.patch")
-sha256sums=('25568d7203ade087387695bf80790ff2c53644fa8bbf5e3b7c917e16d828e475'
+sha256sums=('b1003a11b6e6e8d8f7f5e5586daae7f8ca651d8aee0aa155ff9ac841c48f52c6'
             'd031434e2e9d3d877c8f2f62e2a2c0b546d97bb2d7912e54c3f282d04cd376bc'
             '797f475782026966f1c6ca031ef11df9723ea661a3dbe23b6dcdd07fb597e9a0'
             '8fe88d339af1e163db38cab5774bd3e07c91e8d698b885459e976a6fb276a299')
+
 
 
 
