@@ -42,14 +42,6 @@ Fonts I use.
   * [perfect-vga](http://laemeur.sdf.org/fonts/) -- VGA fonts that I use in terminals that are useable, which as of 2020-08 does not include gnome-terminal or any modern VTE derived terminals.  I have feelings about this.
   * [ttf-vcr-eas](https://www.fontzip.com/vcr-eas) -- The font endemic to digital television systems in the 80s and 90s.  Used for weird things.
 
- 
-### Stuff Being Phased Out
- * [rimworld](https://rimworldgame.com/) -- the non-steam Rimworld package from AUR, with the ability to add Ideology and a simpler method of adding future DLCs
-   * I'd like to keep working on this, but the number of quality of life mods needed basically demand a modmanager, and therefore Steam.
-
-### Stuff That's Gone
- * [qmeu-android-x86](https://aur.archlinux.org/packages/qemu-android-x86/) -- A method for running [Android-x86](http://android-x86.org) like an app.   I've orphaned this project and have moved to Waydroid.
-
 ### Xen Packages
 
 Packages used by the Xen virtualization suite.   Most of these packages are already in AUR.
@@ -59,6 +51,12 @@ Packages used by the Xen virtualization suite.   Most of these packages are alre
  * [xen-grub](https://www.gnu.org/software/grub/) -- GRUB packages compiled for Xen paravirtualization support
  * [xen-edk2](https://github.com/tianocore/edk2) -- A Xen compatible UEFI from the EDK II project
  * xen-next -- A significantly upgraded version of Xen, taking patches from other projects.   As of 05-2025, this effort is currently frozen.
+
+### Other, in AUR
+
+This section will likely expand.
+
+  * [gnome-shell-extension-utcclock-git](https://github.com/injcristianrojas/UTCClock) -- show current UTC time in GNOME topbar
 
 
 ## The Xen Suite
