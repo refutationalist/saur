@@ -1,9 +1,11 @@
 # Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+# This PKGBULID is licensed under 0BSD
+
 pkgname=gnome-shell-extension-utcclock-git
 _reponame=UTCClock
 pkgver=r164.87c82d7
 pkgrel=1
-pkgdesc="show current UTC time in GNOME top-bar"
+pkgdesc="show current UTC time in GNOME topbar"
 arch=('x86_64' 'aarch64')
 url=https://github.com/injcristianrojas/UTCClock
 license=("MIT")
