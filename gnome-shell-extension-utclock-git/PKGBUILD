@@ -1,0 +1,53 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=gnome-shell-extension-utcclock-git
+_reponame=UTCClock
+pkgver=r164.87c82d7
+pkgrel=1
+pkgdesc="show current UTC time in GNOME top-bar"
+arch=('x86_64' 'aarch64')
+url=https://github.com/injcristianrojas/UTCClock
+license=("MIT")
+
+depends=("gnome-shell")
+makedepends=("git" "jq" "glib2")
+
+source=(
+  "git+https://github.com/injcristianrojas/UTCClock"
+  #"gnome51.patch"
+)
+sha256sums=(
+    'SKIP'
+    #'2d38f86f67c26fa4ff07899ef04a1612741effed97a3f9f82f920144c3bd67bf'
+)
+
+pkgver() {
+	cd "${srcdir}/${_reponame}"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "${srcdir}/${_reponame}"
+	#patch < "${srcdir}/gnome51.patch"
+
+}
+
+
+build() {
+	cd "${srcdir}/${_reponame}"
+	glib-compile-schemas schemas/
+}
+
+package() {
+	cd "${srcdir}/${_reponame}"
+
+	_uuid=$(jq -r .uuid metadata.json)
+	echo "==> GNOME UUID: ${_uuid}"
+
+
+	mkdir -p "${pkgdir}/usr/share/gnome-shell/extensions/${_uuid}"
+	cp -R extension.js LICENSE metadata.json schemas/ "${pkgdir}/usr/share/gnome-shell/extensions/${_uuid}"
+
+
+}
+
+
