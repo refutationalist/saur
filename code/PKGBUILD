@@ -4,7 +4,7 @@
 #  https://collaboraonline.github.io/post/build-code/#build-code-on-arch
 
 # tag for this version
-_code_tag="cp-25.04.1-1"
+_code_tag="cp-26.04.5-2"
 
 ## Compile time limitations for open connections and documents
 _connections=100
@@ -19,7 +19,7 @@ _locore_location="/usr/lib/code"
 
 # The version number of the debian file which is literally the only place I couild
 # find the branding files.
-_code_brand_ver="24.04-35"
+_code_brand_ver="26.04.5-3"
 
 
 pkgname=code
@@ -45,7 +45,7 @@ makedepends=(
 
 install="code.install"
 source=(
-	"git+https://github.com/CollaboraOnline/online.git#tag=${_code_tag}"
+	"git+https://github.com/CollaboraOnline/online.mirror.git#tag=${_code_tag}"
 	"https://github.com/CollaboraOnline/online/releases/download/for-code-assets/core-co-${_locore_ver}-assets.tar.gz"
 	"https://www.collaboraoffice.com/repos/CollaboraOnline/CODE/code-brand_${_code_brand_ver}_all.deb"
 	"code.sysusers"

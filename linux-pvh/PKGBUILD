@@ -1,0 +1,63 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=linux-pvh
+_pkgname=linux
+pkgver=7.2.3
+pkgrel=1
+pkgdesc="Linux kernel for Xen PVH use"
+replaces=('linux-lts-pvh')
+conflicts=('linux-lts-pvh')
+arch=(x86_64)
+url="https://kernel.org/"
+license=('GPL2')
+makedepends=(bc kmod libelf cpio)
+options=(!strip)
+source=("$_pkgname-$pkgver.tar.gz"
+        "$_pkgname-$pkgver.patch")
+source=(
+	https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_pkgname}-${pkgver}.tar.{xz,sign}
+	pvh_defconfig
+)
+
+sha256sums=('8ba259e8e7b13ec6ef0941c8a39ad90b24bd4a4d6c0010ba6bafb794550ecd03'
+            'SKIP'
+            '5731c441caf7ba20719cabdbf6b11f80d99b7125a5da7ac28319b6a8f9211c29')
+
+
+validpgpkeys=( 
+  'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds 
+  '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman 
+)
+
+
+# some of this shamelessly stolen from the 'linux' package
+prepare() {
+	cd "$_pkgname-$pkgver"
+
+	echo "Setting version..."
+	echo "-$pkgrel" > localversion.10-pkgrel
+	echo "${_pkgname#linux}" > localversion.20-pkgname
+
+	echo "Setting config..."
+	cp ../pvh_defconfig .config
+	make olddefconfig
+	diff -u ../pvh_defconfig .config || :
+
+	make -s kernelrelease > version
+	echo "Prepared $pkgbase version $(<version)"
+	
+
+}
+
+build() {
+	cd "$_pkgname-$pkgver"
+	make
+}
+
+package() {
+	#cd "$_pkgname-$pkgver"
+	#make DESTDIR="$pkgdir/" install
+
+	mkdir -p "${pkgdir}/usr/share/linux-pvh"
+	install -m644 "${srcdir}/${_pkgname}-${pkgver}/arch/x86/boot/bzImage" "${pkgdir}/usr/share/linux-pvh/kernel"
+	ln -sf "/usr/share/linux-pvh" "${pkgdir}/usr/share/linux-lts-pvh"
+}

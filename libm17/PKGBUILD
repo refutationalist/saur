@@ -1,0 +1,31 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=libm17
+pkgver=0
+pkgrel=1
+pkgdesc="C library for the M17 digital amateur radio mode"
+arch=('x86_64')
+url="https://github.com/v0l/radio_tool"
+license=('GPL-2.0-only')
+depends=('libusb')
+makedepends=('cmake' 'pkgconf')
+checkdepends=('unity-test') # in AUR
+source=('git+https://github.com/M17-Project/libm17')
+sha256sums=('SKIP')
+
+
+prepare() {
+	mkdir -p "${srcdir}/build"
+}
+
+build() {
+
+	cd "${srcdir}/build"
+	cmake -DCMAKE_INSTALL_PREFIX=/usr "../libm17"
+	make
+}
+
+
+package() {
+	cd "${srcdir}/build"
+	make DESTDIR="$pkgdir/" install
+}

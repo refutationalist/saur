@@ -1,0 +1,24 @@
+# Maintainer: Sam Mulvey <archlinux@sammulvey.com>
+pkgname=alvin
+pkgver=1.0.2
+pkgrel=1
+pkgdesc="the Arch Linux Virtual INstaller and declaritive system builder"
+arch=(any)
+url="https://lpfm.io/sam/alvin"
+license=('AGPL-3.0-or-later' 'CC0-1.0')
+
+# pacman, coreutils, and util-linux are in base
+depends=('arch-install-scripts' 'xfsprogs' 'dosfstools' 'qemu-img' 'zstd')
+#optdepends=()
+backup=("etc/alvin.conf")
+source=("https://lpfm.io/sam/alvin/archive/${pkgver}.tar.gz")
+sha256sums=('bd45a45eee8e417c4a4675d7190396d05056660d5805c2199f8e052f3f01e669')
+
+build() {
+	echo "Shell scripts don't require much building."
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+	make DESTDIR="${pkgdir}" install
+}
